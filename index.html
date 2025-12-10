@@ -610,7 +610,7 @@
         <section class="updates-section">
             <div class="container">
                 <div class="section-header">
-                    <h2>আপডেট</h2>
+                    <h2>নিউজ & আপডেট'স</h2>
                 </div>
                 <div class="updates-grid" id="updatesGrid"></div>
             </div>
@@ -799,7 +799,7 @@
         async function loadUpdates() {
             const updatesGrid = document.getElementById('updatesGrid');
             try {
-                const q = query(collection(db, "updates"), orderBy("date", "desc"), limit(3));
+                const q = query(collection(db, "news"), orderBy("date", "desc"), limit(3));
                 const querySnapshot = await getDocs(q);
 
                 updatesGrid.innerHTML = '';
@@ -818,7 +818,7 @@
                             <div class="update-card-content">
                                 <h3>${data.title}</h3>
                                 <p>${data.content}</p>
-                                <div class="update-card-timestamp">সম্প্রতি আপডেটকৃত</div>
+                                <div class="update-card-timestamp">${data.date || 'সম্প্রতি আপডেটকৃত'}</div>
                             </div>
                         </div>`;
                     updatesGrid.innerHTML += card;
