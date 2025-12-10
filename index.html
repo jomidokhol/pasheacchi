@@ -6,10 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>পাশে আছি - রক্তদান প্ল্যাটফর্ম</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Linking Google Fonts for Sidebar Icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
-        /* --- Jagoron Font Definition --- */
         @font-face {
             font-family: 'Jagoron';
             src: url('fonts/jagoron.ttf') format('truetype');
@@ -17,7 +15,6 @@
             font-style: normal;
         }
 
-        /* --- General/Shared Styles --- */
         :root {
             --primary: #e53935;
             --primary-dark: #c62828;
@@ -27,8 +24,6 @@
             --hover-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             --transition: all 0.4s ease;
             --border-radius: 12px;
-
-            /* Light Mode Variables */
             --background-color: #fbe9e7;
             --text-color: #333;
             --text-light: #666;
@@ -41,7 +36,6 @@
             --sidebar-hover-text: #151A2D;
         }
         
-        /* Dark Mode Styles */
         body.dark-mode {
             --background-color: #121212;
             --text-color: #f5f5f5;
@@ -61,6 +55,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         
         html { scroll-behavior: smooth; }
@@ -70,7 +65,6 @@
             background-color: var(--background-color);
             line-height: 1.6;
             animation: backgroundAnimation 20s ease infinite;
-            /* Prevent scrolling while loading */
             overflow-x: hidden;
         }
         
@@ -78,14 +72,13 @@
              animation: none;
         }
 
-        /* --- PRELOADER STYLES --- */
         #preloader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #1a1a1a; /* Dark background for loader contrast */
+            background-color: #1a1a1a;
             z-index: 99999;
             display: flex;
             justify-content: center;
@@ -133,9 +126,7 @@
             70% { height: 0.5em; box-shadow: 0.5em -1em rgba(61, 184, 143, 0.75), -0.5em 1em rgba(233, 169, 32, 0.75); }
             100% { box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75); }
         }
-        /* --- END PRELOADER STYLES --- */
 
-        
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         
         .btn {
@@ -150,7 +141,7 @@
             align-items: center;
             gap: 8px;
             text-decoration: none;
-            white-space: nowrap; /* Prevent button text wrapping */
+            white-space: nowrap;
         }
         
         .btn-primary {
@@ -199,26 +190,25 @@
             animation: slideDown 0.5s ease;
         }
 
-        /* --- Header Fix: Never Wrap --- */
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
             height: 80px;
-            flex-wrap: nowrap; /* Forces single line */
-            overflow-x: auto; /* Adds scroll if absolutely necessary on tiny screens */
-            scrollbar-width: none; /* Hide scrollbar Firefox */
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
-        .header-content::-webkit-scrollbar { display: none; /* Hide scrollbar Chrome/Safari */ }
+        .header-content::-webkit-scrollbar { display: none; }
 
         .logo {
             display: flex;
             align-items: center;
             text-decoration: none;
             color: var(--primary);
-            white-space: nowrap; /* Logo text won't wrap */
-            flex-shrink: 0; /* Prevent logo from shrinking */
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         
         .logo img { height: 40px; }
@@ -228,13 +218,12 @@
             display: flex; 
             gap: 15px; 
             align-items: center;
-            flex-shrink: 0; /* Prevent buttons from shrinking/wrapping */
+            flex-shrink: 0;
         }
 
-        /* Profile Icon & Dialog Styles */
         .profile-container {
             position: relative;
-            display: none; /* Hidden by default */
+            display: none;
             cursor: pointer;
         }
         
@@ -262,48 +251,6 @@
             box-shadow: var(--shadow);
         }
 
-        .dialog-box {
-            position: absolute;
-            top: 60px;
-            right: 0;
-            width: 200px;
-            background: var(--white);
-            color: var(--text-color);
-            padding: 10px 15px;
-            border-radius: 8px;
-            box-shadow: var(--hover-shadow);
-            font-size: 0.9rem;
-            text-align: center;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            border-left: 4px solid var(--primary);
-        }
-        
-        .dialog-box.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .dialog-box::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            right: 15px;
-            width: 12px;
-            height: 12px;
-            background: var(--white);
-            transform: rotate(45deg);
-            border-top: 1px solid #eee;
-            border-left: 1px solid #eee;
-        }
-        body.dark-mode .dialog-box { background: #333; color: #fff; border-left-color: var(--primary); }
-        body.dark-mode .dialog-box::before { background: #333; border-color: #444; }
-
-
         .banner-section { margin: 20px 0; }
         .banner-container { position: relative; height: 400px; overflow: hidden; border-radius: 10px; box-shadow: var(--shadow); }
         .banner-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; background-size: cover; background-position: center; }
@@ -318,9 +265,9 @@
         .news-ticker-wrapper { background-color: #2c3e50; color: #fff; padding: 0; margin-bottom: 30px; display: flex; align-items: center; height: 40px; overflow: hidden; }
         .ticker-heading { background: var(--primary); height: 100%; padding: 0 20px; display: flex; align-items: center; font-weight: bold; z-index: 10; white-space: nowrap; }
         .ticker-content { display: inline-block; white-space: nowrap; padding-left: 100%; animation: ticker 25s linear infinite; }
-        .ticker-item { display: inline-block; padding: 0 25px; font-size: 0.95rem; }
+        .ticker-item { display: inline-block; padding: 0 5px; font-size: 0.95rem; vertical-align: middle; }
+        .ticker-square { display: inline-block; width: 10px; height: 10px; background-color: #e53935; margin: 0 15px; vertical-align: middle; }
         
-        /* Unified Background Update: Making section backgrounds transparent */
         .services-section { padding: 60px 0; background-color: transparent; }
         
         .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
@@ -329,10 +276,7 @@
         .service-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
         .service-name { font-weight: 600; font-size: 1rem; color: var(--text-color); }
         
-        /* --- Emergency Section Styles --- */
-        /* Changed background to transparent for uniformity */
         .emergency-section { background: transparent; padding: 60px 0; }
-        /* body.dark-mode .emergency-section { background: #222; } Removed specific dark mode bg */
         
         .section-header { text-align: center; margin-bottom: 40px; }
         .section-header h2 { color: var(--primary-dark); font-size: 2.4rem; position: relative; display: inline-block; padding-bottom: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
@@ -393,7 +337,6 @@
         
         .load-more-container { text-align: center; margin-top: 20px; }
         
-        /* Updates Section - Background changed to transparent */
         .updates-section { padding: 60px 0; background-color: transparent; }
         
         .updates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
@@ -476,12 +419,10 @@
         #logout-button-item { display: none; }
         body.user-logged-in #logout-button-item { display: block; }
         
-        /* Theme Toggle Button */
         #theme-toggle .dark-mode-icon { display: none; }
         body.dark-mode #theme-toggle .light-mode-icon { display: none; }
         body.dark-mode #theme-toggle .dark-mode-icon { display: block; }
         
-        /* Dropdown Styles */
         .sidebar-nav .nav-item { position: relative; }
         .sidebar-nav .dropdown-container .dropdown-icon { margin-left: auto; transition: transform 0.4s ease; }
         .sidebar-nav .dropdown-container.open .dropdown-icon { transform: rotate(180deg); }
@@ -512,7 +453,7 @@
         }
         @media (max-width: 576px) {
             .services-grid { grid-template-columns: repeat(2, 1fr); }
-            .header-content { flex-direction: row; flex-wrap: nowrap; justify-content: space-between; overflow-x: auto; } /* Ensure nowrap on mobile */
+            .header-content { flex-direction: row; flex-wrap: nowrap; justify-content: space-between; overflow-x: auto; }
             .auth-buttons { margin-top: 0; width: auto; }
             .banner-container { height: 250px; }
             .banner-content h1 { font-size: 1.8rem; }
@@ -522,7 +463,6 @@
     </style>
 </head>
 <body>
-    <!-- Preloader Overlay -->
     <div id="preloader">
         <div class="loader"></div>
     </div>
@@ -540,7 +480,6 @@
         <ul class="nav-list primary-nav">
           <li class="nav-item"><a href="#" class="nav-link"><span class="material-symbols-rounded">home</span><span class="nav-label">হোম</span></a></li>
           
-          <!-- Services Dropdown (Updated with Correct Links) -->
           <li class="nav-item dropdown-container">
             <a href="#" class="nav-link dropdown-toggle">
               <span class="material-symbols-rounded">medical_services</span>
@@ -548,7 +487,6 @@
               <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
             </a>
             <ul class="dropdown-menu">
-              <!-- Corrected link for Blood Donor -->
               <li class="nav-item"><a href="donar_find.html" class="nav-link"><span class="material-symbols-rounded">bloodtype</span><span class="nav-label">ব্লাড ডোনার</span></a></li>
               <li class="nav-item"><a href="all-search.html?type=police" class="nav-link"><span class="material-symbols-rounded">local_police</span><span class="nav-label">পুলিশ স্টেশন</span></a></li>
               <li class="nav-item"><a href="all-search.html?type=hospital" class="nav-link"><span class="material-symbols-rounded">health_and_safety</span><span class="nav-label">হাসপাতাল ও ডাক্তার</span></a></li>
@@ -594,16 +532,11 @@
                         <span id="siteName">পাশে আছি</span>
                     </a>
                     <div class="auth-buttons">
-                        <!-- Login Button (Visible when logged out) -->
                         <a href="login.html" class="btn btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> লগ ইন</a>
                         
-                        <!-- Profile Icon (Visible when logged in) -->
-                        <div class="profile-container" id="profileContainer">
+                        <div class="profile-container" id="profileContainer" onclick="window.location.href='profile.html'">
                             <div class="profile-icon-btn">
                                 <i class="fas fa-user"></i>
-                            </div>
-                            <div class="dialog-box" id="profileDialog">
-                                স্বাগতম! সফলভাবে লগ ইন হয়েছে।
                             </div>
                         </div>
 
@@ -618,7 +551,6 @@
         <section class="banner-section">
             <div class="container">
                 <div class="banner-container">
-                    <!-- Banner images will be loaded via JS for DB/Admin Panel integration -->
                     <div class="banner-slide active"></div>
                     <div class="banner-slide"></div>
                     <div class="banner-slide"></div>
@@ -640,16 +572,13 @@
         <section class="news-ticker-wrapper">
             <div class="ticker-heading">জরুরি ঘোষণা</div>
             <div class="ticker-content" id="newsTickerContent">
-                <!-- Ticker content will be injected via JS -->
             </div>
         </section>
 
         <section class="services-section">
             <div class="container">
                 <h2 class="section-title">সেবাসমূহ</h2>
-                <!-- Services Grid (Updated with Correct Links) -->
                 <div class="services-grid">
-                    <!-- Corrected link for Blood Donor -->
                     <a href="donar_find.html" class="service-btn"><i class="fas fa-tint service-icon"></i><span class="service-name">ব্লাড ডোনার</span></a>
                     <a href="all-search.html?type=police" class="service-btn"><i class="fas fa-shield-alt service-icon"></i><span class="service-name">পুলিশ স্টেশন</span></a>
                     <a href="all-search.html?type=hospital" class="service-btn"><i class="fas fa-hospital service-icon"></i><span class="service-name">হাসপাতাল ও ডাক্তার</span></a>
@@ -682,7 +611,6 @@
             <div class="container">
                 <div class="section-header">
                     <h2>আপডেট</h2>
-                    <p>আমাদের সাম্প্রতিক কার্যক্রম ও ঘোষণা।</p>
                 </div>
                 <div class="updates-grid" id="updatesGrid"></div>
             </div>
@@ -733,13 +661,10 @@
         </footer>
     </main>
 
-    <!-- Firebase SDK Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // TODO: Replace the following with your app's Firebase project configuration
-        // See: https://firebase.google.com/docs/web/setup#config-object
         const firebaseConfig = {
             apiKey: "AIzaSyBnKQr2k2ZWnPlEZiJtMDewv6z3Z7p3kiU",
             authDomain: "pacheacchi.firebaseapp.com",
@@ -750,42 +675,38 @@
             measurementId: "G-M34YKMYHQ8"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Function to fetch Site Settings (Logo, Title, News)
         async function fetchSiteSettings() {
             try {
-                // Assuming you have a collection named 'settings' and a document named 'siteConfig'
-                // You can change 'settings' and 'siteConfig' to match your database structure
                 const docRef = doc(db, "settings", "siteConfig");
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    // Update Logo
                     if (data.logoUrl) {
                         document.getElementById('siteLogo').src = data.logoUrl;
                     }
                     
-                    // Update Site Name
                     if (data.siteName) {
                         document.getElementById('siteName').innerText = data.siteName;
                     }
 
-                    // Update News Ticker
-                    if (data.newsTicker && Array.isArray(data.newsTicker)) {
+                    if (data.newsTicker) {
                         const tickerContentDiv = document.getElementById('newsTickerContent');
-                        let tickerHTML = '';
-                        data.newsTicker.forEach(newsItem => {
-                            tickerHTML += `<span class="ticker-item">${newsItem}</span>`;
-                        });
-                        tickerContentDiv.innerHTML = tickerHTML;
+                        let newsContent = "";
+                        
+                        if (Array.isArray(data.newsTicker)) {
+                            newsContent = data.newsTicker.join('<span class="ticker-square"></span>');
+                        } else if (typeof data.newsTicker === 'string') {
+                            newsContent = data.newsTicker.split(',').join('<span class="ticker-square"></span>');
+                        }
+
+                        tickerContentDiv.innerHTML = `<span class="ticker-item">${newsContent}</span>`;
                     }
                 } else {
-                    console.log("No such document! Loading default.");
                     loadDefaultSettings();
                 }
             } catch (error) {
@@ -794,52 +715,142 @@
             }
         }
 
-        // Fallback to local storage or defaults if Firebase fails or not configured
         function loadDefaultSettings() {
              const defaultLogo = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
              const savedLogo = localStorage.getItem('siteLogo') || defaultLogo;
              document.getElementById('siteLogo').src = savedLogo;
              
-             // Default News
              const defaultTickerNews = [
                 "আমাদের প্ল্যাটফর্মে নতুন রক্তদাতারা যোগ দিচ্ছেন প্রতিদিন।",
                 "জরুরি রক্তের প্রয়োজনে এখনই রক্তদাতা খুঁজুন।"
             ];
             const tickerContentDiv = document.getElementById('newsTickerContent');
-            let tickerHTML = '';
-            defaultTickerNews.forEach(newsItem => {
-                tickerHTML += `<span class="ticker-item">${newsItem}</span>`;
-            });
-            tickerContentDiv.innerHTML = tickerHTML;
+            tickerContentDiv.innerHTML = `<span class="ticker-item">${defaultTickerNews.join('<span class="ticker-square"></span>')}</span>`;
+        }
+        
+        async function loadEmergencyRequests() {
+            const emergencyGrid = document.getElementById('emergencyGrid');
+            try {
+                const q = query(collection(db, "emergency_requests"), orderBy("createdAt", "desc"), limit(6));
+                const querySnapshot = await getDocs(q);
+
+                emergencyGrid.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    emergencyGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">বর্তমানে কোনো জরুরি রক্তের প্রয়োজন নেই।</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const emData = doc.data();
+                    renderIndexEmergencyCard(emData, emergencyGrid);
+                });
+
+            } catch (error) {
+                console.error("Error fetching emergency requests:", error);
+                emergencyGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">তথ্য লোড করতে সমস্যা হয়েছে।</p>';
+            }
         }
 
-        // Call fetch function
+        function renderIndexEmergencyCard(emData, container) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'emergency-card';
+            
+            const creatorName = emData.creatorName || "অজানা";
+            
+            const divisionMap = {
+                "barishal": "বরিশাল",
+                "chattogram": "চট্টগ্রাম",
+                "dhaka": "ঢাকা",
+                "khulna": "খুলনা",
+                "mymensingh": "ময়মনসিংহ",
+                "rajshahi": "রাজশাহী",
+                "rangpur": "রংপুর",
+                "sylhet": "সিলেট"
+            };
+            const divName = divisionMap[emData.division] || emData.division;
+            const postedTime = "কিছুক্ষণ আগে"; 
+
+            cardDiv.innerHTML = `
+                <div class="e-card-top">
+                    <div class="blood-group-badge">${emData.bloodGroup}</div>
+                    <div class="creator-info">
+                        <span class="creator-name"><i class="fas fa-user-circle"></i> ${creatorName}</span>
+                    </div>
+                    <div class="e-card-tags">
+                        <span class="posted-time">${postedTime}</span>
+                        <span class="urgent-tag">Urgent</span>
+                    </div>
+                </div>
+                <div class="e-details">
+                    <h4>${emData.location}</h4>
+                    <p><i class="fas fa-user"></i> রোগী: ${emData.patientName}</p>
+                    <p><i class="fas fa-notes-medical"></i> সমস্যা: ${emData.problem}</p>
+                    <p><i class="fas fa-map-marked-alt"></i> ঠিকানা: ${emData.upazilaText}, ${emData.districtText}, ${divName}</p>
+                </div>
+                <div class="e-actions">
+                    <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${emData.mobile}'"><i class="fas fa-phone-alt"></i> কল করুন</button>
+                    <button class="btn btn-sm btn-outline">ডিটেইলস</button>
+                </div>
+            `;
+            container.appendChild(cardDiv);
+        }
+
+        async function loadUpdates() {
+            const updatesGrid = document.getElementById('updatesGrid');
+            try {
+                const q = query(collection(db, "updates"), orderBy("date", "desc"), limit(3));
+                const querySnapshot = await getDocs(q);
+
+                updatesGrid.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    updatesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">কোন নতুন আপডেট নেই।</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const imageHTML = data.imageUrl ? `<div class="update-card-image"><img src="${data.imageUrl}" alt="${data.title}"></div>` : '';
+                    const card = `
+                        <div class="update-card">
+                            ${imageHTML}
+                            <div class="update-card-content">
+                                <h3>${data.title}</h3>
+                                <p>${data.content}</p>
+                                <div class="update-card-timestamp">সম্প্রতি আপডেটকৃত</div>
+                            </div>
+                        </div>`;
+                    updatesGrid.innerHTML += card;
+                });
+            } catch (error) {
+                console.error("Error fetching updates:", error);
+            }
+        }
+
         fetchSiteSettings();
+        loadEmergencyRequests();
+        loadUpdates();
     </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- LOADER LOGIC ---
             const preloader = document.getElementById('preloader');
             window.addEventListener('load', () => {
-                // Fade out the loader
                 preloader.style.opacity = '0';
                 preloader.style.visibility = 'hidden';
-                // Allow removing it from DOM after transition
                 setTimeout(() => {
                     preloader.style.display = 'none';
                 }, 500);
             });
             
-            // --- BANNER SLIDER LOGIC ---
             function initializeBanners() {
                 const defaultBanners = [
                     "https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
                     "https://images.unsplash.com/photo-1584634731339-252c581abfc5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
                     "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80"
                 ];
-                // Try LocalStorage first (or could be moved to Firebase later)
                 const savedBanners = JSON.parse(localStorage.getItem('siteBanners')) || defaultBanners;
                 
                 const bannerSlides = document.querySelectorAll('.banner-slide');
@@ -851,45 +862,26 @@
             }
             initializeBanners();
 
-            // --- LOGIN / PROFILE LOGIC ---
             const loginBtn = document.getElementById('loginBtn');
             const profileContainer = document.getElementById('profileContainer');
-            const profileDialog = document.getElementById('profileDialog');
             const logoutItem = document.getElementById('logout-button-item');
 
-            // Check Login Status (Simulated)
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
             if (isLoggedIn) {
-                // Hide Login Button
                 loginBtn.style.display = 'none';
-                // Show Profile Icon
                 profileContainer.style.display = 'block';
-                // Show Sidebar Logout
                 document.body.classList.add('user-logged-in');
-
-                // Trigger Dialog Box Animation
-                setTimeout(() => {
-                    profileDialog.classList.add('show');
-                }, 1000); // 1 sec delay after load
-
-                // Hide after 3 seconds
-                setTimeout(() => {
-                    profileDialog.classList.remove('show');
-                }, 4000); // 1s delay + 3s show time
             } else {
                 loginBtn.style.display = 'inline-flex';
                 profileContainer.style.display = 'none';
             }
 
-            // Note: In a real app, clicking logout would set 'isLoggedIn' to false.
             logoutItem.addEventListener('click', (e) => {
                 localStorage.setItem('isLoggedIn', 'false');
                 window.location.reload();
             });
 
-
-            // --- Banner Slider Animation ---
             const bannerSlides = document.querySelectorAll('.banner-slide');
             const bannerDots = document.querySelectorAll('.banner-dot');
             let currentSlide = 0;
@@ -912,94 +904,6 @@
                 });
             });
 
-            // --- EMERGENCY SECTION LOGIC ---
-            const emergencyGrid = document.getElementById('emergencyGrid');
-            
-            function loadIndexEmergencyCards() {
-                const cards = JSON.parse(localStorage.getItem('emergencyCards')) || [];
-                const now = new Date().getTime();
-                const validCards = cards.filter(card => new Date(card.deletionTime).getTime() > now);
-                const cardsToShow = validCards.slice(0, 10);
-                
-                emergencyGrid.innerHTML = '';
-                
-                if (cardsToShow.length === 0) {
-                    emergencyGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">বর্তমানে কোনো জরুরি রক্তের প্রয়োজন নেই।</p>';
-                    return;
-                }
-
-                cardsToShow.forEach(renderIndexEmergencyCard);
-            }
-
-            function renderIndexEmergencyCard(emData) {
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'emergency-card';
-                
-                const creatorName = emData.creatorName || "অজানা";
-                
-                const divisionMap = {
-                    "barishal": "বরিশাল",
-                    "chattogram": "চট্টগ্রাম",
-                    "dhaka": "ঢাকা",
-                    "khulna": "খুলনা",
-                    "mymensingh": "ময়মনসিংহ",
-                    "rajshahi": "রাজশাহী",
-                    "rangpur": "রংপুর",
-                    "sylhet": "সিলেট"
-                };
-                const divName = divisionMap[emData.division] || emData.division;
-
-                const postedTime = "এইমাত্র"; 
-
-                cardDiv.innerHTML = `
-                    <div class="e-card-top">
-                        <div class="blood-group-badge">${emData.bloodGroup}</div>
-                        <div class="creator-info">
-                            <span class="creator-name"><i class="fas fa-user-circle"></i> ${creatorName}</span>
-                        </div>
-                        <div class="e-card-tags">
-                            <span class="posted-time">${postedTime}</span>
-                            <span class="urgent-tag">Urgent</span>
-                        </div>
-                    </div>
-                    <div class="e-details">
-                        <h4>${emData.location}</h4>
-                        <p><i class="fas fa-user"></i> রোগী: ${emData.patientName}</p>
-                        <p><i class="fas fa-notes-medical"></i> সমস্যা: ${emData.problem}</p>
-                        <p><i class="fas fa-map-marked-alt"></i> ঠিকানা: ${emData.upazilaText}, ${emData.districtText}, ${divName}</p>
-                    </div>
-                    <div class="e-actions">
-                        <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${emData.mobile}'"><i class="fas fa-phone-alt"></i> কল করুন</button>
-                        <button class="btn btn-sm btn-outline">ডিটেইলস</button>
-                    </div>
-                `;
-                emergencyGrid.prepend(cardDiv);
-            }
-
-            loadIndexEmergencyCards();
-            
-            // --- UPDATES SECTION LOGIC ---
-            const updatesGrid = document.getElementById('updatesGrid');
-            const updatesData = [];
-
-            function createUpdateCardHTML(data) {
-                const posted = "কিছুক্ষণ আগে"; 
-                const imageHTML = data.imageUrl ? `<div class="update-card-image"><img src="${data.imageUrl}" alt="${data.title}"></div>` : '';
-                return `<div class="update-card">${imageHTML}<div class="update-card-content"><h3>${data.title}</h3><p>${data.content}</p><div class="update-card-timestamp">${posted}</div></div></div>`;
-            }
-
-            function renderUpdates() {
-                if (updatesData.length === 0) { 
-                    updatesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">কোন নতুন আপডেট নেই।</p>'; 
-                    return; 
-                }
-                let content = '';
-                updatesData.forEach(update => { content += createUpdateCardHTML(update); });
-                updatesGrid.innerHTML = content;
-            }
-            renderUpdates();
-
-            // --- Sidebar and Theme Logic ---
             const sidebar = document.querySelector(".sidebar");
             const backdrop = document.querySelector(".sidebar-backdrop");
             const openMenuBtn = document.querySelector(".sidebar-menu-button-header");
@@ -1037,7 +941,6 @@
                 }
             });
 
-            // --- Dropdown Menu Script ---
             const toggleDropdown = (dropdown, menu, isOpen) => {
               dropdown.classList.toggle("open", isOpen);
               menu.style.height = isOpen ? `${menu.scrollHeight}px` : "0";
@@ -1060,12 +963,6 @@
                     closeAllDropdowns();
                 }
                 toggleDropdown(dropdown, menu, !isOpen);
-              });
-            });
-        });
-    </script>
-</body>
-</html>nu, !isOpen);
               });
             });
         });
