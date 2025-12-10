@@ -610,7 +610,7 @@
         <section class="updates-section">
             <div class="container">
                 <div class="section-header">
-                    <h2>নিউজ & আপডেট'স</h2>
+                    <h2>আপডেট</h2>
                 </div>
                 <div class="updates-grid" id="updatesGrid"></div>
             </div>
@@ -648,9 +648,9 @@
                     <div class="footer-column">
                         <h3>যোগাযোগ</h3>
                         <ul class="footer-links">
-                            <li><i class="fas fa-map-marker-alt"></i> ঢাকা, বাংলাদেশ</li>
-                            <li><i class="fas fa-phone"></i> +880 1XXX-XXXXXX</li>
-                            <li><i class="fas fa-envelope"></i> info@bloodlink.com</li>
+                            <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress">ঢাকা, বাংলাদেশ</span></li>
+                            <li><i class="fas fa-phone"></i> <span id="footerPhone">+880 1XXX-XXXXXX</span></li>
+                            <li><i class="fas fa-envelope"></i> <span id="footerEmail">info@bloodlink.com</span></li>
                         </ul>
                     </div>
                 </div>
@@ -828,9 +828,26 @@
             }
         }
 
+        async function fetchContactSettings() {
+            try {
+                const docRef = doc(db, "settings", "contact");
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if(data.address) document.getElementById('footerAddress').innerText = data.address;
+                    if(data.phone) document.getElementById('footerPhone').innerText = data.phone;
+                    if(data.email) document.getElementById('footerEmail').innerText = data.email;
+                }
+            } catch (error) {
+                console.error("Error fetching contact settings:", error);
+            }
+        }
+
         fetchSiteSettings();
         loadEmergencyRequests();
         loadUpdates();
+        fetchContactSettings();
     </script>
 
     <script>
