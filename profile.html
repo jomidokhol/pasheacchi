@@ -1522,7 +1522,7 @@
                     loadEmergencyCards();
                     checkDonorStatus(user.uid);
                 } else {
-                    window.location.href = "login.html";
+                    window.location.replace("login.html");
                 }
             });
 
@@ -1710,7 +1710,6 @@
                         upazilaText: selectedUpazilaOption ? selectedUpazilaOption.textContent : '',
                         imageUrl: finalImageUrl,
                         uid: currentUser.uid,
-                        // Update basic info triggers update timestamp as well for profile consistency
                         lastUpdateTimestamp: new Date().toISOString()
                     };
 
@@ -2056,7 +2055,7 @@
 
             saveStatusEditBtn.addEventListener('click', async () => {
                 const newDate = lastDonationDateInput.value;
-                const now = new Date().toISOString(); // Requirement 1: Update timestamp
+                const now = new Date().toISOString(); 
                 
                 try {
                     const updateData = { 
