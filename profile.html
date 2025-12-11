@@ -6,20 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>পাশে আছি - প্রোফাইল</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <!-- Linking Google Fonts for Sidebar Icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
-        /* --- General/Shared Styles --- */
         :root {
             --primary: #e53935;
             --primary-dark: #c62828;
             --white: #fff;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
-
-            /* Light Mode Variables */
             --background-color: #eef7ff; 
             --text-color: #333;
             --text-light: #666;
@@ -34,7 +29,6 @@
             --section-bg: rgba(255, 255, 255, 0.65);
         }
 
-        /* Dark Mode Styles */
         body.dark-mode {
             --background-color: #121212;
             --text-color: #f5f5f5;
@@ -56,8 +50,15 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
         
+        input:focus, button:focus, select:focus, textarea:focus, a:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
         html {
             scroll-behavior: smooth;
         }
@@ -115,7 +116,6 @@
             color: black;
         }
 
-        /* Notification Styles */
         .notification { position: fixed; top: 0; left: 50%; transform: translate(-50%, -150%); background-color: #2c3e50; color: var(--white); padding: 15px 25px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 2000; font-weight: 500; transition: transform 0.4s ease-in-out; }
         .notification.show { transform: translate(-50%, 20px); }
         .notification.success { background-color: #4CAF50; }
@@ -168,7 +168,6 @@
         .social-links a:hover { background: var(--primary); transform: translateY(-3px); }
         .copyright { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.9rem; color: #aaa; }
 
-        /* Sidebar Styles */
         .sidebar-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0;
@@ -218,7 +217,6 @@
         body.dark-mode #theme-toggle .light-mode-icon { display: none; }
         body.dark-mode #theme-toggle .dark-mode-icon { display: block; }
 
-        /* Dropdown Styles */
         .sidebar-nav .nav-item { position: relative; }
         .sidebar-nav .dropdown-container .dropdown-icon { margin-left: auto; transition: transform 0.4s ease; }
         .sidebar-nav .dropdown-container.open .dropdown-icon { transform: rotate(180deg); }
@@ -238,7 +236,6 @@
             font-size: 0.9rem;
         }
 
-        /* --- Page Specific Styles --- */
         main {
             padding-top: 40px;
         }
@@ -331,7 +328,6 @@
         }
         .add-btn:hover { background-color: #c62828; }
         
-        /* Donor Card Styles */
         .donor-card-container {
             position: relative;
             width: 100%;
@@ -386,7 +382,6 @@
             border-color: rgba(255, 255, 255, 0.15);
         }
         
-        /* Edit Icon (Right) */
         .donor-card-edit-icon {
             position: absolute;
             top: -10px;
@@ -413,11 +408,10 @@
             background-color: #555; 
         }
 
-        /* Publish Icon (Left of Edit Icon) */
         .donor-card-publish-icon {
             position: absolute;
             top: -10px;
-            right: 35px; /* Spaced to the left of edit icon */
+            right: 35px;
             width: 32px;
             height: 32px;
             background-color: #fff; 
@@ -513,7 +507,6 @@
             font-size: 0.9em;
         }
 
-        /* Edit fields inside donor card */
         .donor-card-edit-fields {
             max-height: 0;
             overflow: hidden;
@@ -561,7 +554,6 @@
             padding: 8px 16px;
         }
         
-        /* Modal Styles */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.4); z-index: 1002; 
@@ -709,7 +701,6 @@
             transform: scale(1.05);
         }
 
-        /* Responsive Styles */
         @media (max-width: 768px) { 
             .profile-info { flex-direction: column; text-align: center; }
             .profile-image { margin-right: 0; margin-bottom: 15px; }
@@ -726,7 +717,6 @@
             }
         }
         
-        /* Image Loader Styles */
         .image-loader-container {
             position: relative;
             display: inline-block; 
@@ -840,7 +830,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Emergency Card Styles */
         .emergency-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -926,10 +915,8 @@
     </style>
 </head>
 <body>
-    <!-- Notification Div -->
     <div id="notification" class="notification"></div>
 
-    <!-- Sidebar and Backdrop -->
     <div class="sidebar-backdrop"></div>
     <aside class="sidebar">
       <header class="sidebar-header">
@@ -973,8 +960,8 @@
                   <span class="nav-label"></span>
               </a>
           </li>
-          <li class="nav-item" id="logout-button-item" style="display:none;">
-              <a href="#" class="nav-link">
+          <li class="nav-item" id="logout-button-item">
+              <a href="#" class="nav-link" id="logoutBtn">
                   <span class="material-symbols-rounded">logout</span>
                   <span class="nav-label">লগ আউট</span>
               </a>
@@ -983,12 +970,10 @@
       </nav>
     </aside>
 
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
                 <a href="index.html" class="logo">
-                    <!-- Image Loader Added -->
                     <div class="image-loader-container logo-image-container">
                         <div class="loading-spinner">
                             <div class="spinner-wrapper">
@@ -1016,7 +1001,6 @@
             <section class="section profile-section">
                 <div class="profile-left">
                     <div class="profile-info">
-                        <!-- Image Loader Added -->
                         <div class="image-loader-container profile-image-container">
                             <div class="loading-spinner">
                                 <div class="spinner-wrapper">
@@ -1053,7 +1037,6 @@
                 <div class="donor-card-container" id="donorCardContainer">
                     <div class="donor-card-edit-backdrop" id="donorCardBackdrop"></div>
                     <div class="donor-card-new">
-                        <!-- Publish Icon added here -->
                         <div class="donor-card-publish-icon" id="publishDonorCardBtn" title="পাবলিশ স্ট্যাটাস পরিবর্তন করুন">
                              <i class="fas fa-eye-slash"></i>
                         </div>
@@ -1063,7 +1046,6 @@
                         </div>
                         <div class="donor-card-header">
                             <div class="donor-info">
-                                <!-- Image Loader Added -->
                                 <div class="image-loader-container donor-card-image-container">
                                     <div class="loading-spinner">
                                         <div class="spinner-wrapper">
@@ -1107,14 +1089,12 @@
             <section class="section emergency-section">
                 <h2 class="section-title">জরুরি রক্তের প্রয়োজন</h2>
                 <p>জরুরি অবস্থায় রক্তের জন্যে পোস্ট বানান❕</p>
-                <!-- Container for Emergency Cards -->
                 <div id="emergencyPostContainer" class="emergency-grid"></div>
                 <button class="add-btn" id="addEmergencyBtn">যুক্ত করুন</button>
             </section>
         </div>
     </main>
 
-    <!-- Modals -->
     <div class="modal" id="profileModal">
         <div class="modal-content">
             <h2 class="modal-title">প্রোফাইল এডিট করুন</h2>
@@ -1224,7 +1204,6 @@
             <div class="avatar-grid-container">
                 <h3>মেয়েদের আভাতার</h3>
                 <div class="avatar-grid" id="femaleAvatars">
-                    <!-- Image Loaders Added -->
                     <div class="image-loader-container avatar-image-container">
                          <div class="loading-spinner"><div class="spinner-wrapper"><div class="spinner-circle"></div><div class="spinner-circle"></div><img src="https://i.ibb.co/QFtV51LQ/1000018745.png" alt="Loading Icon" class="loader-icon"></div></div>
                          <img src="https://i.postimg.cc/MTPtbd0v/female_avatar_animation_gif_download_5768476.gif" class="avatar-choice managed-image" alt="Female Avatar 1" style="position: absolute; top:0; left: 0; width: 100%; height: 100%; object-fit: cover;">
@@ -1248,7 +1227,6 @@
                 </div>
                 <h3>ছেলেদের আভাতার</h3>
                 <div class="avatar-grid" id="maleAvatars">
-                    <!-- Image Loaders Added -->
                     <div class="image-loader-container avatar-image-container">
                          <div class="loading-spinner"><div class="spinner-wrapper"><div class="spinner-circle"></div><div class="spinner-circle"></div><img src="https://i.ibb.co/QFtV51LQ/1000018745.png" alt="Loading Icon" class="loader-icon"></div></div>
                          <img src="https://i.postimg.cc/XNzJCd5c/male-character-wearing-hoodie-animation-gif-download-5242887.gif" class="avatar-choice managed-image" alt="Male Avatar 1" style="position: absolute; top:0; left: 0; width: 100%; height: 100%; object-fit: cover;">
@@ -1288,13 +1266,12 @@
         </div>
     </div>
     
-    <!-- Modified Emergency Modal -->
     <div class="modal" id="emergencyModal">
         <div class="modal-content">
             <button type="button" class="modal-close-btn" id="closeEmergencyModal">&times;</button>
             <h2 class="modal-title">জরুরি রক্তের প্রয়োজন যুক্ত করুন</h2>
             <form id="emergencyForm">
-                <input type="hidden" id="em_id"> <!-- Hidden ID field for Editing -->
+                <input type="hidden" id="em_id">
                 <div class="form-group"> <label for="em_patientName">রুগীর নাম</label> <input type="text" id="em_patientName" class="form-control" required> </div>
                 <div class="form-group">
                     <label for="em_bloodGroup">ব্লাড গ্রুপ</label>
@@ -1336,7 +1313,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -1351,12 +1327,11 @@
     
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <!-- Firebase SDK Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBnKQr2k2ZWnPlEZiJtMDewv6z3Z7p3kiU",
             authDomain: "pacheacchi.firebaseapp.com",
@@ -1367,15 +1342,12 @@
             measurementId: "G-M34YKMYHQ8"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
-    </script>
-    
-    <script>
+
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- Notification Logic ---
             const notification = document.getElementById('notification');
             let notificationTimeout;
             function showNotification(message, type) {
@@ -1385,13 +1357,10 @@
                 notificationTimeout = setTimeout(() => { notification.classList.remove('show'); }, 3500);
             }
 
-            // --- START: Image Loader Script ---
             function initializeImageLoaders() {
                 const imageContainers = document.querySelectorAll('.image-loader-container');
-                
                 imageContainers.forEach(container => {
                     const image = container.querySelector('.managed-image');
-                    
                     if (image.complete) {
                         container.classList.add('loaded');
                     } else {
@@ -1406,9 +1375,7 @@
                 });
             }
             initializeImageLoaders(); 
-            // --- END: Image Loader Script ---
 
-            // --- Sidebar, Theme Toggle, and Dropdown functionality ---
             const sidebar = document.querySelector(".sidebar");
             const backdrop = document.querySelector(".sidebar-backdrop");
             const openMenuBtn = document.querySelector(".sidebar-menu-button-header");
@@ -1454,7 +1421,6 @@
               });
             });
 
-            // --- Modal Elements ---
             const editProfileBtn = document.getElementById('editProfileBtn');
             const profileModal = document.getElementById('profileModal');
             const cancelProfileEdit = document.getElementById('cancelProfileEdit');
@@ -1468,8 +1434,8 @@
             const emergencyModal = document.getElementById('emergencyModal');
             const closeEmergencyModal = document.getElementById('closeEmergencyModal');
             const emergencyForm = document.getElementById('emergencyForm');
+            const logoutBtn = document.getElementById('logoutBtn');
 
-            // --- NEW: Avatar Modal Elements ---
             const openAvatarSelectorBtn = document.getElementById('openAvatarSelectorBtn');
             const avatarSelectorModal = document.getElementById('avatarSelectorModal');
             const closeAvatarModal = document.getElementById('closeAvatarModal');
@@ -1477,7 +1443,6 @@
             const editImageInput = document.getElementById('editImage');
             let tempSelectedAvatar = ""; 
 
-            // --- Profile Edit Form Elements ---
             const profileForm = document.getElementById('profileForm');
             const nameInput = document.getElementById('name');
             const birthDateInput = document.getElementById('birthDate');
@@ -1494,10 +1459,47 @@
             const mobileLabel = document.getElementById('mobileLabel');
             const privacyMessage = document.getElementById('privacyMessage');
             
-            // --- DATA ---
+            let currentUser = null;
+            let currentProfileData = {};
+
             const locationData = { "barishal": { "districts": { "barguna": { "name": "বরগুনা", "upazilas": ["আমতলী", "বরগুনা সদর", "বামনা", "বেতাগী", "পাথরঘাটা", "তালতলী"] }, "barishal": { "name": "বরিশাল", "upazilas": ["আগৈলঝাড়া", "বাবুগঞ্জ", "বাকেরগঞ্জ", "বানারীপাড়া", "গৌরনদী", "হিজলা", "বরিশাল সদর", "মেহেন্দিগঞ্জ", "মুলাদী", "উজিরপুর"] }, "bhola": { "name": "ভোলা", "upazilas": ["ভোলা সদর", "বোরহানউদ্দিন", "চরফ্যাশন", "দৌলতখান", "লালমোহন", "মনপুরা", "তজুমদ্দিন"] }, "jhalokati": { "name": "ঝালকাঠি", "upazilas": ["ঝালকাঠি সদর", "কাঁঠালিয়া", "নলছিটি", "রাজাপুর"] }, "patuakhali": { "name": "পটুয়াখালী", "upazilas": ["বাউফল", "দশমিনা", "গলাচিপা", "কলাপাড়া", "মির্জাগঞ্জ", "পটুয়াখালী সদর", "দুমকি", "রাঙ্গাবালী"] }, "pirojpur": { "name": "পিরোজপুর", "upazilas": ["ভান্ডারিয়া", "কাউখালী", "মঠবাড়িয়া", "নাজিরপুর", "নেছারাবাদ", "পিরোজপুর সদর", "জিয়ানগর"] } } }, "chattogram": { "districts": { "bandarban": { "name": "বান্দরবান", "upazilas": ["আলীকদম", "বান্দরবান সদর", "লামা", "নাইক্ষ্যংছড়ি", "রোয়াংছড়ি", "রুমা", "থানচি"] }, "brahmanbaria": { "name": "ব্রাহ্মণবাড়িয়া", "upazilas": ["আখাউড়া", "বাঞ্ছারামপুর", "ব্রাহ্মণবাড়িয়া সদর", "কসবা", "নবীনগর", "নাসিরনগর", "সরাইল", "আশুগঞ্জ", "বিজয়নগর"] }, "chandpur": { "name": "চাঁদপুর", "upazilas": ["চাঁদপুর সদর", "ফরিদগঞ্জ", "হাইমচর", "হাজীগঞ্জ", "কচুয়া", "মতলব উত্তর", "মতলব দক্ষিণ", "শাহরাস্তি"] }, "chattogram": { "name": "চট্টগ্রাম", "upazilas": ["আনোয়ারা", "বাঁশখালী", "বোয়ালখালী", "চন্দনাইש", "ফটিকছড়ি", "হাটহাজারী", "কর্ণফুলী", "লোহাগাড়া", "মীরসরাই", "পটিয়া", "রাঙ্গুনিয়া", "রাউজান", "সন্দ্বীপ", "সাতকানিয়া", "সীতাকুণ্ড"] }, "cumilla": { "name": "কুমিল্লা", "upazilas": ["বরুড়া", "ব্রাহ্মণপাড়া", "বুড়িচং", "চান্দিনা", "চৌদ্দগ্রাম", "দাউদকান্দি", "দেবিদ্বার", "হোমনা", "লাকসাম", "মনোহরগঞ্জ", "মেঘনা", "মুরাদনগর", "নাঙ্গলকোট", "কুমিল্লা সদর", "সদর দক্ষিণ", "তিতাস"] }, "coxs_bazar": { "name": "কক্সবাজার", "upazilas": ["চকরিয়া", "কক্সবাজার সদর", "কুতুবদিয়া", "মহেশখালী", "রামু", "টেকনাফ", "উখিয়া", "পেকুয়া", "ঈদগাঁও"] }, "feni": { "name": "ফেনী", "upazilas": ["ছাগলনাইয়া", "দাগনভূঞা", "ফেনী সদর", "পরশুরাম", "সোনাগাজী", "ফুলগাজী"] }, "khagrachhari": { "name": "খাগড়াছড়ি", "upazilas": ["দীঘিনালা", "খাগড়াছড়ি সদর", "লক্ষ্মীছড়ি", "মহালছড়ি", "মানিকছড়ি", "মাটিরাঙ্গা", "পানছড়ি", "রামগড়"] }, "lakshmipur": { "name": "লক্ষ্মীপুর", "upazilas": ["লক্ষ্মীপুর সদর", "কমলনগর", "রায়পুর", "রামগঞ্জ", "রামগতি"] }, "noakhali": { "name": "নোয়াখালী", "upazilas": ["বেগমগঞ্জ", "চাটখিল", "কোম্পানীগঞ্জ", "হাতিয়া", "সেনবাগ", "সুবর্ণচর", "নোয়াখালী সদর", "কবিরহাট"] }, "rangamati": { "name": "রাঙ্গামাটি", "upazilas": ["বাঘাইছড়ি", "বরকল", "কাপ্তাই", "জুড়াছড়ি", "লংগদু", "নানিয়ারচর", "রাজস্থলী", "রাঙ্গামাটি সদর", "কাউখালী", "বিলাইছড়ি"] } } }, "dhaka": { "districts": { "dhaka": { "name": "ঢাকা", "upazilas": ["সাভার", "ধামরাই", "কেরানীগঞ্জ", "নবাবগঞ্জ", "দোহার"] }, "faridpur": { "name": "ফরিদপুর", "upazilas": ["ফরিদপুর সদর", "আলফাডাঙ্গা", "বোয়ালমারী", "সদরপুর", "নগরকান্দা", "ভাঙ্গা", "চরভদ্রাসন", "মধুখালী", "সালথা"] }, "gazipur": { "name": "গাজীপুর", "upazilas": ["গাজীপুর সদর", "কালিয়াকৈর", "কালীগঞ্জ", "কাপাসিয়া", "শ্রীপুর"] }, "gopalganj": { "name": "গোপালগঞ্জ", "upazilas": ["গোপালগঞ্জ সদর", "কাশিয়ানী", "কোটালীপাড়া", "মুকসুদপুর", "টুঙ্গীপাড়া"] }, "kishoreganj": { "name": "কিশোরগঞ্জ", "upazilas": ["অষ্টগ্রাম", "বাজিতপুর", "ভৈরব", "হোসেনপুর", "ইটনা", "কটিয়াদী", "করিমগঞ্জ", "কিশোরগঞ্জ সদর", "কুলিয়ারচর", "মিঠামইন", "নিকলী", "পাকুন্দিয়া", "তাড়াইল"] }, "madaripur": { "name": "মাদারীপুর", "upazilas": ["কালকিনি", "মাদারীপুর সদর", "রাজৈর", "শিবচর", "ডাসার"] }, "manikganj": { "name": "মানিকগঞ্জ", "upazilas": ["দৌলতপুর", "ঘিওর", "হরিরামপুর", "মানিকগঞ্জ সদর", "সাটুরিয়া", "শিবালয়", "সিঙ্গাইর"] }, "munshiganj": { "name": "মুন্সিগঞ্জ", "upazilas": ["গজারিয়া", "লৌহজং", "মুন্সিগঞ্জ সদর", "সিরাজদিখান", "শ্রীনগর", "টঙ্গিবাড়ী"] }, "narayanganj": { "name": "নারায়ণগঞ্জ", "upazilas": ["আড়াইহাজার", "বন্দর", "নারায়ণগঞ্জ সদর", "রূপগঞ্জ", "সোনারগাঁও"] }, "narsingdi": { "name": "নরসিংদী", "upazilas": ["বেলাব", "মনোহরদী", "নরসিংদী সদর", "পলাশ", "রায়পুরা", "শিবপুর"] }, "rajbari": { "name": "রাজবাড়ী", "upazilas": ["বালিয়াকান্দি", "গোয়ালন্দ", "পাংশা", "রাজবাড়ী সদর", "কালুখালী"] }, "shariatpur": { "name": "শরীয়তপুর", "upazilas": ["ভেদরগঞ্জ", "ডামুড্যা", "গোসাইরহাট", "নড়িয়া", "শরীয়তপুর সদর", "জাজিরা"] }, "tangail": { "name": "টাঙ্গাইল", "upazilas": ["বাসাইল", "ভুঞাপুর", "দেলদুয়ার", "ধনবাড়ী", "ঘাটাইল", "গোপালপুর", "মধুপুর", "মির্জাপুর", "নাগরপুর", "সখিপুর", "টাঙ্গাইল সদর", "কালিহাতী"] } } }, "khulna": { "districts": { "bagerhat": { "name": "বাগেরহাট", "upazilas": ["বাগেরহাট সদর", "চিতলমারী", "ফকিরহাট", "কচুয়া", "মোল্লাহাট", "মোংলা", "মোরেলগঞ্জ", "রামপাল", "শরণখোলা"] }, "chuadanga": { "name": "চুয়াডাঙ্গা", "upazilas": ["আলমডাঙ্গা", "চুয়াডাঙ্গা সদর", "দামুড়হুদা", "জীবননগর"] }, "jashore": { "name": "যশোর", "upazilas": ["অভয়নগর", "বাঘারপাড়া", "চৌগাছা", "ঝিকরগাছা", "কেশবপুর", "যশোর সদর", "মণিরামপুর", "শার্শা"] }, "jhenaidah": { "name": "ঝিনাইদহ", "upazilas": ["হরিণাকুণ্ডু", "ঝিনাইদহ সদর", "কালীগঞ্জ", "কোটচাঁদপুর", "মহেশপুর", "শৈলকুপা"] }, "khulna": { "name": "খুলনা", "upazilas": ["বটিয়াঘাটা", "দাকোপ", "দিঘলিয়া", "ডুমুরিয়া", "ফুলতলা", "কয়রা", "পাইকগাছা", "রূপসা", "তেরখাদা"] }, "kushtia": { "name": "কুষ্টিয়া", "upazilas": ["ভেড়ামারা", "দৌলতপুর", "খোকসা", "কুমারখালী", "কুষ্টিয়া সদর", "মিরপুর"] }, "magura": { "name": "মাগুরা", "upazilas": ["মাগুরা সদর", "মহম্মদপুর", "শালিখা", "শ্রীপুর"] }, "meherpur": { "name": "মেহেরপুর", "upazilas": ["গাংনী", "মেহেরপুর সদর", "মুজিবনগর"] }, "narail": { "name": "নড়াইল", "upazilas": ["কালিয়া", "লোহাগড়া", "নড়াইল সদর"] }, "satkhira": { "name": "সাতক্ষীরা", "upazilas": ["আশাশুনি", "দেবহাটা", "কলারোয়া", "সাতক্ষীরা সদর", "শ্যামনগর", "তালা", "কালিগঞ্জ"] } } }, "mymensingh": { "districts": { "jamalpur": { "name": "জামালপুর", "upazilas": ["বকশীগঞ্জ", "দেওয়ানগঞ্জ", "ইসলামপুর", "জামালপুর সদর", "মাদারগঞ্জ", "মেলান্দহ", "সরিষাবাড়ী"] }, "mymensingh": { "name": "ময়মনসিংহ", "upazilas": ["ভালুকা", "ত্রিশাল", "হালুয়াঘাট", "ফুলপুর", "ধোবাউড়া", "ময়মনসিংহ সদর", "মুক্তাগাছা", "ফুলবাড়ীয়া", "গফরগাঁও", "ঈশ্বরগঞ্জ", "নান্দাইল", "গৌরীপুর", "তারাকান্দা"] }, "netrokona": { "name": "নেত্রকোনা", "upazilas": ["বারহাট্টা", "দুর্গাপুর", "খালিয়াজুরী", "কলমাকান্দা", "কেন্দুয়া", "মদন", "মোহনগঞ্জ", "নেত্রকোনা সদর", "পূর্বধলা", "আটপাড়া"] }, "sherpur": { "name": "শেরপুর", "upazilas": ["ঝিনাইগাতী", "নকলা", "নালিতাবাড়ী", "শেরপুর সদর", "শ্রীবরদী"] } } }, "rajshahi": { "districts": { "bogra": { "name": "বগুড়া", "upazilas": ["আদমদীঘি", "বগুড়া সদর", "ধুনট", "দুপচাঁচিয়া", "গাবতলী", "কাহালু", "নন্দীগ্রাম", "সারিয়াকান্দি", "শাজাহานপুর", "শেরপুর", "শিবগঞ্জ", "সোনাতলা"] }, "joypurhat": { "name": "জয়পুরহাট", "upazilas": ["আক্কেলপুর", "জয়পুরহাট সদর", "কালাই", "ক্ষেতলাল", "পাঁচবিবি"] }, "naogaon": { "name": "নওগাঁ", "upazilas": ["আত্রাই", "বদলগাছী", "ধামইরহাট", "মান্দা", "মহাদেবপুর", "নওগাঁ সদর", "নিয়ামতপুর", "পত্নীতলা", "পোরশা", "রানীনগর", "সাপাহার"] }, "natore": { "name": "নাটোর", "upazilas": ["বাগাতিপাড়া", "বড়াইগ্রাম", "গুরুদাসপুর", "লালপুর", "নাটোর সদর", "সিংড়া", "নলডাঙ্গা"] }, "chapainawabganj": { "name": "চাঁপাইনবাবগঞ্জ", "upazilas": ["ভোলাহাট", "গোমস্তাপুর", "নাচোল", "নবাবগঞ্জ সদর", "শিবগঞ্জ"] }, "pabna": { "name": "পাবনা", "upazilas": ["আটঘরিয়া", "বেড়া", "ভাঙ্গুড়া", "চাটমোহর", "ফরিদপুর", "ঈশ্বরদী", "পাবনা সদর", "সাঁথিয়া", "সুজানগর"] }, "rajshahi": { "name": "রাজশাহী", "upazilas": ["বাঘা", "বাগমারা", "চারঘাট", "দুর্গাপুর", "গোদাগাড়ী", "মোহনপুর", "পবা", "পুঠিয়া", "তানোর"] }, "sirajganj": { "name": "সিরাজগঞ্জ", "upazilas": ["বেলকুচি", "চৌহালি", "কামারখন্দ", "কাজীপুর", "রায়গঞ্জ", "শাহজাদপুর", "সিরাজগঞ্জ সদর", "তাড়াশ", "উল্লাপাড়া"] } } }, "rangpur": { "districts": { "dinajpur": { "name": "দিনাজপুর", "upazilas": ["বিরামপুর", "বীরগঞ্জ", "বিরল", "বোচাগঞ্জ", "চিরিরবন্দর", "ফুলবাড়ী", "ঘোড়াঘাট", "হাকিমপুর", "কাহারোল", "খানসামা", "দিনাজপুর সদর", "নবাবগঞ্জ", "পার্বতীপুর"] }, "gaibandha": { "name": "গাইবান্ধা", "upazilas": ["ফুলছড়ি", "গাইবান্ধা সদর", "গোবিন্দগঞ্জ", "পলাশবাড়ী", "সাদুল্লাপুর", "সাঘাটা", "সুন্দরগঞ্জ"] }, "kurigram": { "name": "কুড়িগ্রাম", "upazilas": ["ভুরুঙ্গামারী", "চর রাজিবপুর", "চিলমারী", "ফুলবাড়ী", "কুড়িগ্রাম সদর", "নাগেশ্বরী", "রাজারহাট", "রৌমারী", "উলিপুর"] }, "lalmonirhat": { "name": "লালমনিরহাট", "upazilas": ["আদিতমারী", "হাতীবান্ধা", "কালীগঞ্জ", "লালমনিরহাট সদর", "পাটগ্রাম"] }, "nilphamari": { "name": "নীলফামারী", "upazilas": ["ডিমলা", "ডোমার", "জলঢাকা", "কিশোরগঞ্জ", "নীলফামারী সদর", "সৈয়দপুর"] }, "panchagarh": { "name": "পঞ্চগড়", "upazilas": ["আটোয়ারী", "বোদা", "দেবীগঞ্জ", "পঞ্চগড় সদর", "তেতুলিয়া"] }, "rangpur": { "name": "রংপুর", "upazilas": ["বদরগঞ্জ", "গঙ্গাচড়া", "কাউনিয়া", "রংপুর সদর", "মিঠাপুকুর", "পীরগাছা", "পীরগঞ্জ", "তারাগঞ্জ"] }, "thakurgaon": { "name": "ঠাকুরগাঁও", "upazilas": ["বালিয়াডাঙ্গী", "হরিপুর", "পীরগঞ্জ", "রানীশংকৈল", "ঠাকুরগাঁও সদর"] } } }, "sylhet": { "districts": { "habiganj": { "name": "হবিগঞ্জ", "upazilas": ["আজমিরীগঞ্জ", "বাহুবল", "בানিয়াচং", "চুনারুঘাট", "হবিগঞ্জ সদর", "লাখাই", "মাধবপুর", "নবীগঞ্জ"] }, "moulvibazar": { "name": "মৌলভীবাজার", "upazilas": ["বড়লেখা", "জুড়ী", "কমলগঞ্জ", "কুলাউড়া", "মৌলভীবাজার সদর", "রাজনগর", "শ্রীমঙ্গল"] }, "sunamganj": { "name": "সুনামগঞ্জ", "upazilas": ["বিশ্বম্ভরপুর", "ছাতক", "দিরাই", "ধর্মপাশা", "দোয়ারাবাজার", "জগন্নাথপুর", "জামালগঞ্জ", "শাল্লা", "সুনামগঞ্জ সদর", "তাহিরপুর", "দক্ষিণ সুনামগঞ্জ", "মধ্যনগর"] }, "sylhet": { "name": "সিলেট", "upazilas": ["বালাগঞ্জ", "বিয়ানীবাজার", "বিশ্বনাথ", "কোম্পানীগঞ্জ", "ফেঞ্চুগঞ্জ", "গোলাপগঞ্জ", "গোয়াইনঘাট", "জৈন্তাপুর", "কানাইঘাট", "সিলেট সদর", "জকিগঞ্জ", "দক্ষিণ সুরমা", "ওসমানীনগর"] } } } };
 
-            // --- Helper Functions ---
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('logout-button-item').style.display = 'block';
+
+                    const docRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        currentProfileData = docSnap.data();
+                    } else {
+                        currentProfileData = {
+                            name: user.displayName || 'আপনার নাম',
+                            imageUrl: user.photoURL || 'https://via.placeholder.com/120',
+                            email: user.email,
+                            mobile: ''
+                        };
+                    }
+                    updateProfileDisplay(currentProfileData);
+                    loadEmergencyCards();
+                    checkDonorStatus(user.uid);
+                } else {
+                    window.location.href = "login.html";
+                }
+            });
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        window.location.href = "index.html";
+                    }).catch((error) => {
+                        console.error("Logout Error:", error);
+                    });
+                });
+            }
+
             function calculateAge(birthDateValue) {
                 if (!birthDateValue) return '';
                 const birthDate = new Date(birthDateValue);
@@ -1546,7 +1548,6 @@
                 saveBtn.disabled = !(isFormValid && allTermsChecked);
             }
             
-            // --- Event Listeners for Profile Form ---
             birthDateInput.addEventListener('change', function() {
                 const age = calculateAge(this.value);
                 ageInput.value = age;
@@ -1586,6 +1587,13 @@
                 document.getElementById('donorCardBloodGroup').textContent = data.bloodGroup || 'Null';
                 const address = (data.upazilaText && data.districtText) ? `${data.upazilaText}, ${data.districtText}` : 'ডোনারের ঠিকানা';
                 document.getElementById('donorCardAddress').textContent = address;
+                
+                if (data.lastDonationDate) {
+                    calculateAndUpdateAvailability(data.lastDonationDate);
+                    document.getElementById('lastDonationDate').value = data.lastDonationDate;
+                } else {
+                    calculateAndUpdateAvailability(null);
+                }
             }
 
             function updateProfileDisplay(data) {
@@ -1601,13 +1609,11 @@
                 }
                 
                 updateDonorCard(data);
-
-                localStorage.setItem('profileData', JSON.stringify(data));
             }
 
             if (editProfileBtn) {
                 editProfileBtn.addEventListener('click', () => {
-                    const savedData = JSON.parse(localStorage.getItem('profileData')) || {};
+                    const savedData = currentProfileData;
                     nameInput.value = savedData.name || '';
                     mobileInput.value = savedData.mobile || '';
                     birthDateInput.value = savedData.birthDate || '';
@@ -1635,7 +1641,7 @@
             if (cancelProfileEdit) { cancelProfileEdit.addEventListener('click', () => { profileModal.style.display = 'none'; }); }
             
             if (profileForm) {
-                profileForm.addEventListener('submit', (e) => {
+                profileForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     if(saveBtn.disabled) return;
                     
@@ -1656,33 +1662,41 @@
                         districtText: selectedDistrictOption ? selectedDistrictOption.textContent : '',
                         upazila: upazilaSelect.value,
                         upazilaText: selectedUpazilaOption ? selectedUpazilaOption.textContent : '',
-                        imageUrl: finalImageUrl
+                        imageUrl: finalImageUrl,
+                        uid: currentUser.uid
                     };
-                    
-                    document.querySelectorAll('#profileImage, #donorCardImage').forEach(img => {
-                       img.parentElement.classList.remove('loaded');
-                    });
-                    
-                    updateProfileDisplay(updatedData);
-                    profileModal.style.display = 'none';
-                    alert('প্রোফাইল তথ্য সফলভাবে আপডেট করা হয়েছে!');
+
+                    try {
+                        await setDoc(doc(db, "users", currentUser.uid), updatedData, { merge: true });
+                        await updateProfile(currentUser, {
+                            displayName: updatedData.name,
+                            photoURL: updatedData.imageUrl
+                        });
+
+                        currentProfileData = { ...currentProfileData, ...updatedData };
+                        
+                        document.querySelectorAll('#profileImage, #donorCardImage').forEach(img => {
+                           img.parentElement.classList.remove('loaded');
+                        });
+                        
+                        updateProfileDisplay(currentProfileData);
+                        
+                        const donorDoc = await getDoc(doc(db, "donors", currentUser.uid));
+                        if (donorDoc.exists()) {
+                            await setDoc(doc(db, "donors", currentUser.uid), updatedData, { merge: true });
+                        }
+
+                        profileModal.style.display = 'none';
+                        showNotification('প্রোফাইল তথ্য সফলভাবে আপডেট করা হয়েছে!', 'success');
+                    } catch (error) {
+                        console.error("Error updating profile: ", error);
+                        showNotification('আপডেট ব্যর্থ হয়েছে।', 'error');
+                    }
                 });
             }
             
-            // --- Other Modals Logic ---
             if (closeDonationModal) { closeDonationModal.addEventListener('click', () => { donationModal.style.display = 'none'; }); }
-            if (donationForm) {
-                donationForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    console.log('ডোনেশন কার্ড তথ্য:', { donationDate: document.getElementById('donationDate').value, donationCenter: document.getElementById('donationCenter').value });
-                    donationModal.style.display = 'none';
-                    alert('ডোনেশন কার্ড সফলভাবে যুক্ত করা হয়েছে!');
-                });
-            }
             
-            // --- EMERGENCY MODAL LOGIC ---
-            
-            // Emergency Location Variables
             const emDivision = document.getElementById('em_division');
             const emDistrict = document.getElementById('em_district');
             const emUpazila = document.getElementById('em_upazila');
@@ -1743,20 +1757,18 @@
             }
             if (closeEmergencyModal) { closeEmergencyModal.addEventListener('click', () => { emergencyModal.style.display = 'none'; }); }
             
-            // Load and Render Emergency Cards
             function loadEmergencyCards() {
-                const cards = JSON.parse(localStorage.getItem('emergencyCards')) || [];
-                const now = new Date().getTime();
-                const validCards = cards.filter(card => new Date(card.deletionTime).getTime() > now);
+                if (!currentUser) return;
                 
-                if (validCards.length !== cards.length) {
-                    localStorage.setItem('emergencyCards', JSON.stringify(validCards));
-                }
-
-                emergencyPostContainer.innerHTML = '';
-                validCards.forEach(renderEmergencyCard);
-
-                setTimeout(loadEmergencyCards, 60000);
+                const q = query(collection(db, "emergency_requests"), where("creatorId", "==", currentUser.uid));
+                
+                onSnapshot(q, (snapshot) => {
+                    emergencyPostContainer.innerHTML = '';
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        renderEmergencyCard({ ...data, id: doc.id });
+                    });
+                });
             }
 
             function renderEmergencyCard(emData) {
@@ -1766,16 +1778,10 @@
                 
                 const creatorName = emData.creatorName || "অজানা";
                 
-                // Division Name Mapping for Bengali Display
                 const divisionMap = {
-                    "barishal": "বরিশাল",
-                    "chattogram": "চট্টগ্রাম",
-                    "dhaka": "ঢাকা",
-                    "khulna": "খুলনা",
-                    "mymensingh": "ময়মনসিংহ",
-                    "rajshahi": "রাজশাহী",
-                    "rangpur": "রংপুর",
-                    "sylhet": "সিলেট"
+                    "barishal": "বরিশাল", "chattogram": "চট্টগ্রাম", "dhaka": "ঢাকা",
+                    "khulna": "খুলনা", "mymensingh": "ময়মনসিংহ", "rajshahi": "রাজশাহী",
+                    "rangpur": "রংপুর", "sylhet": "সিলেট"
                 };
                 const divName = divisionMap[emData.division] || emData.division;
 
@@ -1790,7 +1796,6 @@
                             <span class="urgent-tag">Urgent</span>
                         </div>
                         <div class="e-card-actions">
-                            <button class="e-action-btn edit" onclick="editEmergencyCard('${emData.id}')" title="এডিট করুন"><i class="fas fa-edit"></i></button>
                             <button class="e-action-btn delete" onclick="deleteEmergencyCard('${emData.id}')" title="ডিলিট করুন"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>
@@ -1802,54 +1807,32 @@
                     </div>
                     <div class="e-actions">
                         <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${emData.mobile}'"><i class="fas fa-phone-alt"></i> কল করুন</button>
-                        <button class="btn btn-sm btn-outline">ডিটেইলস</button>
                     </div>
                 `;
                 emergencyPostContainer.prepend(cardDiv);
             }
 
-            window.editEmergencyCard = function(id) {
-                const cards = JSON.parse(localStorage.getItem('emergencyCards')) || [];
-                const card = cards.find(c => c.id === id);
-                if (card) {
-                    document.getElementById('em_id').value = card.id;
-                    document.getElementById('em_patientName').value = card.patientName;
-                    document.getElementById('em_bloodGroup').value = card.bloodGroup;
-                    document.getElementById('em_problem').value = card.problem;
-                    document.getElementById('em_location').value = card.location;
-                    document.getElementById('em_mobile').value = card.mobile;
-                    document.getElementById('em_deletionTime').value = card.deletionTime;
-                    
-                    emDivision.value = card.division;
-                    populateEmergencyDistricts(card.division);
-                    emDistrict.value = card.district;
-                    populateEmergencyUpazilas(card.division, card.district);
-                    emUpazila.value = card.upazila;
-                    
-                    emergencyModal.style.display = 'flex';
-                }
-            };
-
-            window.deleteEmergencyCard = function(id) {
+            window.deleteEmergencyCard = async function(id) {
                 if(confirm('আপনি কি নিশ্চিত যে আপনি এই কার্ডটি ডিলিট করতে চান?')) {
-                    const cards = JSON.parse(localStorage.getItem('emergencyCards')) || [];
-                    const updatedCards = cards.filter(c => c.id !== id);
-                    localStorage.setItem('emergencyCards', JSON.stringify(updatedCards));
-                    loadEmergencyCards(); 
+                    try {
+                        await deleteDoc(doc(db, "emergency_requests", id));
+                        showNotification("কার্ড ডিলিট করা হয়েছে", "success");
+                    } catch (e) {
+                        console.error(e);
+                        showNotification("ডিলিট করা যায়নি", "error");
+                    }
                 }
             };
 
             if (emergencyForm) {
-                emergencyForm.addEventListener('submit', (e) => {
+                emergencyForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     
-                    const emId = emIdInput.value;
                     const selectedDistrictOption = emDistrict.options[emDistrict.selectedIndex];
                     const selectedUpazilaOption = emUpazila.options[emUpazila.selectedIndex];
-                    const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
 
                     const emData = {
-                        id: emId || Date.now().toString(), 
+                        creatorId: currentUser.uid,
                         patientName: document.getElementById('em_patientName').value,
                         bloodGroup: document.getElementById('em_bloodGroup').value,
                         location: document.getElementById('em_location').value,
@@ -1861,34 +1844,22 @@
                         districtText: selectedDistrictOption ? selectedDistrictOption.textContent : '',
                         upazila: emUpazila.value,
                         upazilaText: selectedUpazilaOption ? selectedUpazilaOption.textContent : '',
-                        creatorName: profileData.name || 'অজানা' 
+                        creatorName: currentProfileData.name || 'অজানা',
+                        createdAt: new Date().toISOString()
                     };
 
-                    let cards = JSON.parse(localStorage.getItem('emergencyCards')) || [];
-
-                    if (emId) {
-                        const index = cards.findIndex(c => c.id === emId);
-                        if (index !== -1) {
-                            cards[index] = emData;
-                        }
-                    } else {
-                        cards.push(emData);
+                    try {
+                        await addDoc(collection(db, "emergency_requests"), emData);
+                        emergencyModal.style.display = 'none';
+                        showNotification('জরুরি রক্তের প্রয়োজন সফলভাবে যুক্ত করা হয়েছে!', 'success');
+                        emergencyForm.reset();
+                    } catch (error) {
+                        console.error("Error adding document: ", error);
+                        showNotification('পোস্ট করতে সমস্যা হয়েছে', 'error');
                     }
-
-                    localStorage.setItem('emergencyCards', JSON.stringify(cards));
-                    loadEmergencyCards(); 
-
-                    console.log('জরুরি রক্তের প্রয়োজন তথ্য:', emData);
-                    emergencyModal.style.display = 'none';
-                    alert(emId ? 'কার্ড আপডেট করা হয়েছে!' : 'জরুরি রক্তের প্রয়োজন সফলভাবে যুক্ত করা হয়েছে!');
-                    emergencyForm.reset();
                 });
             }
 
-            loadEmergencyCards();
-
-            
-            // --- Avatar Modal Logic ---
             if (openAvatarSelectorBtn) {
                 openAvatarSelectorBtn.addEventListener('click', () => {
                     avatarSelectorModal.style.display = 'flex';
@@ -1909,7 +1880,6 @@
                 });
             });
 
-
             window.addEventListener('click', (e) => {
                 if (e.target === profileModal) profileModal.style.display = 'none';
                 if (e.target === donationModal) donationModal.style.display = 'none';
@@ -1917,12 +1887,6 @@
                 if (e.target === avatarSelectorModal) avatarSelectorModal.style.display = 'none'; 
             });
             
-            const savedProfileData = JSON.parse(localStorage.getItem('profileData'));
-            if (savedProfileData) {
-                updateProfileDisplay(savedProfileData);
-            }
-            
-            // --- Donor Card Logic & Publish Button ---
             const donorCardContainer = document.getElementById('donorCardContainer');
             const donorCardBackdrop = document.getElementById('donorCardBackdrop');
             const editDonorStatusBtn = document.getElementById('editDonorCardStatus');
@@ -1950,8 +1914,7 @@
 
                 const timeDiff = today.getTime() - lastDonationDate.getTime();
                 const dayDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-
-                if (dayDiff >= 90) {
+if (dayDiff >= 90) {
                     donorAvailabilityStatusEl.innerHTML = `Available <i class="fas fa-check-circle"></i>`;
                     donorAvailabilityStatusEl.style.color = '#28a745'; 
                 } else {
@@ -1961,31 +1924,13 @@
                 }
             }
 
-            const savedLastDonationDate = localStorage.getItem('lastDonationDate');
-            if (savedLastDonationDate) {
-                lastDonationDateInput.value = savedLastDonationDate;
-                calculateAndUpdateAvailability(savedLastDonationDate);
-            } else {
-                calculateAndUpdateAvailability(null); 
-            }
-
             const openEditMode = () => {
                 donorCardContainer.classList.add('edit-mode');
             };
 
             const closeEditMode = () => {
                 donorCardContainer.classList.remove('edit-mode');
-                const savedDate = localStorage.getItem('lastDonationDate');
-                lastDonationDateInput.value = savedDate || '';
-                calculateAndUpdateAvailability(savedDate);
             };
-
-            function triggerBlinkHighlight(element) {
-                element.classList.add('blink-highlight');
-                setTimeout(() => {
-                    element.classList.remove('blink-highlight');
-                }, 3000); 
-            }
 
             editDonorStatusBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); 
@@ -1996,61 +1941,82 @@
                 }
             });
 
-            // --- Publish Button Functionality ---
-            let isPublished = localStorage.getItem('isDonorPublished') === 'true';
-            updatePublishIcon(isPublished);
+            async function checkDonorStatus(uid) {
+                try {
+                    const docRef = doc(db, "donors", uid);
+                    const docSnap = await getDoc(docRef);
+                    updatePublishIcon(docSnap.exists());
+                } catch (error) {
+                    console.error(error);
+                }
+            }
 
-            publishDonorCardBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); 
-                isPublished = !isPublished;
-                localStorage.setItem('isDonorPublished', isPublished);
-                updatePublishIcon(isPublished);
-                showNotification(
-                    isPublished ? 'আপনার প্রোফাইল এখন উন্মুক্ত করা হয়েছে' : 'আপনার প্রোফাইল এখন কেউ দেখতে পারবে না',
-                    isPublished ? 'success' : 'private'
-                );
-            });
-
-            function updatePublishIcon(status) {
+            function updatePublishIcon(isPublished) {
                 const icon = publishDonorCardBtn.querySelector('i');
-                if (status) {
+                if (isPublished) {
                     publishDonorCardBtn.classList.add('active');
                     icon.className = 'fas fa-eye';
+                    publishDonorCardBtn.setAttribute('data-published', 'true');
                 } else {
                     publishDonorCardBtn.classList.remove('active');
                     icon.className = 'fas fa-eye-slash';
+                    publishDonorCardBtn.setAttribute('data-published', 'false');
                 }
             }
+
+            publishDonorCardBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (!currentUser) return;
+
+                const isPublished = publishDonorCardBtn.getAttribute('data-published') === 'true';
+
+                if (isPublished) {
+                    try {
+                        await deleteDoc(doc(db, "donors", currentUser.uid));
+                        updatePublishIcon(false);
+                        showNotification('আপনার প্রোফাইল এখন কেউ দেখতে পারবে না', 'private');
+                    } catch (error) {
+                        showNotification('সমস্যা হয়েছে', 'error');
+                    }
+                } else {
+                    if (!currentProfileData.mobile || !currentProfileData.bloodGroup) {
+                        alert("অনুগ্রহ করে আগে আপনার প্রোফাইল তথ্য (নাম, রক্ত, মোবাইল) সম্পূর্ণ করুন।");
+                        return;
+                    }
+                    
+                    try {
+                        const donorData = { ...currentProfileData, uid: currentUser.uid };
+                        await setDoc(doc(db, "donors", currentUser.uid), donorData);
+                        updatePublishIcon(true);
+                        showNotification('আপনার প্রোফাইল এখন ডোনার লিস্টে দেখা যাবে', 'success');
+                    } catch (error) {
+                        showNotification('সমস্যা হয়েছে', 'error');
+                    }
+                }
+            });
 
             cancelStatusEditBtn.addEventListener('click', closeEditMode);
             donorCardBackdrop.addEventListener('click', closeEditMode);
 
-            saveStatusEditBtn.addEventListener('click', () => {
+            saveStatusEditBtn.addEventListener('click', async () => {
                 const newDate = lastDonationDateInput.value;
-                if (newDate) {
-                    localStorage.setItem('lastDonationDate', newDate);
-                } else {
-                    localStorage.removeItem('lastDonationDate');
-                }
-                calculateAndUpdateAvailability(newDate);
-                closeEditMode();
-                alert('স্ট্যাটাস সফলভাবে সেভ করা হয়েছে!');
-            });
-
-            lastDonationDateInput.addEventListener('input', () => {
-                calculateAndUpdateAvailability(lastDonationDateInput.value);
-            });
-
-            const closeAndBlinkElements = [donorCardName, donorCardBloodGroup, donorCardAddress, callDonorBtn];
-            closeAndBlinkElements.forEach(element => {
-                element.addEventListener('click', () => {
-                    if (donorCardContainer.classList.contains('edit-mode')) {
-                        closeEditMode();
-                        triggerBlinkHighlight(editProfileBtn);
+                
+                try {
+                    await setDoc(doc(db, "users", currentUser.uid), { lastDonationDate: newDate }, { merge: true });
+                    
+                    const isPublished = publishDonorCardBtn.getAttribute('data-published') === 'true';
+                    if (isPublished) {
+                         await setDoc(doc(db, "donors", currentUser.uid), { lastDonationDate: newDate }, { merge: true });
                     }
-                });
-            });
 
+                    currentProfileData.lastDonationDate = newDate;
+                    calculateAndUpdateAvailability(newDate);
+                    closeEditMode();
+                    showNotification('স্ট্যাটাস সফলভাবে সেভ করা হয়েছে!', 'success');
+                } catch (error) {
+                    showNotification('সেভ করতে সমস্যা হয়েছে', 'error');
+                }
+            });
 
             if (callDonorBtn) {
                 callDonorBtn.addEventListener('click', (e) => {
@@ -2060,11 +2026,10 @@
                     }
 
                     e.preventDefault();
-                    const profileData = JSON.parse(localStorage.getItem('profileData'));
-                    const mobileNumber = profileData ? profileData.mobile : null;
+                    const mobileNumber = currentProfileData.mobile;
 
-                    if (!mobileNumber || mobileNumber.trim() === "") {
-                        alert('ডোনারের প্রোফাইল থেকে মোবাইল নম্বর পাওয়া যায়নি। অনুগ্রহ করে প্রোফাইল এডিট করুন।');
+                    if (!mobileNumber) {
+                        alert('মোবাইল নম্বর পাওয়া যায়নি।');
                         return;
                     }
 
@@ -2076,7 +2041,6 @@
                         navigator.clipboard.writeText(mobileNumber).then(() => {
                             alert(`মোবাইল নম্বর (${mobileNumber}) ক্লিপবোর্ডে কপি করা হয়েছে।`);
                         }).catch(err => {
-                            console.error('Could not copy text: ', err);
                             alert('দুঃখিত, নম্বরটি কপি করা যায়নি।');
                         });
                     }
