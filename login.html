@@ -51,11 +51,21 @@
           -webkit-user-select: none;
           -ms-user-select: none;
           user-select: none;
+          
+          /* --- নীল হাইলাইট বন্ধ করার কোড --- */
+          -webkit-tap-highlight-color: transparent; /* মোবাইলে টাচ হাইলাইট বন্ধ */
+          outline: none; /* ফোকাস আউটলাইন বন্ধ */
         }
         
         input {
             user-select: text; 
             -webkit-user-select: text;
+        }
+        
+        /* ফোকাস করার সময় ব্রাউজারের ডিফল্ট আউটলাইন বা বর্ডার কালার রিমুভ */
+        input:focus, button:focus, a:focus {
+            outline: none !important;
+            box-shadow: none !important;
         }
 
         body {
@@ -93,7 +103,7 @@
           height: 100%;
           background: var(--login-bg);
           transition: all 0.6s ease;
-          z-index: 100; /* ফিক্স: সাইন আপ সেকশনের আইকন ঢেকে ফেলার জন্য */
+          z-index: 100;
         }
         .wrapper.active .form.login {
           bottom: -15%;
@@ -158,9 +168,13 @@
         .form.login input {
           border: 1px solid #aaa;
         }
+        
+        /* কাস্টম ফোকাস স্টাইল (নীল রঙের বদলে হালকা শ্যাডো) */
         .form.login input:focus {
-          box-shadow: 0 1px 0 #ddd;
+          border-color: #ddd; 
+          box-shadow: 0 1px 0 #ddd !important;
         }
+        
         form .checkbox {
           display: flex;
           align-items: center;
@@ -198,7 +212,8 @@
 
         form input[type="submit"]:hover,
         form input[type="submit"]:focus {
-            outline: 2px solid var(--text-color-main);
+             /* ফোকাস আউটলাইন রিমুভ করে কাস্টম বর্ডার দেওয়া হয়েছে */
+            outline: 2px solid var(--text-color-main) !important;
             outline-offset: 2px;
         }
         
@@ -355,18 +370,18 @@
                 createUserWithEmailAndPassword, 
                 signInWithEmailAndPassword, 
                 GoogleAuthProvider, 
-                signInWithPopup 
+                signInWithPopup,
+                updateProfile /* ইউজারের নাম সেভ করার জন্য এই ফাংশনটি ইম্পোর্ট করা হলো */
             } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
             // TODO: Replace with your actual Firebase project configuration
             const firebaseConfig = {
-                apiKey: "AIzaSyBnKQr2k2ZWnPlEZiJtMDewv6z3Z7p3kiU",
-  authDomain: "pacheacchi.firebaseapp.com",
-  projectId: "pacheacchi",
-  storageBucket: "pacheacchi.firebasestorage.app",
-  messagingSenderId: "679996219070",
-  appId: "1:679996219070:web:871b64fb4a5be296eac8ef",
-  measurementId: "G-M34YKMYHQ8"
+                apiKey: "YOUR_API_KEY_HERE",
+                authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+                projectId: "YOUR_PROJECT_ID",
+                storageBucket: "YOUR_PROJECT_ID.appspot.com",
+                messagingSenderId: "YOUR_SENDER_ID",
+                appId: "YOUR_APP_ID"
             };
 
             const app = initializeApp(firebaseConfig);
@@ -380,6 +395,7 @@
 
             signupForm.addEventListener('submit', (e) => {
                 e.preventDefault();
+                const name = document.getElementById('signup-name').value; // নাম সংগ্রহ
                 const email = document.getElementById('signup-email').value;
                 const password = document.getElementById('signup-pass').value;
                 const repass = document.getElementById('signup-repass').value;
@@ -391,8 +407,21 @@
 
                 createUserWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
-                        alert("Signup Successful!");
-                        window.location.href = "profile.html";
+                        const user = userCredential.user;
+                        
+                        // ইউজারের নাম (Display Name) ফায়ারবেসে আপডেট করা হচ্ছে
+                        updateProfile(user, {
+                            displayName: name,
+                            // এখানে ডিফল্ট ছবি দেওয়া যেতে পারে যদি চান
+                            // photoURL: "https://example.com/user.png" 
+                        }).then(() => {
+                            alert("Signup Successful!");
+                            window.location.href = "profile.html"; // প্রোফাইল পেজে রিডাইরেক্ট
+                        }).catch((error) => {
+                            console.error("Profile update error", error);
+                            // নাম আপডেট না হলেও সাইন আপ হয়েছে, তাই পেজ রিডাইরেক্ট করা যেতে পারে
+                            window.location.href = "profile.html";
+                        });
                     })
                     .catch((error) => {
                         alert("Signup Error: " + error.message);
@@ -407,7 +436,8 @@
                 signInWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
                         alert("Login Successful!");
-                        window.location.href = "index.html";
+                        // প্রোফাইল পেজে বা ইনডেক্স পেজে পাঠানো হবে
+                        window.location.href = "index.html"; 
                     })
                     .catch((error) => {
                         alert("Login Error: " + error.message);
@@ -418,6 +448,7 @@
                 e.preventDefault();
                 signInWithPopup(auth, provider)
                     .then((result) => {
+                        // গুগলের ডাটা অটোমেটিক পাওয়া যাবে profile.html এ
                         window.location.href = "profile.html";
                     }).catch((error) => {
                         alert("Google Error: " + error.message);
