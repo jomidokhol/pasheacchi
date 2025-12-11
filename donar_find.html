@@ -43,7 +43,21 @@
             --modal-bg: rgba(42, 42, 42, 0.95);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* নীল হাইলাইট বন্ধ */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        
+        input:focus, button:focus, a:focus, select:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
         html { scroll-behavior: smooth; }
         body { background-color: var(--background-color); color: var(--text-color); line-height: 1.6; }
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; }
@@ -55,15 +69,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--background-color); /* Matches theme background */
-            z-index: 9999; /* Ensures it stays on top of everything */
+            background-color: var(--background-color); 
+            z-index: 9999; 
             display: flex;
             justify-content: center;
             align-items: center;
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
 
-        /* From Uiverse.io by SchawnnahJ */ 
         .loader {
             position: relative;
             width: 2.5em;
@@ -121,7 +134,6 @@
         .logo span { font-size: 2.0rem; font-weight: bold; }
         .auth-buttons { display: flex; gap: 15px; align-items: center; }
 
-        /* --- NEW STYLES FOR DONOR BUTTON & DIALOG --- */
         .donor-btn-wrapper { position: relative; }
         .donor-dialog {
             position: absolute;
@@ -186,7 +198,7 @@
         .sidebar-nav .dropdown-container.open .dropdown-icon { transform: rotate(180deg); }
         .sidebar-nav .dropdown-menu { list-style: none; padding-left: 20px; height: 0; overflow: hidden; transition: height 0.4s ease; display: flex; flex-direction: column; gap: 2px; }
 
-        /* Filter Bar Styles (Updated Z-Index) */
+        /* Filter Bar Styles */
         .filter-bar { display: flex; justify-content: center; gap: 12px; margin-bottom: 35px; flex-wrap: wrap; align-items: center; transition: all 0.4s ease; position: relative; z-index: 500; }
         
         .filter-btn { background-color: var(--card-bg); border: 1px solid var(--text-light); color: var(--text-color); border-radius: 30px; padding: 8px 18px; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; height: 40px; }
@@ -206,11 +218,10 @@
         
         .filter-item { position: relative; }
         
-        /* Updated Filter Dropdown Z-Index */
         .filter-dropdown { 
             position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(10px); 
             background: var(--card-bg); border-radius: 8px; box-shadow: var(--shadow); padding: 10px; width: 220px; 
-            z-index: 1000; /* Increased Z-Index to stay above cards */
+            z-index: 1000; 
             opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; 
             border: 1px solid rgba(0,0,0,0.1); max-height: 300px; overflow-y: auto;
         }
@@ -277,24 +288,20 @@
         .spinner-circle:nth-child(2) { border-left-color: #00ff00; border-right-color: #00ff00; animation-delay: 0.2s; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Media Queries for Mobile Filter */
         @media (max-width: 768px) {
             .filter-options-wrapper { gap: 8px; }
             .filter-btn { padding: 6px 12px; font-size: 0.85rem; width: auto; justify-content: center; }
             .filter-dropdown { width: 200px; }
-            /* Mobile adjustment for new donor button if needed */
             .donor-btn-wrapper .btn { padding: 6px 12px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Main Page Preloader -->
     <div id="preloader">
         <div class="loader"></div>
     </div>
 
-    <!-- Sidebar -->
     <div class="sidebar-backdrop"></div>
     <aside class="sidebar">
       <header class="sidebar-header">
@@ -307,7 +314,6 @@
       </header>
       
       <nav class="sidebar-nav">
-        <!-- Main Menu -->
         <ul class="nav-list primary-nav">
           <li class="nav-item"><a href="index.html" class="nav-link"><span class="material-symbols-rounded">home</span><span class="nav-label">হোম</span></a></li>
           <li class="nav-item dropdown-container">
@@ -335,7 +341,6 @@
           <li class="nav-item"><a href="https://wa.me/8801851956615" class="nav-link"><span class="material-symbols-rounded">contact_support</span><span class="nav-label">সাপোর্ট</span></a></li>
         </ul>
 
-        <!-- Bottom Menu (Theme) -->
         <ul class="nav-list secondary-nav">
           <li class="nav-item">
               <a href="#" class="nav-link" id="theme-toggle">
@@ -348,7 +353,6 @@
       </nav>
     </aside>
 
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
@@ -360,17 +364,15 @@
                                 <div class="spinner-circle"></div>
                             </div>
                         </div>
-                        <img src="https://i.ibb.co/QFtV51LQ/1000018745.png" alt="পাশে আছি লোগো" class="managed-image" style="height: 40px;">
+                        <img id="siteLogo" src="" alt="পাশে আছি লোগো" class="managed-image" style="height: 40px;">
                     </div>
-                    <span>পাশে আছি</span>
+                    <span id="siteName">পাশে আছি</span>
                 </a>
                 <div class="auth-buttons">
-                    <!-- New Donor Button Section -->
                     <div class="donor-btn-wrapper" id="donorBtnWrapper" style="display: none;">
                         <a href="#" id="beADonorBtn" class="btn btn-primary">ডোনার হোন</a>
                         <div id="donorDialog" class="donor-dialog">আপনি কি একজন ডেনার হতে চান?</div>
                     </div>
-                    <!-- Menu Button -->
                     <a href="#" class="btn btn-outline sidebar-menu-button-header">
                         <i class="fas fa-bars"></i>
                     </a>
@@ -383,34 +385,29 @@
         <div class="container">
             <h2 style="margin-bottom: 20px; color: var(--primary-dark); border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 5px;">ফাইন্ড ডোনার</h2>
             
-            <!-- Filter Bar -->
             <div class="filter-bar">
                 <div class="filter-item">
                     <button class="filter-btn" id="mainFilterBtn"><i class="fas fa-filter"></i> <span>ফিল্টার</span></button>
                 </div>
                 <div class="filter-options-wrapper" id="filterOptionsWrapper">
-                    <!-- Division Filter -->
                     <div class="filter-item">
                         <button class="filter-btn" data-dropdown="division-dropdown"><span>বিভাগ</span> <i class="fas fa-chevron-down"></i></button>
                         <div id="division-dropdown" class="filter-dropdown">
                             <ul><!-- Options loaded by JS --></ul>
                         </div>
                     </div>
-                    <!-- District Filter -->
                     <div class="filter-item">
                         <button class="filter-btn" data-dropdown="district-dropdown"><span>জেলা</span> <i class="fas fa-chevron-down"></i></button>
                         <div id="district-dropdown" class="filter-dropdown">
                             <ul><!-- Options loaded by JS --></ul>
                         </div>
                     </div>
-                    <!-- Upazila Filter -->
                     <div class="filter-item">
                         <button class="filter-btn" data-dropdown="upazila-dropdown"><span>উপজেলা</span> <i class="fas fa-chevron-down"></i></button>
                         <div id="upazila-dropdown" class="filter-dropdown">
                             <ul><!-- Options loaded by JS --></ul>
                         </div>
                     </div>
-                    <!-- Blood Group Filter -->
                     <div class="filter-item">
                         <button class="filter-btn" data-dropdown="blood-group-dropdown"><span>রক্তের গ্রুপ</span> <i class="fas fa-chevron-down"></i></button>
                         <div id="blood-group-dropdown" class="filter-dropdown">
@@ -423,16 +420,13 @@
                 </div>
             </div>
 
-            <!-- Donors Grid -->
             <div class="donor-grid" id="donorGrid">
-                <!-- Initial content hidden by preloader, but will show loader here if JS fails -->
                 <div style="text-align: center; grid-column: 1/-1; padding: 50px;">
                     <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
                     <p>ডোনার লোড হচ্ছে...</p>
                 </div>
             </div>
 
-            <!-- Load More / No More -->
             <div class="load-more-container">
                 <button id="loadMoreBtn" class="btn btn-primary" style="display: none;">আরো দেখুন <i class="fas fa-arrow-down"></i></button>
                 <p id="noMoreText" class="no-more-text">আর ডোনার পাওয়া যায়নি</p>
@@ -440,36 +434,36 @@
         </div>
     </main>
 
-    <!-- Details Modal -->
     <div class="modal" id="detailsModal">
         <div class="modal-content">
             <span class="close-modal" id="closeDetailsModal">&times;</span>
             <h3 style="color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">ডোনার ডিটেইলস</h3>
             <div id="modalBody">
-                <!-- Details injected here -->
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column"><h3>পাশে আছি</h3><p>জীবন বাঁচাতে রক্ত দিন। আমাদের প্ল্যাটফর্ম জরুরী অবস্থায় রক্তের প্রয়োজনীয়তা মেটাতে সাহায্য করে।</p><div class="social-links"><a href="https://www.facebook.com/profile.php?id=61583966346088"><i class="fab fa-facebook-f"></i></a><a href="phttps://x.com/PasheAachi"><i class="fab fa-twitter"></i></a><a href="https://www.instagram.com/pasheachhi?igsh=aGJyeHpmM3llazY5"><i class="fab fa-instagram"></i></a><a href="https://bd.linkedin.com/in/pashe-aachi-65b5a6392"><i class="fab fa-linkedin-in"></i></a></div></div>
                 <div class="footer-column"><h3>লিংকস</h3><ul class="footer-links"><li><a href="index.html">হোম</a></li><li><a href="emergency-find-blood.html">জরুরি যোগাযোগ</a></li><li><a href="emergency-find-blood.html">ইমারজেন্সি ব্লাড</a></li></ul></div>
                 <div class="footer-column"><h3>সহায়তা</h3><ul class="footer-links"><li><a href="https://wa.me/8801851956615">সাপোর্ট</a></li><li><a href="about-us.html">আমাদের সম্পর্কে</a></li><li><a href="condition.html">টার্মস এন্ড কন্ডিশন</a></li></ul></div>
-                <div class="footer-column"><h3>যোগাযোগ</h3><ul class="footer-links"><li><i class="fas fa-map-marker-alt"></i> ঢাকা, বাংলাদেশ</li><li><i class="fas fa-phone"></i> +880 1XXX-XXXXXX</li><li><i class="fas fa-envelope"></i> info@bloodlink.com</li></ul></div>
+                <div class="footer-column"><h3>যোগাযোগ</h3><ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress">ঢাকা, বাংলাদেশ</span></li>
+                    <li><i class="fas fa-phone"></i> <span id="footerPhone">+880 1XXX-XXXXXX</span></li>
+                    <li><i class="fas fa-envelope"></i> <span id="footerEmail">info@bloodlink.com</span></li>
+                </ul></div>
             </div>
             <div class="copyright"><p>&copy; ২০২৫ পাশে আছি. সকল অধিকার সংরক্ষিত।</p></div>
         </div>
     </footer>
 
-    <!-- Firebase SDK Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBnKQr2k2ZWnPlEZiJtMDewv6z3Z7p3kiU",
             authDomain: "pacheacchi.firebaseapp.com",
@@ -480,17 +474,96 @@
             measurementId: "G-M34YKMYHQ8"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        // Can access Firestore here if needed for fetching donors later
-        // const donorsRef = collection(db, "donors");
+        // --- Fetch Dynamic Content ---
+        async function fetchSiteSettings() {
+            try {
+                const docRef = doc(db, "settings", "siteConfig");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.logoUrl) document.getElementById('siteLogo').src = data.logoUrl;
+                    if (data.siteName) document.getElementById('siteName').innerText = data.siteName;
+                } else {
+                     document.getElementById('siteLogo').src = "https://i.ibb.co/QFtV51LQ/1000018745.png";
+                }
+            } catch (error) { console.error("Error getting settings:", error); }
+        }
+
+        async function fetchContactSettings() {
+            try {
+                const docRef = doc(db, "settings", "contact");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if(data.address) document.getElementById('footerAddress').innerText = data.address;
+                    if(data.phone) document.getElementById('footerPhone').innerText = data.phone;
+                    if(data.email) document.getElementById('footerEmail').innerText = data.email;
+                }
+            } catch (error) { console.error("Error fetching contact:", error); }
+        }
+
+        fetchSiteSettings();
+        fetchContactSettings();
+
+        // --- Auth State & Donor Button ---
+        onAuthStateChanged(auth, async (user) => {
+            const btnWrapper = document.getElementById('donorBtnWrapper');
+            const btn = document.getElementById('beADonorBtn');
+            const dialog = document.getElementById('donorDialog');
+            
+            if (user) {
+                const donorDoc = await getDoc(doc(db, "donors", user.uid));
+                if (donorDoc.exists()) {
+                    btnWrapper.style.display = 'none';
+                } else {
+                    btnWrapper.style.display = 'block';
+                    btn.href = 'profile.html';
+                }
+            } else {
+                btnWrapper.style.display = 'block';
+                btn.href = 'login.html';
+            }
+
+            if(btnWrapper.style.display === 'block') {
+                setTimeout(() => {
+                    dialog.style.opacity = '0';
+                    setTimeout(() => { dialog.style.display = 'none'; }, 500);
+                }, 3000);
+            }
+        });
+
+        // --- Load Donors from Firestore ---
+        window.allDonors = []; 
+        
+        async function fetchDonors() {
+            const donorGrid = document.getElementById('donorGrid');
+            try {
+                const querySnapshot = await getDocs(collection(db, "donors"));
+                const donors = [];
+                querySnapshot.forEach((doc) => {
+                    donors.push({ id: doc.id, ...doc.data() });
+                });
+                window.allDonors = donors; 
+                donorGrid.innerHTML = ''; 
+                window.filteredDonors = [...window.allDonors];
+                window.displayCount = 0;
+                window.loadMoreDonors();
+            } catch (error) {
+                console.error("Error fetching donors:", error);
+                donorGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">ডোনার লোড করতে সমস্যা হয়েছে।</p>';
+            }
+        }
+        
+        fetchDonors();
+
     </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Image Loader Logic ---
             function initializeImageLoaders() {
                 document.querySelectorAll('.image-loader-container').forEach(container => {
                     const image = container.querySelector('.managed-image');
@@ -500,7 +573,6 @@
             }
             initializeImageLoaders();
 
-            // --- Theme & Sidebar Logic ---
             const sidebar = document.querySelector(".sidebar");
             const backdrop = document.querySelector(".sidebar-backdrop");
             const openMenuBtn = document.querySelector(".sidebar-menu-button-header");
@@ -520,18 +592,13 @@
                 });
             }
             
-            // Fixed Dropdowns Logic
             document.querySelectorAll(".dropdown-toggle").forEach(toggle => {
                 toggle.addEventListener("click", (e) => {
                     e.preventDefault();
                     const container = toggle.closest(".dropdown-container");
                     const menu = container.querySelector(".dropdown-menu");
                     const isOpen = container.classList.contains("open");
-                    
-                    // Toggle Open Class
                     container.classList.toggle("open", !isOpen);
-                    
-                    // Animate Height
                     if (!isOpen) {
                         menu.style.height = `${menu.scrollHeight}px`;
                     } else {
@@ -540,52 +607,6 @@
                 });
             });
 
-            // --- "BE A DONOR" BUTTON LOGIC ---
-            async function initDonorButton() {
-                const btnWrapper = document.getElementById('donorBtnWrapper');
-                const btn = document.getElementById('beADonorBtn');
-                const dialog = document.getElementById('donorDialog');
-
-                // Simulation of data fetching from Server/Database
-                // In a real application, replace this with: const userData = await fetch('/api/user/status').then(res => res.json());
-                const userData = await new Promise((resolve) => {
-                    // Simulating check (You can change values in localStorage to test)
-                    // localStorage.setItem('isLoggedIn', 'true');
-                    // localStorage.setItem('hasDonorCard', 'false');
-                    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; 
-                    const hasDonorCard = localStorage.getItem('hasDonorCard') === 'true';
-                    
-                    resolve({ isLoggedIn, hasDonorCard });
-                });
-
-                if (userData.isLoggedIn && userData.hasDonorCard) {
-                    // Case: Logged in AND has card -> Hide button
-                    btnWrapper.style.display = 'none';
-                } else {
-                    // Show button
-                    btnWrapper.style.display = 'block';
-
-                    if (!userData.isLoggedIn) {
-                        // Case: Not Logged In
-                        btn.href = 'login.html';
-                    } else if (userData.isLoggedIn && !userData.hasDonorCard) {
-                        // Case: Logged In but No Card
-                        btn.href = 'profile.html';
-                    }
-
-                    // Show Dialog for 3 seconds
-                    setTimeout(() => {
-                        dialog.style.opacity = '0';
-                        setTimeout(() => {
-                            dialog.style.display = 'none';
-                        }, 500); // Wait for transition
-                    }, 3000); // 3 seconds visible
-                }
-            }
-            initDonorButton();
-            // ---------------------------------
-
-            // --- DATA: Complete Bangladesh Location Data (Divisions, Districts, Upazilas) ---
             const locationData = {
                 "ঢাকা": {
                     "ঢাকা": ["সাভার", "ধামরাই", "কেরানীগঞ্জ", "নবাবগঞ্জ", "দোহার", "তেজগাঁও", "গুলশান", "মিরপুর", "মোহাম্মদপুর", "উত্তরা", "রমনা", "মতিঝিল"],
@@ -656,7 +677,7 @@
                     "দিনাজপুর": ["দিনাজপুর সদর", "বিরল", "বোচাগঞ্জ", "কাহারোল", "বীরগঞ্জ", "খানসামা", "চিরিরবন্দর", "পার্বতীপুর", "ফুলবাড়ী", "নবাবগঞ্জ", "বিরামপুর", "হাকিমপুর", "ঘোড়াঘাট"],
                     "গাইবান্ধা": ["গাইবান্ধা সদর", "সুন্দরগঞ্জ", "সাদুল্লাপুর", "পলাশবাড়ী", "গোবিন্দগঞ্জ", "সাঘাটা", "ফুলছড়ি"],
                     "কুড়িগ্রাম": ["কুড়িগ্রাম সদর", "নাগেশ্বরী", "ভুরুঙ্গামারী", "ফুলবাড়ী", "রাজারহাট", "উলিপুর", "চিলমারী", "রৌমারী", "চর রাজিবপুর"],
-                    "लालমনিরহাট": ["লালমনিরহাট সদর", "আদিতমারী", "কালীগঞ্জ", "হাতীবান্ধা", "পাটগ্রাম"],
+                    "लालমনিরহাট": ["लालমনিরহাট সদর", "আদিতমারী", "কালীগঞ্জ", "হাতীবান্ধা", "পাটগ্রাম"],
                     "নীলফামারী": ["নীলফামারী সদর", "সৈয়দপুর", "জলঢাকা", "কিশোরগঞ্জ", "ডিমলা", "ডোমার"],
                     "পঞ্চগড়": ["পঞ্চগড় সদর", "দেবীগঞ্জ", "বোদা", "আটোয়ারী", "তেঁতুলিয়া"],
                     "ঠাকুরগাঁও": ["ঠাকুরগাঁও সদর", "পীরগঞ্জ", "বালিয়াডাঙ্গী", "হরিপুর", "রাণীশংকৈল"]
@@ -669,16 +690,11 @@
                 }
             };
 
-            // --- DATA SOURCE (Mock Donors Data) ---
-            const mockDonors = []; 
-
-            // --- Filter Logic ---
             const divisionDropdownUl = document.getElementById('division-dropdown').querySelector('ul');
             const districtDropdownUl = document.getElementById('district-dropdown').querySelector('ul');
             const upazilaDropdownUl = document.getElementById('upazila-dropdown').querySelector('ul');
             
             const mainFilterBtn = document.getElementById('mainFilterBtn');
-            const filterOptionsWrapper = document.getElementById('filterOptionsWrapper');
             const filterBar = mainFilterBtn.closest('.filter-bar');
 
             const divisionBtn = document.querySelector('button[data-dropdown="division-dropdown"]');
@@ -686,19 +702,16 @@
             const upazilaBtn = document.querySelector('button[data-dropdown="upazila-dropdown"]');
             const bloodGroupBtn = document.querySelector('button[data-dropdown="blood-group-dropdown"]');
 
-            // Populate Divisions
             Object.keys(locationData).forEach(div => {
                 const li = document.createElement('li'); li.textContent = div; divisionDropdownUl.appendChild(li);
             });
 
-            // Toggle Filter Bar with Animation
             mainFilterBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const isActive = filterBar.classList.toggle('active');
                 if (!isActive) { closeAllDropdowns(); }
             });
 
-            // Dropdown Logic
             function closeAllDropdowns() {
                 document.querySelectorAll('.filter-dropdown.open').forEach(d => d.classList.remove('open'));
                 document.querySelectorAll('.filter-btn[data-dropdown].active').forEach(b => b.classList.remove('active'));
@@ -719,7 +732,6 @@
                 });
             });
 
-            // Filter Selection Logic
             document.querySelectorAll('.filter-dropdown ul').forEach(ul => {
                 ul.addEventListener('click', (e) => {
                     if(e.target.tagName !== 'LI') return;
@@ -753,13 +765,12 @@
                 });
             });
 
-            // --- Rendering & Pagination Logic ---
             const donorGrid = document.getElementById('donorGrid');
             const loadMoreBtn = document.getElementById('loadMoreBtn');
             const noMoreText = document.getElementById('noMoreText');
             
-            let filteredDonors = [...mockDonors];
-            let displayCount = 0;
+            window.filteredDonors = [];
+            window.displayCount = 0;
             const itemsPerPage = 10;
 
             function applyFilters() {
@@ -772,22 +783,28 @@
                 const isDistSet = sDist !== 'জেলা';
                 const isUpzSet = sUpz !== 'উপজেলা';
                 const isBgSet = sBg !== 'রক্তের গ্রুপ';
+                
+                const divMap = { "বরিশাল": "barishal", "চট্টগ্রাম": "chattogram", "ঢাকা": "dhaka", "খুলনা": "khulna", "ময়মনসিংহ": "mymensingh", "রাজশাহী": "rajshahi", "রংপুর": "rangpur", "সিলেট": "sylhet" };
+                const selectedDivKey = divMap[sDiv] || sDiv;
 
-                filteredDonors = mockDonors.filter(d => {
-                    const matchDiv = !isDivSet || d.division === sDiv;
-                    const matchDist = !isDistSet || d.district === sDist;
-                    const matchUpz = !isUpzSet || d.upazila === sUpz;
+                window.filteredDonors = window.allDonors.filter(d => {
+                    const matchDiv = !isDivSet || d.division === selectedDivKey;
+                    const matchDist = !isDistSet || (d.districtText === sDist || d.district === sDist);
+                    const matchUpz = !isUpzSet || (d.upazilaText === sUpz || d.upazila === sUpz);
                     const matchBg = !isBgSet || d.bloodGroup === sBg;
                     return matchDiv && matchDist && matchUpz && matchBg;
                 });
 
-                displayCount = 0;
+                window.displayCount = 0;
                 donorGrid.innerHTML = '';
-                loadMoreDonors();
+                window.loadMoreDonors();
             }
 
             function timeAgo(timestamp) {
-                const seconds = Math.floor((Date.now() - timestamp) / 1000);
+                if(!timestamp) return "এইমাত্র";
+                const date = new Date(timestamp);
+                const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+                
                 let interval = seconds / 31536000;
                 if (interval > 1) return Math.floor(interval) + " বছর আগে";
                 interval = seconds / 2592000;
@@ -806,7 +823,7 @@
                 const lastDate = new Date(lastDonationDateStr);
                 const today = new Date();
                 const diffDays = Math.ceil(Math.abs(today - lastDate) / (1000 * 60 * 60 * 24));
-                if (diffDays > 90) return { status: "Available", color: "#27ae60", icon: "check_circle" };
+                if (diffDays >= 90) return { status: "Available", color: "#27ae60", icon: "check_circle" };
                 const remaining = 90 - diffDays;
                 return { status: `In ${remaining} Days`, color: "#e53935", icon: "hourglass_top" };
             }
@@ -817,21 +834,33 @@
             }
 
             function createCardHTML(donor) {
-                const availability = getAvailability(donor.lastDonation);
-                const updatedTime = timeAgo(donor.lastUpdateTimestamp);
-                const dateBengali = formatDateToBengali(donor.lastDonation);
+                const availability = getAvailability(donor.lastDonationDate);
+                // Use lastDonationDate directly from DB as update time (or fallback to 'now' but preferably explicit)
+                const updateSource = donor.lastDonationDate || new Date(); 
+                const updatedTime = timeAgo(updateSource); 
+                const dateBengali = formatDateToBengali(donor.lastDonationDate);
                 
+                const imageUrl = donor.imageUrl || 'https://via.placeholder.com/60';
+                
+                const loc = `${donor.upazilaText || donor.upazila || ''}, ${donor.districtText || donor.district || ''}`;
+
+                let genderIcon = '';
+                const g = (donor.gender || '').toLowerCase();
+                if(g === 'male' || g === 'পুরুষ') genderIcon = '<i class="fas fa-mars" title="Male" style="font-size: 0.9rem;"></i>';
+                else if(g === 'female' || g === 'মহিলা') genderIcon = '<i class="fas fa-venus" title="Female" style="font-size: 0.9rem;"></i>';
+                else genderIcon = '<i class="fas fa-genderless" title="Other" style="font-size: 0.9rem;"></i>';
+
                 return `
                     <div class="find-donor-card">
                         <div class="card-header">
                             <div class="donor-basic-info">
                                 <div class="image-loader-container donor-card-image-container">
                                     <div class="loading-spinner"><div class="spinner-wrapper"><div class="spinner-circle"></div><div class="spinner-circle"></div></div></div>
-                                    <img src="${donor.image}" class="managed-image" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="Donor">
+                                    <img src="${imageUrl}" class="managed-image" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="Donor">
                                 </div>
                                 <div class="name-group">
                                     <p class="donor-name">${donor.name}</p>
-                                    <small style="color: var(--text-light);">${donor.gender}</small>
+                                    <small style="color: var(--text-light);">${genderIcon}</small>
                                 </div>
                             </div>
                             <span class="donor-blood-badge">${donor.bloodGroup}</span>
@@ -841,7 +870,7 @@
                                 ${availability.status} <span class="material-symbols-rounded" style="font-size:1.2rem;">${availability.icon}</span>
                             </p>
                             <p class="location-info">
-                                <i class="fas fa-map-marker-alt"></i> ${donor.upazila}, ${donor.district}
+                                <i class="fas fa-map-marker-alt"></i> ${loc}
                             </p>
                             <p class="last-donation-info">
                                 শেষ রক্তদান: ${dateBengali}
@@ -849,37 +878,33 @@
                         </div>
                         <div class="card-footer">
                             <a href="tel:${donor.mobile}" class="btn btn-primary"><i class="fas fa-phone-alt"></i> কল করুন</a>
-                            <button class="btn btn-outline" onclick="openDetails(${donor.id})"><i class="fas fa-info-circle"></i> ডিটেইলস</button>
+                            <button class="btn btn-outline" onclick="openDetails('${donor.id}')"><i class="fas fa-info-circle"></i> ডিটেইলস</button>
                         </div>
                         <span class="last-updated-text">আপডেট: ${updatedTime}</span>
                     </div>
                 `;
             }
 
-            function loadMoreDonors() {
-                // Determine the slice for this batch from the EXISTING filtered list
-                const nextItems = filteredDonors.slice(displayCount, displayCount + itemsPerPage);
+            window.loadMoreDonors = function() {
+                const nextItems = window.filteredDonors.slice(window.displayCount, window.displayCount + itemsPerPage);
                 
-                // Handle No Donors Case
-                if (filteredDonors.length === 0) {
+                if (window.filteredDonors.length === 0) {
                     donorGrid.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>কোন ডোনার পাওয়া যায়নি।</p>";
                     loadMoreBtn.style.display = 'none';
                     noMoreText.style.display = 'none';
                     return;
                 }
 
-                // Render Items (Just displaying, NOT generating new data)
                 nextItems.forEach(donor => {
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = createCardHTML(donor);
                     donorGrid.appendChild(tempDiv.firstElementChild);
                 });
 
-                displayCount += nextItems.length;
+                window.displayCount += nextItems.length;
                 initializeImageLoaders();
 
-                // Check if more items exist in the list
-                if (displayCount >= filteredDonors.length) {
+                if (window.displayCount >= window.filteredDonors.length) {
                     loadMoreBtn.style.display = 'none';
                     noMoreText.style.display = 'block';
                 } else {
@@ -888,14 +913,9 @@
                 }
             }
 
-            loadMoreBtn.addEventListener('click', loadMoreDonors);
+            loadMoreBtn.addEventListener('click', window.loadMoreDonors);
 
-            // Initial Load with Delay simulation and Preloader Removal
             setTimeout(() => {
-                donorGrid.innerHTML = '';
-                loadMoreDonors();
-                
-                // Hide Preloader once data is loaded
                 const preloader = document.getElementById('preloader');
                 if(preloader) {
                     preloader.style.opacity = '0';
@@ -903,26 +923,40 @@
                 }
             }, 800); 
 
-            // --- Modal Logic ---
             const modal = document.getElementById('detailsModal');
             const modalBody = document.getElementById('modalBody');
             const closeModal = document.getElementById('closeDetailsModal');
 
+            // Division English to Bengali Map
+            const engToBnDiv = {
+                "barishal": "বরিশাল", "chattogram": "চট্টগ্রাম", "dhaka": "ঢাকা",
+                "khulna": "খুলনা", "mymensingh": "ময়মনসিংহ", "rajshahi": "রাজশাহী",
+                "rangpur": "রংপুর", "sylhet": "সিলেট"
+            };
+
             window.openDetails = (id) => {
-                const donor = mockDonors.find(d => d.id === id);
+                const donor = window.allDonors.find(d => d.id === id);
                 if(donor) {
-                    const availability = getAvailability(donor.lastDonation);
-                    const dateBengali = formatDateToBengali(donor.lastDonation);
+                    const availability = getAvailability(donor.lastDonationDate);
+                    const dateBengali = formatDateToBengali(donor.lastDonationDate);
+                    const imageUrl = donor.imageUrl || 'https://via.placeholder.com/80';
+                    
+                    // Division Translation Logic
+                    const rawDiv = donor.division || '';
+                    const divBn = engToBnDiv[rawDiv] || rawDiv;
+                    
+                    const loc = `${donor.upazilaText || ''}, ${donor.districtText || ''}, ${divBn}`;
+
                     modalBody.innerHTML = `
                         <div style="text-align:center; margin-bottom:20px;">
-                            <img src="${donor.image}" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--primary); object-fit:cover;">
+                            <img src="${imageUrl}" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--primary); object-fit:cover;">
                             <h2 style="margin-top:10px;">${donor.name}</h2>
                             <span style="background:var(--primary); color:white; padding:2px 10px; border-radius:10px; font-size:0.8rem;">${donor.bloodGroup}</span>
                         </div>
                         <div class="details-row"><i class="fas fa-info-circle"></i> <span><strong>স্ট্যাটাস:</strong> <span style="color:${availability.color}; font-weight:bold;">${availability.status}</span></span></div>
-                        <div class="details-row"><i class="fas fa-venus-mars"></i> <span><strong>জেন্ডার:</strong> ${donor.gender}</span></div>
+                        <div class="details-row"><i class="fas fa-venus-mars"></i> <span><strong>জেন্ডার:</strong> ${donor.gender || 'N/A'}</span></div>
                         <div class="details-row"><i class="fas fa-weight"></i> <span><strong>ওজন:</strong> ${donor.weight} কেজি</span></div>
-                        <div class="details-row"><i class="fas fa-map-marker-alt"></i> <span><strong>ঠিকানা:</strong> ${donor.upazila}, ${donor.district}, ${donor.division}</span></div>
+                        <div class="details-row"><i class="fas fa-map-marker-alt"></i> <span><strong>ঠিকানা:</strong> ${loc}</span></div>
                         <div class="details-row"><i class="fas fa-calendar-alt"></i> <span><strong>শেষ রক্তদান:</strong> ${dateBengali}</span></div>
                         <div class="details-row"><i class="fas fa-phone"></i> <span><strong>মোবাইল:</strong> ${donor.mobile}</span></div>
                         <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
