@@ -13,21 +13,29 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
     <style>
+        @font-face {
+            font-family: 'Jagoron';
+            src: url('fonts/jagoron.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         /* =========================================
-           1. CORE STYLES
+           1. CORE STYLES & THEME
            ========================================= */
         :root {
             --primary: #e53935;
             --primary-dark: #c62828;
+            --secondary: #f5f5f5;
             --white: #fff;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --transition: all 0.4s ease;
             --text-color: #333;
             --text-light: #666;
             --header-bg: #fff;
             --card-bg: #fff;
             --footer-bg: #2c3e50;
-            --sidebar-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-bg: rgba(255, 255, 255, 0.65);
             --sidebar-text: #333;
             --sidebar-hover-bg: #EEF2FF;
             --sidebar-hover-text: #151A2D;
@@ -41,7 +49,7 @@
             --header-bg: #1e1e1e;
             --card-bg: #2a2a2a;
             --footer-bg: #1e1e1e;
-            --sidebar-bg: rgba(30, 30, 30, 0.95);
+            --sidebar-bg: rgba(26, 26, 26, 0.55);
             --sidebar-text: #f5f5f5;
             --sidebar-hover-bg: #333;
             --sidebar-hover-text: #f5f5f5;
@@ -49,7 +57,20 @@
             --section-bg: rgba(42, 42, 42, 0.6);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            -webkit-tap-highlight-color: transparent; /* Disable Blue Tap Highlight */
+            outline: none;
+        }
+        
+        input:focus, button:focus, a:focus, select:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
         html { scroll-behavior: smooth; }
         
         @keyframes bgColorChange {
@@ -64,6 +85,7 @@
             line-height: 1.6; 
             min-height: 100vh;
             animation: bgColorChange 8s infinite alternate ease-in-out;
+            overflow-x: hidden;
         }
         
         body.dark-mode {
@@ -72,28 +94,79 @@
         }
 
         /* =========================================
-           2. SEARCH VIEW STYLES
+           2. SHARED COMPONENTS
+           ========================================= */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .btn {
+            padding: 10px 25px; border-radius: 30px; font-weight: 600; cursor: pointer;
+            transition: var(--transition); border: none; font-size: 0.95rem;
+            display: inline-flex; align-items: center; gap: 8px; text-decoration: none; white-space: nowrap;
+        }
+        .btn-primary { background: var(--primary); color: var(--white); box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        body.dark-mode .btn-outline { color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: var(--white); }
+
+        .form-control { 
+            width: 100%; padding: 12px 15px; border: 1px solid rgba(0,0,0,0.1); 
+            border-radius: 10px; font-size: 1rem; transition: var(--transition); 
+            background-color: rgba(255,255,255,0.6); color: var(--text-color); 
+        }
+        body.dark-mode .form-control { border-color: #444; background-color: rgba(0,0,0,0.5); }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.2); }
+        
+        /* Sidebar (Global) */
+        .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        .sidebar-backdrop.is-open { opacity: 1; pointer-events: auto; }
+        .sidebar { position: fixed; top: 0; left: 0; z-index: 1001; width: 270px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transform: translateX(-100%); transition: transform 0.4s ease; }
+        .sidebar.is-open { transform: translateX(0); }
+        .sidebar .sidebar-header { display: flex; position: relative; padding: 20px 15px; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .sidebar-header .header-logo img { height: 40px; display: block; object-fit: contain; }
+        .sidebar-auth-btn { padding: 6px 15px; font-size: 0.85rem; border-radius: 20px; text-decoration: none; background: var(--primary); color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: var(--transition); }
+        .sidebar-auth-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .sidebar-header .sidebar-back-button { height: 35px; width: 35px; color: var(--sidebar-text); border: none; cursor: pointer; display: flex; background: transparent; align-items: center; justify-content: center; border-radius: 8px; transition: 0.4s ease; }
+        .sidebar-header .sidebar-back-button:hover { background: rgba(0, 0, 0, 0.1); }
+        .sidebar-header .sidebar-back-button span { font-size: 1.75rem; }
+        .sidebar-nav .nav-list { list-style: none; display: flex; gap: 4px; padding: 0 15px; flex-direction: column; transform: translateY(15px); transition: 0.4s ease; }
+        .sidebar .sidebar-nav .primary-nav { overflow-y: auto; scrollbar-width: thin; padding-bottom: 20px; height: calc(100vh - 227px); scrollbar-color: transparent transparent; }
+        .sidebar .sidebar-nav .primary-nav:hover { scrollbar-color: #EEF2FF transparent; }
+        .sidebar-nav .nav-item .nav-link { color: var(--sidebar-text); display: flex; gap: 12px; white-space: nowrap; border-radius: 8px; padding: 11px 15px; align-items: center; text-decoration: none; border: 1px solid transparent; transition: 0.4s ease; }
+        .sidebar-nav .nav-item:hover > .nav-link { color: var(--sidebar-hover-text); background: var(--sidebar-hover-bg); }
+        .sidebar-nav .secondary-nav { position: absolute; bottom: 35px; width: 100%; background: transparent; }
+        #theme-toggle .dark-mode-icon { display: none; }
+        body.dark-mode #theme-toggle .light-mode-icon { display: none; }
+        body.dark-mode #theme-toggle .dark-mode-icon { display: block; }
+        .sidebar-nav .nav-item { position: relative; }
+        .sidebar-nav .dropdown-container .dropdown-icon { margin-left: auto; transition: transform 0.4s ease; }
+        .sidebar-nav .dropdown-container.open .dropdown-icon { transform: rotate(180deg); }
+        .sidebar-nav .dropdown-menu { list-style: none; padding-left: 25px; height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .sidebar-nav .dropdown-menu .nav-link { padding-top: 8px; padding-bottom: 8px; font-size: 0.9rem; }
+
+        /* =========================================
+           3. VIEW: SEARCH PAGE (Standalone, No Header/Footer)
            ========================================= */
         #search-view-section {
-            display: block;
-            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             min-height: 100vh;
+            width: 100%;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 50;
+            overflow-y: auto;
+            background-color: var(--background-color); /* Matches body bg */
         }
-        
-        .search-view-content { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
         
         .search-container { 
             background-color: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 30px; 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 30px; 
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); 
-            padding: 40px; 
-            width: 100%; 
-            max-width: 600px; 
-            position: relative; 
-            overflow: hidden; 
+            padding: 40px; width: 90%; max-width: 500px; 
+            position: relative; overflow: hidden; 
         }
 
         .search-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: linear-gradient(90deg, var(--primary), var(--primary-dark)); }
@@ -103,82 +176,34 @@
         .search-form .form-group label { font-weight: 500; color: var(--text-color); display: flex; align-items: center; gap: 8px; }
         .search-form .form-group label i { color: var(--primary); width: 20px; }
         
-        .form-control { 
-            width: 100%; 
-            padding: 12px 15px; 
-            border: 1px solid rgba(0,0,0,0.1); 
-            border-radius: 10px; 
-            font-size: 1rem; 
-            transition: var(--transition); 
-            background-color: rgba(255,255,255,0.6); 
-            color: var(--text-color); 
-        }
-        
-        body.dark-mode .form-control { border-color: #444; background-color: rgba(0,0,0,0.5); }
-        .form-control:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.2); }
         .search-btn { background: var(--primary); color: var(--white); border: none; padding: 15px; border-radius: 10px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: var(--transition); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .search-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
         /* =========================================
-           3. RESULTS VIEW STYLES
+           4. VIEW: RESULTS PAGE (Has Header & Footer)
            ========================================= */
-        #results-view-section { display: none; }
+        #results-view-section { display: none; } /* Hidden by default */
 
-        header { background-color: var(--header-bg); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 999; }
-        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .header-content { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
-        .logo { display: flex; align-items: center; gap: 10px; color: var(--primary); font-weight: 700; font-size: 1.5rem; text-decoration: none; }
-        .logo img { height: 40px; } 
-        .btn { padding: 10px 20px; border-radius: 30px; font-weight: 600; cursor: pointer; transition: var(--transition); border: none; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-primary { background: var(--primary); color: var(--white); }
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-primary[disabled] { background: #ccc; cursor: not-allowed; }
-        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-        .btn-outline:hover { background: var(--primary); color: var(--white); }
-
-        /* Sidebar Styles */
-        .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
-        .sidebar-backdrop.is-open { opacity: 1; pointer-events: auto; }
-        
-        .sidebar { position: fixed; top: 0; left: 0; z-index: 1001; width: 280px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(10px); transform: translateX(-100%); transition: transform 0.4s ease; display: flex; flex-direction: column; }
-        .sidebar.is-open { transform: translateX(0); }
-        
-        .sidebar .sidebar-header { display: flex; padding: 20px; align-items: center; justify-content: space-between; flex-shrink: 0; }
-        .sidebar-header .header-logo img { width: 46px; height: 46px; border-radius: 50%; }
-        .sidebar-header .sidebar-back-button { height: 35px; width: 35px; color: var(--sidebar-text); border: none; cursor: pointer; display: flex; background: transparent; align-items: center; justify-content: center; border-radius: 8px; font-size: 1.5rem; transition: 0.4s ease; }
-        .sidebar-header .sidebar-back-button:hover { background: rgba(0, 0, 0, 0.1); }
-        
-        .sidebar-nav { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 20px; }
-        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 5px; padding: 0 15px; }
-        .nav-list.primary-nav { flex-grow: 1; }
-        
-        .nav-item .nav-link { color: var(--sidebar-text); display: flex; gap: 12px; border-radius: 8px; padding: 12px 15px; align-items: center; text-decoration: none; transition: 0.3s ease; font-weight: 500; }
-        .sidebar-nav .nav-item:hover > .nav-link { color: var(--sidebar-hover-text); background: var(--sidebar-hover-bg); }
-        
-        .nav-list.secondary-nav { margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); }
-        body.dark-mode .nav-list.secondary-nav { border-top: 1px solid rgba(255,255,255,0.1); }
-        
-        #theme-toggle .dark-mode-icon { display: none; }
-        body.dark-mode #theme-toggle .light-mode-icon { display: none; }
-        body.dark-mode #theme-toggle .dark-mode-icon { display: block; }
-
-        .sidebar-nav .nav-item { position: relative; }
-        .sidebar-nav .dropdown-container .dropdown-icon { margin-left: auto; transition: transform 0.3s ease; }
-        .sidebar-nav .dropdown-container.open .dropdown-icon { transform: rotate(180deg); }
-        .sidebar-nav .dropdown-menu { list-style: none; padding-left: 20px; height: 0; overflow: hidden; transition: height 0.4s ease; display: flex; flex-direction: column; gap: 2px; }
+        /* Header */
+        header { background-color: var(--header-bg); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 999; animation: slideDown 0.5s ease; }
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .header-content { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; height: 80px; }
+        .logo { display: flex; align-items: center; text-decoration: none; color: var(--primary); white-space: nowrap; flex-shrink: 0; }
+        .logo img { height: 40px; }
+        .logo span { font-family: 'Jagoron', sans-serif; font-size: 2.0rem; font-weight: bold; margin-left: 10px; }
+        .auth-buttons { display: flex; gap: 15px; align-items: center; flex-shrink: 0; }
+        .profile-container { position: relative; display: none; cursor: pointer; }
+        .profile-icon-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--secondary); border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; overflow: hidden; transition: var(--transition); }
+        .profile-icon-btn img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-icon-btn i { font-size: 1.5rem; color: var(--text-light); }
 
         /* Results Grid */
         .section-title { color: var(--primary-dark); margin-bottom: 15px; font-size: 1.5rem; border-bottom: 2px solid var(--primary-dark); padding-bottom: 8px; font-weight: 600; }
         .emergency-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; margin-top: 20px; }
-        
         .emergency-card { background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); position: relative; border-left: 5px solid var(--primary); animation: fadeIn 0.5s ease; text-align: left; }
-        .e-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; position: relative; }
-        .blood-group-badge { width: 45px; height: 45px; background: var(--primary); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; box-shadow: 0 2px 5px rgba(229, 57, 53, 0.4); }
-        .creator-info { display: flex; flex-direction: column; margin-left: 10px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .e-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .creator-name { font-size: 0.95rem; color: var(--text-color); font-weight: 600; }
-        .e-card-tags { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; margin-left: auto; }
-        .status-tag { font-size: 0.75rem; color: #27ae60; background: rgba(39, 174, 96, 0.1); padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .e-details h4 { font-size: 1.1rem; margin-bottom: 5px; color: var(--text-color); }
         .e-details p { font-size: 0.9rem; color: var(--text-light); margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
         .e-details i { color: var(--primary); width: 15px; }
         .e-actions { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
@@ -186,7 +211,6 @@
         .btn-sm { padding: 6px 15px; font-size: 0.85rem; border-radius: 20px; }
         .btn-call { background: #27ae60; color: white; border: none; cursor: pointer; }
         .btn-call:hover { background: #219150; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Footer */
         footer { background: var(--footer-bg); color: var(--white); padding: 60px 0 20px; margin-top: 40px; }
@@ -200,194 +224,78 @@
         .social-links a:hover { background: var(--primary); transform: translateY(-3px); }
         .copyright { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.9rem; color: #aaa; }
 
-        /* Floating Action Button (FAB) */
-        .fab-container {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1002;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-        
-        .fab-hint {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            padding: 10px 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            white-space: nowrap;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.4s ease;
-            pointer-events: none;
-            position: relative;
-        }
-        
-        .fab-hint.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .fab-hint::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            right: 22px;
-            width: 12px;
-            height: 12px;
-            background-color: var(--card-bg);
-            transform: rotate(45deg);
-        }
-
-        .fab-btn {
-            width: 60px;
-            height: 60px;
-            background-color: var(--primary);
-            color: #fff;
-            border-radius: 50%;
-            border: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        .fab-btn:hover {
-            transform: scale(1.1) rotate(90deg);
-            background-color: var(--primary-dark);
-        }
+        /* FAB */
+        .fab-container { position: fixed; bottom: 30px; right: 30px; z-index: 1002; display: flex; flex-direction: column; align-items: flex-end; }
+        .fab-hint { background-color: var(--card-bg); color: var(--text-color); padding: 10px 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 12px; font-size: 0.9rem; font-weight: 500; white-space: nowrap; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; pointer-events: none; position: relative; }
+        .fab-hint.show { opacity: 1; transform: translateY(0); }
+        .fab-hint::after { content: ''; position: absolute; bottom: -6px; right: 22px; width: 12px; height: 12px; background-color: var(--card-bg); transform: rotate(45deg); }
+        .fab-btn { width: 60px; height: 60px; background-color: var(--primary); color: #fff; border-radius: 50%; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .fab-btn:hover { transform: scale(1.1) rotate(90deg); background-color: var(--primary-dark); }
 
         /* =========================================
-           4. PASS KEY OVERLAY & ADD CONTACT OVERLAY STYLES
+           5. OVERLAYS (Passkey & Add Contact)
            ========================================= */
-        .passkey-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* Transparent Black */
-            backdrop-filter: blur(8px); /* Blur Effect */
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            animation: fadeInOverlay 0.4s ease;
-            overflow-y: auto; /* For taller forms */
-            padding: 20px;
-        }
+        .passkey-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; display: none; justify-content: center; align-items: center; animation: fadeInOverlay 0.4s ease; overflow-y: auto; padding: 20px; }
+        .add-contact-container, .passkey-container { background-color: var(--card-bg); border-radius: 30px; box-shadow: var(--shadow); padding: 30px; width: 100%; max-width: 500px; position: relative; color: var(--text-color); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .add-contact-container { max-width: 800px; }
         
-        .passkey-container {
-            background-color: var(--card-bg);
-            border-radius: 30px;
-            box-shadow: var(--shadow);
-            padding: 40px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            position: relative;
-            color: var(--text-color);
-        }
+        .close-btn { position: absolute; top: 15px; right: 15px; padding: 0; width: 35px; height: 35px; line-height: 35px; border-radius: 50%; font-size: 1.2rem; background: transparent; border: none; color: var(--text-light); cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .close-btn:hover { color: var(--primary); background: rgba(0,0,0,0.05); }
+        .edit-title, .passkey-title { font-size: 1.8rem; margin-bottom: 20px; color: var(--text-color); text-align: center; }
         
-        /* Add Contact Form Specific Styles within Overlay */
-        .add-contact-container {
-            background-color: var(--card-bg);
-            border-radius: 30px;
-            box-shadow: var(--shadow);
-            padding: 30px;
-            width: 100%;
-            max-width: 800px;
-            position: relative;
-            color: var(--text-color);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .passkey-container .close-btn, .add-contact-container .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 0;
-            width: 35px;
-            height: 35px;
-            line-height: 35px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            background: transparent;
-            border: none;
-            color: var(--text-light);
-            cursor: pointer;
-            z-index: 10;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .close-btn:hover {
-            color: var(--primary);
-            background: rgba(0,0,0,0.05);
-        }
-        
-        .passkey-title, .edit-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--text-color);
-            text-align: center;
-        }
-        
-        #passkey-input {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.5rem;
-            text-align: center;
-            letter-spacing: 10px;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            background: rgba(0,0,0,0.02);
-            color: var(--text-color);
-        }
-        
-        #passkey-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
-        }
-        
-        #passkey-error {
-            color: var(--primary);
-            margin-top: 15px;
-            font-weight: 500;
-            height: 20px;
-            min-height: 20px;
-        }
-
-        /* Form Grid for Add Contact */
         .edit-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
         .form-group.full-width { grid-column: 1 / -1; }
         .edit-form .form-group label { font-weight: 500; color: var(--text-color); display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
-        
         @media (max-width: 768px) { .edit-form { grid-template-columns: 1fr; } .form-group.full-width { grid-column: 1 / 1; } }
-
-        @keyframes fadeInOverlay {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        
+        @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <!-- =========================================
-         VIEW 1: SEARCH PAGE
-         ========================================= -->
+    <!-- SIDEBAR (Global, initially hidden) -->
+    <div class="sidebar-backdrop"></div>
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <a href="index.html" class="header-logo">
+            <img id="sidebarLogo" src="" alt="Logo">
+        </a>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <a href="login.html" id="sidebarLoginBtn" class="sidebar-auth-btn"><i class="fas fa-sign-in-alt"></i> লগ ইন</a>
+            <button id="sidebarLogoutBtn" class="sidebar-auth-btn" style="display: none;"><i class="fas fa-sign-out-alt"></i> লগ আউট</button>
+            <button class="sidebar-back-button"><span class="material-symbols-rounded">arrow_back</span></button>
+        </div>
+      </header>
+      <nav class="sidebar-nav">
+        <ul class="nav-list primary-nav">
+          <li class="nav-item"><a href="index.html" class="nav-link"><span class="material-symbols-rounded">home</span><span class="nav-label">হোম</span></a></li>
+          <li class="nav-item dropdown-container">
+            <a href="#" class="nav-link dropdown-toggle"><span class="material-symbols-rounded">medical_services</span><span class="nav-label">সেবাসমূহ</span><span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span></a>
+            <ul class="dropdown-menu">
+              <li class="nav-item"><a href="donar_find.html" class="nav-link"><span class="material-symbols-rounded">bloodtype</span><span class="nav-label">ব্লাড ডোনার</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=police" class="nav-link"><span class="material-symbols-rounded">local_police</span><span class="nav-label">পুলিশ স্টেশন</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=hospital" class="nav-link"><span class="material-symbols-rounded">health_and_safety</span><span class="nav-label">হাসপাতাল ও ডাক্তার</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=ambulance" class="nav-link"><span class="material-symbols-rounded">ambulance</span><span class="nav-label">এম্বুল্যান্স</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=electricity" class="nav-link"><span class="material-symbols-rounded">electrical_services</span><span class="nav-label">বিদ্যুৎ জোনাল অফিস</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=fire" class="nav-link"><span class="material-symbols-rounded">fire_truck</span><span class="nav-label">ফায়ার সার্ভিস</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=gas" class="nav-link"><span class="material-symbols-rounded">gas_meter</span><span class="nav-label">গ্যাস ফিলিং স্টেশন</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=wasa" class="nav-link"><span class="material-symbols-rounded">water_drop</span><span class="nav-label">ওয়াসা</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=petrol" class="nav-link"><span class="material-symbols-rounded">local_gas_station</span><span class="nav-label">পেট্রোল পাম্প</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=govt" class="nav-link"><span class="material-symbols-rounded">account_balance</span><span class="nav-label">সরকারী কার্যালয়</span></a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a href="bloodrouls.html" class="nav-link"><span class="material-symbols-rounded">rule</span><span class="nav-label">রক্তদানের নিয়ম</span></a></li>
+          <li class="nav-item"><a href="emergency-find-blood.html" class="nav-link"><span class="material-symbols-rounded">emergency</span><span class="nav-label">ইমারজেন্সি ব্লাড</span></a></li>
+          <li class="nav-item"><a href="#" class="nav-link"><span class="material-symbols-rounded">campaign</span><span class="nav-label">নিউজ এন্ড আপডেটস</span></a></li>
+          <li class="nav-item"><a href="https://wa.me/8801851956615" class="nav-link"><span class="material-symbols-rounded">contact_support</span><span class="nav-label">সাপোর্ট</span></a></li>
+        </ul>
+        <ul class="nav-list secondary-nav">
+          <li class="nav-item"><a href="#" class="nav-link" id="theme-toggle"><span class="material-symbols-rounded light-mode-icon">light_mode</span><span class="material-symbols-rounded dark-mode-icon">dark_mode</span><span class="nav-label"></span></a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- VIEW 1: SEARCH PAGE (No Header/Footer) -->
     <div id="search-view-section">
         <div class="search-view-content">
             <div class="search-container">
@@ -414,218 +322,155 @@
                         </select>
                     </div>
                     <button type="submit" class="search-btn"><i class="fas fa-search"></i> খুঁজুন</button>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <a href="index.html" style="color: var(--primary); text-decoration: none;"><i class="fas fa-arrow-left"></i> ফিরে যান</a>
+                    </div>
                 </form>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="index.html" style="color: var(--primary); text-decoration: none;"><i class="fas fa-arrow-left"></i> ফিরে যান</a>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- =========================================
-         VIEW 3: RESULTS PAGE
-         ========================================= -->
+    <!-- VIEW 2: RESULTS PAGE (Has Header & Footer) -->
     <div id="results-view-section">
-        
-        <!-- Sidebar and Backdrop -->
-        <div class="sidebar-backdrop"></div>
-        <aside class="sidebar">
-            <header class="sidebar-header">
-              <a href="index.html" class="header-logo">
-                   <img src="https://i.ibb.co/QFtV51LQ/1000018745.png" alt="logo">
-              </a>
-              <button class="sidebar-back-button">
-                <span class="material-symbols-rounded">arrow_back</span>
-              </button>
-            </header>
-            
-            <nav class="sidebar-nav">
-              <ul class="nav-list primary-nav">
-                <li class="nav-item"><a href="index.html" class="nav-link"><span class="material-symbols-rounded">home</span><span class="nav-label">হোম</span></a></li>
-                <li class="nav-item dropdown-container">
-                  <a href="#" class="nav-link dropdown-toggle">
-                    <span class="material-symbols-rounded">medical_services</span>
-                    <span class="nav-label">সেবাসমূহ</span>
-                    <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li class="nav-item"><a href="all-search.html?type=donor" class="nav-link"><span class="material-symbols-rounded">bloodtype</span><span class="nav-label">ব্লাড ডোনার</span></a></li>
-                    <li class="nav-item"><a href="all-search.html?type=police" class="nav-link"><span class="material-symbols-rounded">local_police</span><span class="nav-label">পুলিশ স্টেশন</span></a></li>
-                    <li class="nav-item"><a href="all-search.html?type=hospital" class="nav-link"><span class="material-symbols-rounded">health_and_safety</span><span class="nav-label">হাসপাতাল ও ডাক্তার</span></a></li>
-                    <li class="nav-item"><a href="all-search.html?type=ambulance" class="nav-link"><span class="material-symbols-rounded">ambulance</span><span class="nav-label">এম্বুলেন্স</span></a></li>
-                    <li class="nav-item"><a href="all-search.html?type=electricity" class="nav-link"><span class="material-symbols-rounded">electrical_services</span><span class="nav-label">বিদ্যুৎ জোনাল অফিস</span></a></li>
-                    <li class="nav-item"><a href="all-search.html?type=fire" class="nav-link"><span class="material-symbols-rounded">fire_truck</span><span class="nav-label">ফায়ার সার্ভিস</span></a></li>
-                    <li class="nav-item"><a href="all-search.html?type=gas" class="nav-link"><span class="material-symbols-rounded">gas_meter</span><span class="nav-label">গ্যাস ফিলিং স্টেশন</span></a></li>
-                    <li class="nav-item"><a href="all-search.html?type=wasa" class="nav-link"><span class="material-symbols-rounded">water_drop</span><span class="nav-label">ওয়াসা</span></a></li>
-                    <li class="nav-item"><a href="all-search.html?type=petrol" class="nav-link"><span class="material-symbols-rounded">local_gas_station</span><span class="nav-label">পেট্রোল পাম্প</span></a></li>
-                    <li class="nav-item"><a href="all-search.html?type=govt" class="nav-link"><span class="material-symbols-rounded">account_balance</span><span class="nav-label">সরকারী কার্যালয়</span></a></li>
-                  </ul>
-                </li>
-                <li class="nav-item"><a href="bloodrouls.html" class="nav-link"><span class="material-symbols-rounded">rule</span><span class="nav-label">রক্তদানের নিয়ম</span></a></li>
-                <li class="nav-item"><a href="emergency-find-blood.html" class="nav-link"><span class="material-symbols-rounded">emergency</span><span class="nav-label">ইমারজেন্সি ব্লাড</span></a></li>
-                <li class="nav-item"><a href="news.html" class="nav-link"><span class="material-symbols-rounded">campaign</span><span class="nav-label">নিউজ এন্ড আপডেটস</span></a></li>
-                <li class="nav-item"><a href="https://wa.me/8801851956615" class="nav-link"><span class="material-symbols-rounded">contact_support</span><span class="nav-label">সাপোর্ট</span></a></li>
-              </ul>
-      
-              <ul class="nav-list secondary-nav">
-                <li class="nav-item">
-                    <a href="#" class="nav-link" id="theme-toggle">
-                        <span class="material-symbols-rounded light-mode-icon">light_mode</span>
-                        <span class="material-symbols-rounded dark-mode-icon">dark_mode</span>
-                        <span class="nav-label"></span>
-                    </a>
-                </li>
-              </ul>
-            </nav>
-        </aside>
-
-        <!-- Header -->
         <header>
             <div class="container">
                 <div class="header-content">
                     <a href="index.html" class="logo">
-                        <img src="https://i.ibb.co/QFtV51LQ/1000018745.png" alt="Logo">
-                        <span>পাশে আছি</span>
+                        <img id="siteLogo" src="" alt="লোগো" style="height: 40px;"> 
+                        <span id="siteName">পাশে আছি</span>
                     </a>
                     <div class="auth-buttons">
-                        <button class="btn btn-primary" onclick="resetSearch()">নতুন সন্ধান</button>
-                        <button class="btn btn-outline sidebar-toggle">
-                            <i class="fas fa-bars"></i>
-                        </button>
+                        <button class="btn btn-primary" onclick="resetSearch()" style="margin-right: 10px;">নতুন অনুসন্ধান</button>
+                        <div class="profile-container" id="profileContainer" onclick="window.location.href='profile.html'">
+                            <div class="profile-icon-btn"><i class="fas fa-user"></i></div>
+                        </div>
+                        <a href="#" class="btn btn-outline sidebar-menu-button-header"><i class="fas fa-bars"></i></a>
                     </div>
                 </div>
             </div>
         </header>
 
-        <main>
-            <div class="container">
-                <!-- Result Section -->
-                <section class="section" style="background: var(--section-bg); padding: 25px; border-radius: 12px; backdrop-filter: blur(12px);">
-                    <!-- Dynamic Header Title -->
-                    <h2 class="section-title" id="resultHeaderTitle">ফলাফল</h2>
-                    <p id="searchCriteriaText" style="color: var(--text-light); margin-bottom: 20px;">ফিল্টার অনুযায়ী ফলাফল দেখানো হচ্ছে...</p>
-                    
-                    <div id="loadingSpinner" style="text-align: center; display: none; padding: 40px;">
-                        <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
-                        <p class="mt-2">ডাটা লোড হচ্ছে...</p>
-                    </div>
+        <main class="container">
+            <section class="section" style="background: var(--section-bg); padding: 25px; border-radius: 12px; backdrop-filter: blur(12px); margin-top: 40px;">
+                <h2 class="section-title" id="resultHeaderTitle">ফলাফল</h2>
+                <p id="searchCriteriaText" style="color: var(--text-light); margin-bottom: 20px;">ফিল্টার অনুযায়ী ফলাফল দেখানো হচ্ছে...</p>
+                
+                <div id="loadingSpinner" style="text-align: center; display: none; padding: 40px;">
+                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                    <p class="mt-2">ডাটা লোড হচ্ছে...</p>
+                </div>
 
-                    <div id="resultsGrid" class="emergency-grid">
-                        <!-- Cards will be injected here by JS -->
-                    </div>
+                <div id="resultsGrid" class="emergency-grid"></div>
 
-                    <div id="noResults" style="display:none; text-align: center; padding: 40px; color: var(--text-light);">
-                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;"></i>
-                        <p>দুঃখিত, এই এলাকায় এই মুহূর্তে কোনো <span id="dynamicNoResultType">তথ্য</span> পাওয়া যায়নি।</p>
-                    </div>
-                </section>
-            </div>
+                <div id="noResults" style="display:none; text-align: center; padding: 40px; color: var(--text-light);">
+                    <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                    <p>দুঃখিত, এই এলাকায় এই মুহূর্তে কোনো <span id="dynamicNoResultType">তথ্য</span> পাওয়া যায়নি।</p>
+                </div>
+            </section>
         </main>
 
-        <!-- Floating Action Button (Only in Results View) -->
-        <div class="fab-container">
-            <!-- New Hint Box -->
-            <div class="fab-hint" id="fabHint">আপনি কি কোন কন্টাক্ট যুক্ত করতে চান?</div>
-            <button class="fab-btn" id="adminFab">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-
-        <!-- Footer -->
         <footer>
             <div class="container">
                 <div class="footer-content">
-                    <div class="footer-column"><h3>পাশে আছি</h3><p>জীবন বাঁচাতে রক্ত দিন। আমাদের প্ল্যাটফর্ম জরুরী অবস্থায় রক্তের প্রয়োজনীয়তা মেটাতে সাহায্য করে।</p><div class="social-links"><a href="https://www.facebook.com/profile.php?id=61583966346088"><i class="fab fa-facebook-f"></i></a><a href="phttps://x.com/PasheAachi"><i class="fab fa-twitter"></i></a><a href="https://www.instagram.com/pasheachhi?igsh=aGJyeHpmM3llazY5"><i class="fab fa-instagram"></i></a><a href="https://bd.linkedin.com/in/pashe-aachi-65b5a6392"><i class="fab fa-linkedin-in"></i></a></div></div>
-                    <div class="footer-column"><h3>লিংকস</h3><ul class="footer-links"><li><a href="index.html">হোম</a></li><li><a href="emergency-find-blood.html">জরুরি যোগাযোগ</a></li><li><a href="emergency-find-blood.html">ইমারজেন্সি ব্লাড</a></li></ul></div>
-                    <div class="footer-column"><h3>সহায়তা</h3><ul class="footer-links"><li><a href="https://wa.me/8801851956615">সাপোর্ট</a></li><li><a href="about-us.html">আমাদের সম্পর্কে</a></li><li><a href="condition.html">টার্মস এন্ড কন্ডিশন</a></li></ul></div>
-                    <div class="footer-column"><h3>যোগাযোগ</h3><ul class="footer-links"><li><i class="fas fa-map-marker-alt"></i> ঢাকা, বাংলাদেশ</li><li><i class="fas fa-phone"></i> +880 1XXX-XXXXXX</li><li><i class="fas fa-envelope"></i> info@bloodlink.com</li></ul></div>
+                    <div class="footer-column">
+                        <h3>পাশে আছি</h3>
+                        <p>জীবন বাঁচাতে রক্ত দিন। আমাদের প্ল্যাটফর্ম জরুরী অবস্থায় রক্তের প্রয়োজনীয়তা মেটাতে সাহায্য করে।</p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/profile.php?id=61583966346088"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://x.com/PasheAachi"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.instagram.com/pasheachhi?igsh=aGJyeHpmM3llazY5"><i class="fab fa-instagram"></i></a>
+                            <a href="https://bd.linkedin.com/in/pashe-aachi-65b5a6392"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-column">
+                        <h3>লিংকস</h3>
+                        <ul class="footer-links">
+                            <li><a href="index.html">হোম</a></li>
+                            <li><a href="all-search.html?type=donor">রক্তদাতা</a></li>
+                            <li><a href="emergency-find-blood.html">ইমারজেন্সি ব্লাড</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>সহায়তা</h3>
+                         <ul class="footer-links">
+                            <li><a href="https://wa.me/8801851956615">সাপোর্ট</a></li>
+                             <li><a href="about-us.html">আমাদের সম্পর্কে</a></li>
+                             <li><a href="condition.html">টার্মস এন্ড কন্ডিশন</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>যোগাযোগ</h3>
+                        <ul class="footer-links">
+                            <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress">ঢাকা, বাংলাদেশ</span></li>
+                            <li><i class="fas fa-phone"></i> <span id="footerPhone">+880 1XXX-XXXXXX</span></li>
+                            <li><i class="fas fa-envelope"></i> <span id="footerEmail">info@bloodlink.com</span></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="copyright"><p>&copy; ২০২৫ পাশে আছি. সকল অধিকার সংরক্ষিত।</p></div>
             </div>
         </footer>
+
+        <!-- FAB for Adding Contact -->
+        <div class="fab-container">
+            <div class="fab-hint" id="fabHint">আপনি কি কোন কন্টাক্ট যুক্ত করতে চান?</div>
+            <button class="fab-btn" id="adminFab"><i class="fas fa-plus"></i></button>
+        </div>
     </div>
 
-    <!-- Pass Key Overlay -->
+    <!-- PASS KEY OVERLAY -->
     <div class="passkey-overlay" id="passkeyOverlay">
         <div class="passkey-container">
-            <button id="closePasskeyBtn" class="close-btn" title="ফিরে যান"><i class="fas fa-times"></i></button>
+            <button id="closePasskeyBtn" class="close-btn"><i class="fas fa-times"></i></button>
             <h1 class="passkey-title">Pass Key দিন</h1>
             <p style="color: var(--text-light); margin-bottom: 20px;">ডাটা এন্ট্রির জন্য ৬-সংখ্যার key -টি লিখুন।</p>
             <form id="passkeyForm">
-                <input type="password" id="passkey-input" maxlength="6" autocomplete="off" placeholder="______" required>
-                <div id="passkey-error"></div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;">প্রবেশ করুন</button>
-                
-                <p style="margin-top: 20px; font-size: 0.9rem; text-align: center;">
-                    <a href="https://wa.me/message/JXOKUYORFYPUK1" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
-                        <i class="fab fa-whatsapp"></i> এডমিনের থেকে Pass key নিন
-                    </a>
-                </p>
+                <!-- Using type="tel" and autocomplete="off" to prevent password managers -->
+                <input type="tel" id="passkeyInput" maxlength="6" name="random_code_field" autocomplete="off" placeholder="______" required 
+                       class="form-control" style="text-align: center; letter-spacing: 10px; font-size: 1.5rem;">
+                <div id="passkey-error" style="color: var(--primary); margin-top: 10px; min-height: 20px;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">প্রবেশ করুন</button>
             </form>
         </div>
     </div>
 
-    <!-- NEW: Add Contact Overlay (Initially Hidden) -->
+    <!-- ADD CONTACT OVERLAY -->
     <div class="passkey-overlay" id="addContactOverlay">
         <div class="add-contact-container">
-            <button id="closeAddContactBtn" class="close-btn" title="বন্ধ করুন"><i class="fas fa-times"></i></button>
+            <button id="closeAddContactBtn" class="close-btn"><i class="fas fa-times"></i></button>
             <h1 class="edit-title"><i class="fas fa-plus-circle"></i> নতুন কন্টাক্ট যোগ করুন</h1>
             
             <form class="edit-form" id="editForm">
                 <div class="form-group full-width">
-                    <label for="serviceType">সেকশন</label>
-                    <select id="serviceType" class="form-control" required>
-                        <option value="" disabled>সেকশন নির্বাচন করুন</option>
-                        <option value="ব্লাড ডোনার">ব্লাড ডোনার</option>
-                        <option value="পুলিশ স্টেশন">পুলিশ স্টেশন</option>
-                        <option value="হাসপাতাল">হাসপাতাল ও ডাক্তার</option>
-                        <option value="এম্বুলেন্স">এম্বুলেন্স</option>
-                        <option value="বিদ্যুৎ জোনাল অফিস">বিদ্যুৎ জোনাল অফিস</option>
-                        <option value="ফায়ার সার্ভিস">ফায়ার সার্ভিস</option>
-                        <option value="গ্যাস ফিলিং স্টেশন">গ্যাস ফিলিং স্টেশন</option>
-                        <option value="ওয়াসা">ওয়াসা</option>
-                        <option value="পেট্রোল পাম্প">পেট্রোল পাম্প</option>
-                        <option value="সরকারী কার্যালয়">সরকারী কার্যালয়</option>
-                    </select>
+                    <label>সেকশন (অটো সিলেক্টেড)</label>
+                    <input type="text" id="serviceType" class="form-control" disabled>
                 </div>
-                
-                <!-- বিভাগ সিলেক্ট -->
                 <div class="form-group">
-                    <label for="editDivision">বিভাগ</label>
-                    <select id="editDivision" class="form-control" required>
-                        <option value="" disabled selected>বিভাগ নির্বাচন করুন</option>
-                    </select>
+                    <label>বিভাগ (অটো সিলেক্টেড)</label>
+                    <select id="editDivision" class="form-control" disabled></select>
                 </div>
-                
                 <div class="form-group">
-                    <label for="editDistrict">জেলা</label>
-                    <select id="editDistrict" class="form-control" disabled required>
-                        <option value="" disabled selected>প্রথমে বিভাগ নির্বাচন করুন</option>
-                    </select>
+                    <label>জেলা (অটো সিলেক্টেড)</label>
+                    <select id="editDistrict" class="form-control" disabled></select>
                 </div>
-                
                 <div class="form-group full-width">
-                    <label for="editUpazila">উপজেলা</label>
-                    <select id="editUpazila" class="form-control" disabled required>
-                        <option value="" disabled selected>প্রথমে জেলা নির্বাচন করুন</option>
-                    </select>
+                    <label>উপজেলা (অটো সিলেক্টেড)</label>
+                    <select id="editUpazila" class="form-control" disabled></select>
                 </div>
-                
                 <div class="form-group full-width">
-                    <label for="personName">নাম (অপশনাল)</label>
+                    <label>নাম (অপশনাল)</label>
                     <input type="text" id="personName" class="form-control" placeholder="ব্যক্তির নাম...">
                 </div>
                 <div class="form-group full-width">
-                    <label for="officeName">পদ / প্রতিষ্ঠান নাম</label>
+                    <label>পদ / প্রতিষ্ঠান নাম</label>
                     <input type="text" id="officeName" class="form-control" placeholder="প্রতিষ্ঠানের নাম..." required>
                 </div>
                 <div class="form-group">
-                    <label for="mobileNumber">মোবাইল নম্বর</label>
+                    <label>মোবাইল নম্বর</label>
                     <input type="tel" id="mobileNumber" class="form-control" placeholder="017xxxxxxxx">
                 </div>
                 <div class="form-group">
-                    <label for="emailAddress">ই-মেল (অপশনাল)</label>
+                    <label>ই-মেল (অপশনাল)</label>
                     <input type="email" id="emailAddress" class="form-control" placeholder="example@mail.com">
                 </div>
                 <div class="form-group full-width">
@@ -635,12 +480,12 @@
         </div>
     </div>
 
-    <!-- Firebase Integration and Main Logic -->
+    <!-- Logic Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Configuration (Same as Admin)
         const firebaseConfig = {
             apiKey: "AIzaSyBnKQr2k2ZWnPlEZiJtMDewv6z3Z7p3kiU",
             authDomain: "pacheacchi.firebaseapp.com",
@@ -652,499 +497,318 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ==========================================
-        //  DATA & UTILITIES
-        // ==========================================
-
-        // Category Mapping (English Key in URL -> Bangla DB Value)
+        // Data Maps
         const categoryMap = {
-            "donor": "ব্লাড ডোনার",
-            "police": "পুলিশ স্টেশন",
-            "hospital": "হাসপাতাল",
-            "ambulance": "এম্বুলেন্স",
-            "electricity": "বিদ্যুৎ জোনাল অফিস",
-            "fire": "ফায়ার সার্ভিস",
-            "gas": "গ্যাস ফিলিং স্টেশন",
-            "wasa": "ওয়াসা",
-            "petrol": "পেট্রোল পাম্প",
-            "govt": "সরকারী কার্যালয়"
+            "donor": "ব্লাড ডোনার", "police": "পুলিশ স্টেশন", "hospital": "হাসপাতাল", "ambulance": "এম্বুলেন্স",
+            "electricity": "বিদ্যুৎ জোনাল অফিস", "fire": "ফায়ার সার্ভিস", "gas": "গ্যাস ফিলিং স্টেশন",
+            "wasa": "ওয়াসা", "petrol": "পেট্রোল পাম্প", "govt": "সরকারী কার্যালয়"
         };
 
-        // Geo Data from Admin Panel (Corrected Upazilas)
-        const bdGeoData = {
-            "Dhaka": {
-                "Dhaka": ["Savar", "Dhamrai", "Keraniganj", "Nawabganj", "Dohar", "Hazaribagh", "Ramna", "Tejgaon", "Gulshan", "Mirpur", "Pallabi", "Kafrul", "Cantonment", "Uttara", "Mohammadpur", "Dhanmondi", "Badda", "Khilkhet", "Demra", "Jatrabari", "Lalbagh", "Kotwali", "Sutrapur"],
-                "Gazipur": ["Gazipur Sadar", "Kaliakair", "Kapasia", "Sreepur", "Kaliganj"],
-                "Narayanganj": ["Narayanganj Sadar", "Bandar", "Araihazar", "Rupganj", "Sonargaon"],
-                "Manikganj": ["Manikganj Sadar", "Singair", "Saturia", "Shivalaya", "Ghior", "Daulatpur", "Harirampur"],
-                "Munshiganj": ["Munshiganj Sadar", "Tongibari", "Sreenagar", "Lohajang", "Gajaria", "Sirajdikhan"],
-                "Narsingdi": ["Narsingdi Sadar", "Belabo", "Monohardi", "Palash", "Raipura", "Shibpur"],
-                "Tangail": ["Tangail Sadar", "Sakhipur", "Basail", "Madhupur", "Ghatail", "Kalihati", "Nagarpur", "Mirzapur", "Gopalpur", "Delduar", "Bhuapur", "Dhanbari"],
-                "Kishoreganj": ["Kishoreganj Sadar", "Hossainpur", "Pakundia", "Katiadi", "Karimganj", "Tarail", "Itna", "Mithamoin", "Austagram", "Nikli", "Bajitpur", "Kuliarchar", "Bhairab"],
-                "Faridpur": ["Faridpur Sadar", "Boalmari", "Alfadanga", "Madhukhali", "Bhanga", "Nagarkanda", "Charbhadrasan", "Sadarpur", "Saltha"],
-                "Gopalganj": ["Gopalganj Sadar", "Kashiani", "Tungipara", "Kotalipara", "Muksudpur"],
-                "Madaripur": ["Madaripur Sadar", "Kalkini", "Rajoir", "Shibchar"],
-                "Rajbari": ["Rajbari Sadar", "Goalanda", "Pangsa", "Baliakandi", "Kalukhali"],
-                "Shariatpur": ["Shariatpur Sadar", "Naria", "Zajira", "Gosairhat", "Bhedarganj", "Damudya"]
-            },
-            "Chittagong": {
-                "Chittagong": ["Chittagong Sadar", "Sitakunda", "Mirsharai", "Patiya", "Rangunia", "Anwara", "Boalkhali", "Raozan", "Hathazari", "Fatikchhari", "Sandwip", "Lohagara", "Satkania", "Banshkhali", "Chandanaish", "Karnaphuli"],
-                "Cox's Bazar": ["Cox's Bazar Sadar", "Chakaria", "Kutubdia", "Ukhiya", "Moheshkhali", "Pekua", "Ramu", "Teknaf"],
-                "Comilla": ["Comilla Sadar", "Barura", "Brahmanpara", "Burichong", "Chandina", "Chauddagram", "Daudkandi", "Debidwar", "Homna", "Laksam", "Muradnagar", "Nangalkot", "Meghna", "Titas", "Monohargonj", "Lalmai"],
-                "Brahmanbaria": ["Brahmanbaria Sadar", "Kasba", "Nasirnagar", "Sarail", "Ashuganj", "Akhaura", "Nabinagar", "Bancharampur", "Bijoynagar"],
-                "Chandpur": ["Chandpur Sadar", "Faridganj", "Haimchar", "Haziganj", "Kachua", "Matlab North", "Matlab South", "Shahrasti"],
-                "Noakhali": ["Noakhali Sadar", "Begumganj", "Chatkhil", "Companyganj", "Hatiya", "Senbagh", "Sonaimuri", "Subarnachar", "Kabirhat"],
-                "Feni": ["Feni Sadar", "Chhagalnaiya", "Daganbhuiyan", "Parshuram", "Fulgazi", "Sonagazi"],
-                "Lakshmipur": ["Lakshmipur Sadar", "Raipur", "Ramganj", "Ramgati", "Kamalnagar"],
-                "Khagrachhari": ["Khagrachhari Sadar", "Dighinala", "Panchhari", "Laxmichhari", "Mahalchhari", "Manikchhari", "Ramgarh", "Matiranga", "Guimara"],
-                "Rangamati": ["Rangamati Sadar", "Belaichhari", "Bagaichhari", "Barkal", "Juraichhari", "Rajasthali", "Kaptai", "Langadu", "Naniarchar", "Kaukhali"],
-                "Bandarban": ["Bandarban Sadar", "Ali Kadam", "Naikhongchhari", "Rowangchhari", "Lama", "Ruma", "Thanchi"]
-            },
-            "Sylhet": {
-                "Sylhet": ["Sylhet Sadar", "Beanibazar", "Bishwanath", "Dakshin Surma", "Balaganj", "Companiganj", "Fenchuganj", "Golapganj", "Gowainghat", "Jaintiapur", "Kanaighat", "Zakiganj", "Osmani Nagar"],
-                "Moulvibazar": ["Moulvibazar Sadar", "Barlekha", "Juri", "Kamalganj", "Kulaura", "Rajnagar", "Sreemangal"],
-                "Habiganj": ["Habiganj Sadar", "Azmiriganj", "Bahubal", "Baniyachong", "Chunarughat", "Lakhai", "Madhabpur", "Nabiganj", "Shayestaganj"],
-                "Sunamganj": ["Sunamganj Sadar", "Bishwamvarpur", "Chhatak", "Derai", "Dharamapasha", "Dowarabazar", "Jagannathpur", "Jamalganj", "Tahirpur", "Sullah", "Shantiganj"]
-            },
-            "Rajshahi": {
-                "Rajshahi": ["Rajshahi Sadar", "Bagha", "Bagmara", "Charghat", "Durgapur", "Godagari", "Mohanpur", "Paba", "Puthia", "Tanore"],
-                "Bogra": ["Bogra Sadar", "Adamdighi", "Dhupchanchia", "Gabtali", "Kahaloo", "Nandigram", "Sariakandi", "Sahajanpur", "Sherpur", "Shibganj", "Sonatala"],
-                "Naogaon": ["Naogaon Sadar", "Atrai", "Badalgachhi", "Dhamoirhat", "Manda", "Mohadevpur", "Niamatpur", "Patnitala", "Porsha", "Raninagar", "Sapahar"],
-                "Natore": ["Natore Sadar", "Bagatipara", "Baraigram", "Gurudaspur", "Lalpur", "Singra", "Naldanga"],
-                "Chapainawabganj": ["Chapainawabganj Sadar", "Gomastapur", "Nachole", "Bholahat", "Shibganj"],
-                "Pabna": ["Pabna Sadar", "Atgharia", "Bera", "Bhangura", "Chatmohar", "Faridpur", "Ishwardi", "Santhia", "Sujanagar"],
-                "Sirajganj": ["Sirajganj Sadar", "Belkuchi", "Chauhali", "Kamarkhanda", "Kazipur", "Raiganj", "Shahjadpur", "Tarash", "Ullahpara"],
-                "Joypurhat": ["Joypurhat Sadar", "Akkelpur", "Kalai", "Khetlal", "Panchbibi"]
-            },
-            "Khulna": {
-                "Khulna": ["Khulna Sadar", "Batiaghata", "Dacope", "Dumuria", "Dighalia", "Koyra", "Paikgachha", "Phultala", "Rupsha", "Terokhada"],
-                "Bagerhat": ["Bagerhat Sadar", "Chitalmari", "Fakirhat", "Kachua", "Mollahat", "Mongla", "Morrelganj", "Rampal", "Sarankhola"],
-                "Chuadanga": ["Chuadanga Sadar", "Alamdanga", "Damurhuda", "Jibannagar"],
-                "Jessore": ["Jessore Sadar", "Abhaynagar", "Bagherpara", "Chaugachha", "Jhikargachha", "Keshabpur", "Manirampur", "Sharsha"],
-                "Jhenaidah": ["Jhenaidah Sadar", "Harinakunda", "Kaliganj", "Kotchandpur", "Maheshpur", "Shailkupa"],
-                "Kushtia": ["Kushtia Sadar", "Bheramara", "Daulatpur", "Khoksa", "Kumarkhali", "Mirpur"],
-                "Magura": ["Magura Sadar", "Mohammadpur", "Shalikha", "Sreepur"],
-                "Meherpur": ["Meherpur Sadar", "Gangni", "Mujibnagar"],
-                "Narail": ["Narail Sadar", "Kalia", "Lohagara"],
-                "Satkhira": ["Satkhira Sadar", "Assasuni", "Debhata", "Kalaroa", "Kaliganj", "Shyamnagar", "Tala"]
-            },
-            "Barisal": {
-                "Barisal": ["Barisal Sadar", "Agailjhara", "Babuganj", "Bakerganj", "Banaripara", "Gaurnadi", "Hizla", "Mehendiganj", "Muladi", "Wazirpur"],
-                "Barguna": ["Barguna Sadar", "Amtali", "Bamna", "Betagi", "Patharghata", "Taltali"],
-                "Bhola": ["Bhola Sadar", "Burhanuddin", "Char Fasson", "Daulatkhan", "Lalmohan", "Manpura", "Tazumuddin"],
-                "Jhalokati": ["Jhalokati Sadar", "Kathalia", "Nalchity", "Rajapur"],
-                "Patuakhali": ["Patuakhali Sadar", "Bauphal", "Dashmina", "Galachipa", "Kalapara", "Mirzaganj", "Rangabali", "Dumki"],
-                "Pirojpur": ["Pirojpur Sadar", "Bhandaria", "Kawkhali", "Mathbaria", "Nazirpur", "Nesarabad", "Indurkani"]
-            },
-            "Rangpur": {
-                "Rangpur": ["Rangpur Sadar", "Badarganj", "Gangachhara", "Kaunia", "Mithapukur", "Pirgachha", "Pirganj", "Taraganj"],
-                "Dinajpur": ["Dinajpur Sadar", "Birampur", "Birganj", "Bochaganj", "Chirirbandar", "Fulbari", "Ghoraghat", "Hakimpur", "Kaharole", "Khansama", "Nawabganj", "Parbatipur", "Birol"],
-                "Gaibandha": ["Gaibandha Sadar", "Fulchhari", "Gobindaganj", "Palashbari", "Sadullapur", "Saghata", "Sundarganj"],
-                "Kurigram": ["Kurigram Sadar", "Bhurungamari", "Char Rajibpur", "Chilmari", "Phulbari", "Nageshwari", "Rajarhat", "Raomari", "Ulipur"],
-                "Lalmonirhat": ["Lalmonirhat Sadar", "Aditmari", "Hatibandha", "Kaliganj", "Patgram"],
-                "Nilphamari": ["Nilphamari Sadar", "Dimla", "Domar", "Jaldhaka", "Kishoreganj", "Saidpur"],
-                "Panchagarh": ["Panchagarh Sadar", "Atwari", "Boda", "Debiganj", "Tetulia"],
-                "Thakurgaon": ["Thakurgaon Sadar", "Baliadangi", "Haripur", "Pirganj", "Ranishankail"]
-            },
-            "Mymensingh": {
-                "Mymensingh": ["Mymensingh Sadar", "Bhaluka", "Dhobaura", "Fulbaria", "Gafargaon", "Gauripur", "Haluaghat", "Ishwarganj", "Muktagachha", "Nandail", "Phulpur", "Trishal", "Tara Khanda"],
-                "Jamalpur": ["Jamalpur Sadar", "Baksiganj", "Dewanganj", "Islampur", "Madarganj", "Melandaha", "Sarishabari"],
-                "Netrokona": ["Netrokona Sadar", "Atpara", "Barhatta", "Durgapur", "Khaliajuri", "Kalmakanda", "Kendua", "Madan", "Mohanganj", "Purbadhala"],
-                "Sherpur": ["Sherpur Sadar", "Jhenaigati", "Nakla", "Nalitabari", "Sreebardi"]
+        const locationData = {
+            "Dhaka": { name: "ঢাকা", districts: { "Dhaka": { name: "ঢাকা", upazilas: ["Savar", "Dhamrai", "Keraniganj", "Nawabganj", "Dohar", "Hazaribagh", "Ramna", "Tejgaon", "Gulshan", "Mirpur", "Pallabi", "Kafrul", "Cantonment", "Uttara", "Mohammadpur", "Dhanmondi", "Badda", "Khilkhet", "Demra", "Jatrabari", "Lalbagh", "Kotwali", "Sutrapur"] }, "Gazipur": { name: "গাজীপুর", upazilas: ["Gazipur Sadar", "Kaliakair", "Kapasia", "Sreepur", "Kaliganj"] }, "Narayanganj": { name: "নারায়ণগঞ্জ", upazilas: ["Narayanganj Sadar", "Bandar", "Araihazar", "Rupganj", "Sonargaon"] }, "Manikganj": { name: "মানিকগঞ্জ", upazilas: ["Manikganj Sadar", "Singair", "Saturia", "Shivalaya", "Ghior", "Daulatpur", "Harirampur"] }, "Munshiganj": { name: "মুন্সিগঞ্জ", upazilas: ["Munshiganj Sadar", "Tongibari", "Sreenagar", "Lohajang", "Gajaria", "Sirajdikhan"] }, "Narsingdi": { name: "নরসিংদী", upazilas: ["Narsingdi Sadar", "Belabo", "Monohardi", "Palash", "Raipura", "Shibpur"] }, "Tangail": { name: "টাঙ্গাইল", upazilas: ["Tangail Sadar", "Sakhipur", "Basail", "Madhupur", "Ghatail", "Kalihati", "Nagarpur", "Mirzapur", "Gopalpur", "Delduar", "Bhuapur", "Dhanbari"] }, "Kishoreganj": { name: "কিশোরগঞ্জ", upazilas: ["Kishoreganj Sadar", "Hossainpur", "Pakundia", "Katiadi", "Karimganj", "Tarail", "Itna", "Mithamoin", "Austagram", "Nikli", "Bajitpur", "Kuliarchar", "Bhairab"] }, "Faridpur": { name: "ফরিদপুর", upazilas: ["Faridpur Sadar", "Boalmari", "Alfadanga", "Madhukhali", "Bhanga", "Nagarkanda", "Charbhadrasan", "Sadarpur", "Saltha"] }, "Gopalganj": { name: "গোপালগঞ্জ", upazilas: ["Gopalganj Sadar", "Kashiani", "Tungipara", "Kotalipara", "Muksudpur"] }, "Madaripur": { name: "মাদারীপুর", upazilas: ["Madaripur Sadar", "Kalkini", "Rajoir", "Shibchar"] }, "Rajbari": { name: "রাজবাড়ী", upazilas: ["Rajbari Sadar", "Goalanda", "Pangsa", "Baliakandi", "Kalukhali"] }, "Shariatpur": { name: "শরীয়তপুর", upazilas: ["Shariatpur Sadar", "Naria", "Zajira", "Gosairhat", "Bhedarganj", "Damudya"] } } },
+            "Chittagong": { name: "চট্টগ্রাম", districts: { "Chittagong": { name: "চট্টগ্রাম", upazilas: ["Chittagong Sadar", "Sitakunda", "Mirsharai", "Patiya", "Rangunia", "Anwara", "Boalkhali", "Raozan", "Hathazari", "Fatikchhari", "Sandwip", "Lohagara", "Satkania", "Banshkhali", "Chandanaish", "Karnaphuli"] }, "Cox's Bazar": { name: "কক্সবাজার", upazilas: ["Cox's Bazar Sadar", "Chakaria", "Kutubdia", "Ukhiya", "Moheshkhali", "Pekua", "Ramu", "Teknaf"] }, "Comilla": { name: "কুমিল্লা", upazilas: ["Comilla Sadar", "Barura", "Brahmanpara", "Burichong", "Chandina", "Chauddagram", "Daudkandi", "Debidwar", "Homna", "Laksam", "Muradnagar", "Nangalkot", "Meghna", "Titas", "Monohargonj", "Lalmai"] }, "Brahmanbaria": { name: "ব্রাহ্মণবাড়িয়া", upazilas: ["Brahmanbaria Sadar", "Kasba", "Nasirnagar", "Sarail", "Ashuganj", "Akhaura", "Nabinagar", "Bancharampur", "Bijoynagar"] }, "Chandpur": { name: "চাঁদপুর", upazilas: ["Chandpur Sadar", "Faridganj", "Haimchar", "Haziganj", "Kachua", "Matlab North", "Matlab South", "Shahrasti"] }, "Noakhali": { name: "নোয়াখালী", upazilas: ["Noakhali Sadar", "Begumganj", "Chatkhil", "Companyganj", "Hatiya", "Senbagh", "Sonaimuri", "Subarnachar", "Kabirhat"] }, "Feni": { name: "ফেনী", upazilas: ["Feni Sadar", "Chhagalnaiya", "Daganbhuiyan", "Parshuram", "Fulgazi", "Sonagazi"] }, "Lakshmipur": { name: "লক্ষ্মীপুর", upazilas: ["Lakshmipur Sadar", "Raipur", "Ramganj", "Ramgati", "Kamalnagar"] }, "Khagrachhari": { name: "খাগড়াছড়ি", upazilas: ["Khagrachhari Sadar", "Dighinala", "Panchhari", "Laxmichhari", "Mahalchhari", "Manikchhari", "Ramgarh", "Matiranga", "Guimara"] }, "Rangamati": { name: "রাঙ্গামাটি", upazilas: ["Rangamati Sadar", "Belaichhari", "Bagaichhari", "Barkal", "Juraichhari", "Rajasthali", "Kaptai", "Langadu", "Naniarchar", "Kaukhali"] }, "Bandarban": { name: "বান্দরবান", upazilas: ["Bandarban Sadar", "Ali Kadam", "Naikhongchhari", "Rowangchhari", "Lama", "Ruma", "Thanchi"] } } },
+            "Rajshahi": { name: "রাজশাহী", districts: { "Rajshahi": { name: "রাজশাহী", upazilas: ["Rajshahi Sadar", "Bagha", "Bagmara", "Charghat", "Durgapur", "Godagari", "Mohanpur", "Paba", "Puthia", "Tanore"] }, "Bogra": { name: "বগুড়া", upazilas: ["Bogra Sadar", "Adamdighi", "Dhupchanchia", "Gabtali", "Kahaloo", "Nandigram", "Sariakandi", "Sahajanpur", "Sherpur", "Shibganj", "Sonatala"] }, "Naogaon": { name: "নওগাঁ", upazilas: ["Naogaon Sadar", "Atrai", "Badalgachhi", "Dhamoirhat", "Manda", "Mohadevpur", "Niamatpur", "Patnitala", "Porsha", "Raninagar", "Sapahar"] }, "Natore": { name: "নাটোর", upazilas: ["Natore Sadar", "Bagatipara", "Baraigram", "Gurudaspur", "Lalpur", "Singra", "Naldanga"] }, "Chapainawabganj": { name: "চাঁপাইনবাবগঞ্জ", upazilas: ["Chapainawabganj Sadar", "Gomastapur", "Nachole", "Bholahat", "Shibganj"] }, "Pabna": { name: "পাবনা", upazilas: ["Pabna Sadar", "Atgharia", "Bera", "Bhangura", "Chatmohar", "Faridpur", "Ishwardi", "Santhia", "Sujanagar"] }, "Sirajganj": { name: "সিরাজগঞ্জ", upazilas: ["Sirajganj Sadar", "Belkuchi", "Chauhali", "Kamarkhanda", "Kazipur", "Raiganj", "Shahjadpur", "Tarash", "Ullahpara"] }, "Joypurhat": { name: "জয়পুরহাট", upazilas: ["Joypurhat Sadar", "Akkelpur", "Kalai", "Khetlal", "Panchbibi"] } } },
+            "Khulna": { name: "খুলনা", districts: { "Khulna": { name: "খুলনা", upazilas: ["Khulna Sadar", "Batiaghata", "Dacope", "Dumuria", "Dighalia", "Koyra", "Paikgachha", "Phultala", "Rupsha", "Terokhada"] }, "Bagerhat": { name: "বাগেরহাট", upazilas: ["Bagerhat Sadar", "Chitalmari", "Fakirhat", "Kachua", "Mollahat", "Mongla", "Morrelganj", "Rampal", "Sarankhola"] }, "Chuadanga": { name: "চুয়াডাঙ্গা", upazilas: ["Chuadanga Sadar", "Alamdanga", "Damurhuda", "Jibannagar"] }, "Jessore": { name: "যশোর", upazilas: ["Jessore Sadar", "Abhaynagar", "Bagherpara", "Chaugachha", "Jhikargachha", "Keshabpur", "Manirampur", "Sharsha"] }, "Jhenaidah": { name: "ঝিনাইদহ", upazilas: ["Jhenaidah Sadar", "Harinakunda", "Kaliganj", "Kotchandpur", "Maheshpur", "Shailkupa"] }, "Kushtia": { name: "কুষ্টিয়া", upazilas: ["Kushtia Sadar", "Bheramara", "Daulatpur", "Khoksa", "Kumarkhali", "Mirpur"] }, "Magura": { name: "মাগুরা", upazilas: ["Magura Sadar", "Mohammadpur", "Shalikha", "Sreepur"] }, "Meherpur": { name: "মেহেরপুর", upazilas: ["Meherpur Sadar", "Gangni", "Mujibnagar"] }, "Narail": { name: "নড়াইল", upazilas: ["Narail Sadar", "Kalia", "Lohagara"] }, "Satkhira": { name: "সাতক্ষীরা", upazilas: ["Satkhira Sadar", "Assasuni", "Debhata", "Kalaroa", "Kaliganj", "Shyamnagar", "Tala"] } } },
+            "Barisal": { name: "বরিশাল", districts: { "Barisal": { name: "বরিশাল", upazilas: ["Barisal Sadar", "Agailjhara", "Babuganj", "Bakerganj", "Banaripara", "Gaurnadi", "Hizla", "Mehendiganj", "Muladi", "Wazirpur"] }, "Barguna": { name: "বরগুনা", upazilas: ["Barguna Sadar", "Amtali", "Bamna", "Betagi", "Patharghata", "Taltali"] }, "Bhola": { name: "ভোলা", upazilas: ["Bhola Sadar", "Burhanuddin", "Char Fasson", "Daulatkhan", "Lalmohan", "Manpura", "Tazumuddin"] }, "Jhalokati": { name: "ঝালকাঠি", upazilas: ["Jhalokati Sadar", "Kathalia", "Nalchity", "Rajapur"] }, "Patuakhali": { name: "পটুয়াখালী", upazilas: ["Patuakhali Sadar", "Bauphal", "Dashmina", "Galachipa", "Kalapara", "Mirzaganj", "Rangabali", "Dumki"] }, "Pirojpur": { name: "পিরোজপুর", upazilas: ["Pirojpur Sadar", "Bhandaria", "Kawkhali", "Mathbaria", "Nazirpur", "Nesarabad", "Indurkani"] } } },
+            "Sylhet": { name: "সিলেট", districts: { "Sylhet": { name: "সিলেট", upazilas: ["Sylhet Sadar", "Beanibazar", "Bishwanath", "Dakshin Surma", "Balaganj", "Companiganj", "Fenchuganj", "Golapganj", "Gowainghat", "Jaintiapur", "Kanaighat", "Zakiganj", "Osmani Nagar"] }, "Moulvibazar": { name: "মৌলভীবাজার", upazilas: ["Moulvibazar Sadar", "Barlekha", "Juri", "Kamalganj", "Kulaura", "Rajnagar", "Sreemangal"] }, "Habiganj": { name: "হবিগঞ্জ", upazilas: ["Habiganj Sadar", "Azmiriganj", "Bahubal", "Baniyachong", "Chunarughat", "Lakhai", "Madhabpur", "Nabiganj", "Shayestaganj"] }, "Sunamganj": { name: "সুনামগঞ্জ", upazilas: ["Sunamganj Sadar", "Bishwamvarpur", "Chhatak", "Derai", "Dharamapasha", "Dowarabazar", "Jagannathpur", "Jamalganj", "Tahirpur", "Sullah", "Shantiganj"] } } },
+            "Rangpur": { name: "রংপুর", districts: { "Rangpur": { name: "রংপুর", upazilas: ["Rangpur Sadar", "Badarganj", "Gangachhara", "Kaunia", "Mithapukur", "Pirgachha", "Pirganj", "Taraganj"] }, "Dinajpur": { name: "দিনাজপুর", upazilas: ["Dinajpur Sadar", "Birampur", "Birganj", "Bochaganj", "Chirirbandar", "Fulbari", "Ghoraghat", "Hakimpur", "Kaharole", "Khansama", "Nawabganj", "Parbatipur", "Birol"] }, "Gaibandha": { name: "গাইবান্ধা", upazilas: ["Gaibandha Sadar", "Fulchhari", "Gobindaganj", "Palashbari", "Sadullapur", "Saghata", "Sundarganj"] }, "Kurigram": { name: "কুড়িগ্রাম", upazilas: ["Kurigram Sadar", "Bhurungamari", "Char Rajibpur", "Chilmari", "Phulbari", "Nageshwari", "Rajarhat", "Raomari", "Ulipur"] }, "Lalmonirhat": { name: "লালমনিরহাট", upazilas: ["Lalmonirhat Sadar", "Aditmari", "Hatibandha", "Kaliganj", "Patgram"] }, "Nilphamari": { name: "নীলফামারী", upazilas: ["Nilphamari Sadar", "Dimla", "Domar", "Jaldhaka", "Kishoreganj", "Saidpur"] }, "Panchagarh": { name: "পঞ্চগড়", upazilas: ["Panchagarh Sadar", "Atwari", "Boda", "Debiganj", "Tetulia"] }, "Thakurgaon": { name: "ঠাকুরগাঁও", upazilas: ["Thakurgaon Sadar", "Baliadangi", "Haripur", "Pirganj", "Ranishankail"] } } },
+            "Mymensingh": { name: "ময়মনসিংহ", districts: { "Mymensingh": { name: "ময়মনসিংহ", upazilas: ["Mymensingh Sadar", "Bhaluka", "Dhobaura", "Fulbaria", "Gafargaon", "Gauripur", "Haluaghat", "Ishwarganj", "Muktagachha", "Nandail", "Phulpur", "Trishal", "Tara Khanda"] }, "Jamalpur": { name: "জামালপুর", upazilas: ["Jamalpur Sadar", "Baksiganj", "Dewanganj", "Islampur", "Madarganj", "Melandaha", "Sarishabari"] }, "Netrokona": { name: "নেত্রকোণা", upazilas: ["Netrokona Sadar", "Atpara", "Barhatta", "Durgapur", "Khaliajuri", "Kalmakanda", "Kendua", "Madan", "Mohanganj", "Purbadhala"] }, "Sherpur": { name: "শেরপুর", upazilas: ["Sherpur Sadar", "Jhenaigati", "Nakla", "Nalitabari", "Sreebardi"] } } }
+        };
+
+        // UI & Auth Init
+        onAuthStateChanged(auth, (user) => {
+            const btns = { in: document.getElementById('sidebarLoginBtn'), out: document.getElementById('sidebarLogoutBtn'), prof: document.getElementById('profileContainer') };
+            if(user) {
+                if(btns.in) btns.in.style.display='none';
+                if(btns.out) btns.out.style.display='inline-flex';
+                if(btns.prof) btns.prof.style.display='block';
+                const pImg = document.querySelector('.profile-icon-btn');
+                if(pImg) pImg.innerHTML = user.photoURL ? `<img src="${user.photoURL}">` : `<i class="fas fa-user"></i>`;
+            } else {
+                if(btns.in) btns.in.style.display='inline-flex';
+                if(btns.out) btns.out.style.display='none';
+                if(btns.prof) btns.prof.style.display='none';
             }
-        };
+        });
+        document.getElementById('sidebarLogoutBtn')?.addEventListener('click', () => signOut(auth).then(()=>location.reload()));
 
-        // DOM Elements
-        const divisionSelect = document.getElementById('division');
-        const districtSelect = document.getElementById('district');
-        const upazilaSelect = document.getElementById('upazila');
-        const searchForm = document.getElementById('searchForm');
-        
-        const editDivisionSelect = document.getElementById('editDivision');
-        const editDistrictSelect = document.getElementById('editDistrict');
-        const editUpazilaSelect = document.getElementById('editUpazila');
-        const editForm = document.getElementById('editForm');
-        
-        const resultsGrid = document.getElementById('resultsGrid');
-        const noResults = document.getElementById('noResults');
-        const loadingSpinner = document.getElementById('loadingSpinner');
+        // Fetch Settings
+        (async()=>{
+            const site = await getDoc(doc(db,"settings","siteConfig"));
+            if(site.exists()){
+                const d=site.data();
+                if(d.logoUrl) { document.querySelectorAll('#siteLogo, #sidebarLogo').forEach(e=>e.src=d.logoUrl); }
+                else { document.querySelectorAll('#siteLogo, #sidebarLogo').forEach(e=>e.src="https://i.ibb.co.com/QFtV51LQ/1000018745.png"); }
+                if(d.siteName) document.getElementById('siteName').innerText=d.siteName;
+            } else { document.querySelectorAll('#siteLogo, #sidebarLogo').forEach(e=>e.src="https://i.ibb.co.com/QFtV51LQ/1000018745.png"); }
+            
+            const contact = await getDoc(doc(db,"settings","contact"));
+            if(contact.exists()){
+                const d=contact.data();
+                if(d.address) document.getElementById('footerAddress').innerText=d.address;
+                if(d.phone) document.getElementById('footerPhone').innerText=d.phone;
+                if(d.email) document.getElementById('footerEmail').innerText=d.email;
+            }
+        })();
 
-        // State
-        let currentSearchType = ""; // The mapped Bengali category
-        let currentSearchTypeTitle = ""; // For Display
-
-        // ==========================================
-        //  INIT & LOGIC
-        // ==========================================
+        // Logic Init
+        let currentSearchType = "";
+        let currentSearchTypeTitle = "";
 
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // 1. DETERMINE SEARCH TYPE
             const params = new URLSearchParams(window.location.search);
-            const typeParam = params.get('type');
-            
-            if(typeParam && categoryMap[typeParam]) {
-                currentSearchType = categoryMap[typeParam];
-                currentSearchTypeTitle = currentSearchType;
-            } else {
-                currentSearchTypeTitle = "অনুসন্ধান";
-            }
-            
-            // Set Header
+            const type = params.get('type');
+            if(type && categoryMap[type]) { currentSearchType=categoryMap[type]; currentSearchTypeTitle=currentSearchType; }
+            else { currentSearchTypeTitle="অনুসন্ধান"; }
             document.getElementById('dynamicSearchTitle').innerHTML = `<i class="fas fa-search"></i> ${currentSearchTypeTitle}`;
 
-            // 2. POPULATE DROPDOWNS (Main Search & Add Form)
-            populateDivisions(divisionSelect);
-            populateDivisions(editDivisionSelect);
-
-            setupDropdownListeners(divisionSelect, districtSelect, upazilaSelect);
-            setupDropdownListeners(editDivisionSelect, editDistrictSelect, editUpazilaSelect);
-
-            // 3. SEARCH HANDLER
-            searchForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await performSearch();
+            // Populate Main Search
+            const divSel = document.getElementById('division');
+            divSel.innerHTML = '<option value="" disabled selected>বিভাগ নির্বাচন করুন</option>';
+            Object.keys(locationData).forEach(k => {
+                const opt = document.createElement('option');
+                opt.value = k; opt.textContent = locationData[k].name;
+                divSel.appendChild(opt);
             });
 
-            // 4. ADD CONTACT HANDLER
-            editForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await saveContact();
+            divSel.addEventListener('change', function(){
+                const distSel = document.getElementById('district');
+                const upaSel = document.getElementById('upazila');
+                distSel.innerHTML='<option value="" disabled selected>জেলা নির্বাচন করুন</option>'; distSel.disabled=false;
+                upaSel.innerHTML='<option value="" disabled selected>প্রথমে জেলা নির্বাচন করুন</option>'; upaSel.disabled=true;
+                
+                const dists = locationData[this.value].districts;
+                Object.keys(dists).forEach(k => {
+                    const opt = document.createElement('option');
+                    opt.value=k; opt.textContent=dists[k].name;
+                    distSel.appendChild(opt);
+                });
             });
+
+            document.getElementById('district').addEventListener('change', function(){
+                const upaSel = document.getElementById('upazila');
+                upaSel.innerHTML='<option value="" disabled selected>উপজেলা নির্বাচন করুন</option>'; upaSel.disabled=false;
+                const upas = locationData[divSel.value].districts[this.value].upazilas;
+                upas.forEach(u => {
+                    const opt = document.createElement('option');
+                    opt.value=u; opt.textContent=u;
+                    upaSel.appendChild(opt);
+                });
+            });
+
+            // Search Trigger
+            document.getElementById('searchForm').addEventListener('submit', (e)=>{
+                e.preventDefault();
+                performSearch();
+            });
+
+            // FAB Trigger (Auth -> Passkey -> AddForm)
+            document.getElementById('adminFab').addEventListener('click', ()=>{
+                if(!auth.currentUser) { window.location.href='login.html'; return; }
+                document.getElementById('passkeyOverlay').style.display='flex';
+            });
+
+            // Passkey Submit
+            document.getElementById('passkeyForm').addEventListener('submit', async(e)=>{
+                e.preventDefault();
+                const input = document.getElementById('passkeyInput').value;
+                const err = document.getElementById('passkey-error');
+                
+                // Fetch key from settings/admin/passkey (fallback 123456)
+                // Assuming admin panel saves it in: settings -> admin -> passKey
+                let realKey = "123456"; 
+                try {
+                    const snap = await getDoc(doc(db, "settings", "admin"));
+                    if(snap.exists() && snap.data().passKey) realKey = snap.data().passKey;
+                } catch(e){ console.log(e); }
+
+                if(input === realKey) {
+                    document.getElementById('passkeyOverlay').style.display='none';
+                    document.getElementById('passkeyInput').value='';
+                    err.innerText='';
+                    openAddContactOverlay();
+                } else {
+                    err.innerText = "ভুল পাস-কী! আবার চেষ্টা করুন।";
+                }
+            });
+
+            // Add Form Submit
+            document.getElementById('editForm').addEventListener('submit', saveContact);
         });
 
-        // --- Dropdown Helpers ---
-        function populateDivisions(selectElement) {
-            selectElement.innerHTML = '<option value="" disabled selected>বিভাগ নির্বাচন করুন</option>';
-            Object.keys(bdGeoData).forEach(div => {
-                const option = document.createElement('option');
-                option.value = div;
-                option.textContent = div; // Use English name to match DB
-                selectElement.appendChild(option);
-            });
-        }
-
-        function setupDropdownListeners(divSelect, distSelect, upaSelect) {
-            divSelect.addEventListener('change', function() {
-                // Populate Districts
-                distSelect.innerHTML = '<option value="" disabled selected>জেলা নির্বাচন করুন</option>';
-                distSelect.disabled = false;
-                upaSelect.innerHTML = '<option value="" disabled selected>প্রথমে জেলা নির্বাচন করুন</option>';
-                upaSelect.disabled = true;
-
-                const districts = bdGeoData[this.value];
-                if(districts) {
-                    Object.keys(districts).forEach(dist => {
-                        const opt = document.createElement('option');
-                        opt.value = dist;
-                        opt.textContent = dist;
-                        distSelect.appendChild(opt);
-                    });
-                }
-            });
-
-            distSelect.addEventListener('change', function() {
-                // Populate Upazilas
-                upaSelect.innerHTML = '<option value="" disabled selected>উপজেলা নির্বাচন করুন</option>';
-                upaSelect.disabled = false;
-
-                const upazilas = bdGeoData[divSelect.value][this.value];
-                if(upazilas) {
-                    upazilas.forEach(upz => {
-                        const opt = document.createElement('option');
-                        opt.value = upz;
-                        opt.textContent = upz;
-                        upaSelect.appendChild(opt);
-                    });
-                }
-            });
-            
-            // Extra for Add Form: validate on change
-            if(editForm.contains(divSelect)) {
-                [divSelect, distSelect, upaSelect].forEach(el => {
-                    el.addEventListener('change', validateAddForm);
-                });
-            }
-        }
-
-        // --- SEARCH FUNCTION ---
+        // Search Logic
         async function performSearch() {
-            const div = divisionSelect.value;
-            const dist = districtSelect.value;
-            const upa = upazilaSelect.value;
-
-            if(!div || !dist || !upa) return;
-
-            // Switch UI
-            document.getElementById('search-view-section').style.display = 'none';
-            document.getElementById('results-view-section').style.display = 'block';
-            window.scrollTo(0,0);
+            const div = document.getElementById('division').value;
+            const dist = document.getElementById('district').value;
+            const upa = document.getElementById('upazila').value;
             
-            // Set Titles
-            document.getElementById('resultHeaderTitle').textContent = `${currentSearchTypeTitle || 'ফলাফল'} | ${upa}`;
-            document.getElementById('searchCriteriaText').textContent = `${upa}, ${dist}, ${div}`;
-            document.getElementById('dynamicNoResultType').textContent = currentSearchTypeTitle;
+            // Getting Display Names
+            const divTxt = document.getElementById('division').options[document.getElementById('division').selectedIndex].text;
+            const distTxt = document.getElementById('district').options[document.getElementById('district').selectedIndex].text;
+            const upaTxt = document.getElementById('upazila').options[document.getElementById('upazila').selectedIndex].text;
 
-            // Load Data
-            resultsGrid.innerHTML = '';
-            loadingSpinner.style.display = 'block';
-            noResults.style.display = 'none';
+            document.getElementById('search-view-section').style.display='none';
+            document.getElementById('results-view-section').style.display='block';
+            window.scrollTo(0,0);
+
+            document.getElementById('resultHeaderTitle').innerText = `${currentSearchTypeTitle} | ${upaTxt}`;
+            document.getElementById('searchCriteriaText').innerText = `${upaTxt}, ${distTxt}, ${divTxt}`;
+            
+            const grid = document.getElementById('resultsGrid');
+            grid.innerHTML='';
+            document.getElementById('loadingSpinner').style.display='block';
+            document.getElementById('noResults').style.display='none';
 
             try {
-                // Query Firestore: Category + Division + District + Upazila
                 let q;
                 if(currentSearchType) {
-                    q = query(collection(db, "contacts"), 
-                        where("category", "==", currentSearchType),
-                        where("division", "==", div),
-                        where("district", "==", dist),
-                        where("upazila", "==", upa)
-                    );
+                    q = query(collection(db,"contacts"), where("category","==",currentSearchType), where("division","==",div), where("district","==",dist), where("upazila","==",upa));
                 } else {
-                    // Fallback generic search if no category in URL
-                     q = query(collection(db, "contacts"), 
-                        where("division", "==", div),
-                        where("district", "==", dist),
-                        where("upazila", "==", upa)
-                    );
+                    q = query(collection(db,"contacts"), where("division","==",div), where("district","==",dist), where("upazila","==",upa));
                 }
-
-                const querySnapshot = await getDocs(q);
-                loadingSpinner.style.display = 'none';
-
-                if(querySnapshot.empty) {
-                    noResults.style.display = 'block';
-                } else {
-                    querySnapshot.forEach((doc) => {
-                        const d = doc.data();
-                        renderCard(d);
+                const snap = await getDocs(q);
+                document.getElementById('loadingSpinner').style.display='none';
+                if(snap.empty) { document.getElementById('noResults').style.display='block'; }
+                else {
+                    snap.forEach(d => {
+                        const data = d.data();
+                        const card = document.createElement('div');
+                        card.className = 'emergency-card';
+                        let emailBtn = '';
+                        const mailMatch = (data.details || '').match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+                        if(mailMatch) emailBtn = `<button class="btn btn-sm btn-outline" onclick="copyToClipboard('${mailMatch[0]}')"><i class="fas fa-copy"></i> ই-মেইল</button>`;
+                        
+                        card.innerHTML = `
+                        <div class="e-card-top"><div class="creator-info"><span class="creator-name"><i class="fas fa-building"></i> ${data.name}</span></div></div>
+                        <div class="e-details">
+                            <p class="text-dark fw-bold"><i class="fas fa-info-circle"></i> ${data.details || 'বিস্তারিত তথ্য নেই'}</p>
+                            <p><i class="fas fa-phone"></i> ${data.phone}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ${data.upazila}, ${data.district}</p>
+                        </div>
+                        <div class="e-actions">
+                            <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${data.phone}'"><i class="fas fa-phone-alt"></i> কল করুন</button>
+                            ${emailBtn}
+                        </div>`;
+                        grid.appendChild(card);
                     });
-                    
-                    // Show FAB Hint
-                    const fabHint = document.getElementById('fabHint');
-                    if(fabHint) {
-                        setTimeout(() => { fabHint.classList.add('show'); }, 500);
-                        setTimeout(() => { fabHint.classList.remove('show'); }, 3500);
-                    }
+                    const hint = document.getElementById('fabHint');
+                    setTimeout(()=>hint.classList.add('show'),500);
+                    setTimeout(()=>hint.classList.remove('show'),3500);
                 }
-
-            } catch (error) {
-                console.error("Error getting documents: ", error);
-                loadingSpinner.style.display = 'none';
-                resultsGrid.innerHTML = `<div style="text-align:center; color:red; width:100%;">ডাটা লোড করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।</div>`;
+            } catch(e) {
+                document.getElementById('loadingSpinner').style.display='none';
+                grid.innerHTML='<p style="color:red;width:100%;text-align:center">ডাটা লোড এরর।</p>';
             }
         }
 
-        function renderCard(data) {
-            const card = document.createElement('div');
-            card.className = 'emergency-card';
-            
-            // Parse Details (Often contains Person name or extra info)
-            // Admin Panel structure: name (Office/Main), phone, details
-            
-            // Check if details contains email (simple check)
-            let emailBtn = '';
-            const detailsText = data.details || '';
-            const emailMatch = detailsText.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
-            
-            if(emailMatch && emailMatch[0]) {
-                emailBtn = `<button class="btn btn-sm btn-outline" onclick="copyToClipboard('${emailMatch[0]}')"><i class="fas fa-copy"></i> ই-মেইল</button>`;
-            }
+        // Open Add Form (Auto Populate)
+        function openAddContactOverlay() {
+            const divSel = document.getElementById('division');
+            const distSel = document.getElementById('district');
+            const upaSel = document.getElementById('upazila');
 
-            card.innerHTML = `
-                <div class="e-card-top">
-                    <div class="creator-info">
-                        <span class="creator-name"><i class="fas fa-building"></i> ${data.name}</span>
-                    </div>
-                </div>
-                <div class="e-details">
-                    <p class="text-dark fw-bold"><i class="fas fa-info-circle"></i> ${data.details || 'বিস্তারিত তথ্য নেই'}</p>
-                    <p><i class="fas fa-phone"></i> ${data.phone}</p>
-                    <p><i class="fas fa-map-marker-alt"></i> ${data.upazila}, ${data.district}</p>
-                </div>
-                <div class="e-actions">
-                    <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${data.phone}'">
-                        <i class="fas fa-phone-alt"></i> কল করুন
-                    </button>
-                    ${emailBtn}
-                </div>
-            `;
-            resultsGrid.appendChild(card);
+            document.getElementById('serviceType').value = currentSearchType || "General";
+            
+            const eDiv = document.getElementById('editDivision');
+            eDiv.innerHTML = `<option value="${divSel.value}">${divSel.options[divSel.selectedIndex].text}</option>`;
+            eDiv.value = divSel.value;
+
+            const eDist = document.getElementById('editDistrict');
+            eDist.innerHTML = `<option value="${distSel.value}">${distSel.options[distSel.selectedIndex].text}</option>`;
+            eDist.value = distSel.value;
+
+            const eUpa = document.getElementById('editUpazila');
+            eUpa.innerHTML = `<option value="${upaSel.value}">${upaSel.options[upaSel.selectedIndex].text}</option>`;
+            eUpa.value = upaSel.value;
+
+            document.getElementById('addContactOverlay').style.display='flex';
+            validateAddForm();
         }
 
-        // --- SAVE CONTACT FUNCTION ---
-        async function saveContact() {
-            const serviceType = document.getElementById('serviceType').value;
-            const div = document.getElementById('editDivision').value;
-            const dist = document.getElementById('editDistrict').value;
-            const upa = document.getElementById('editUpazila').value;
-            const officeName = document.getElementById('officeName').value; // Saved as 'name'
-            const personName = document.getElementById('personName').value; 
-            const mobile = document.getElementById('mobileNumber').value; // Saved as 'phone'
-            const email = document.getElementById('emailAddress').value;
-
-            // Validation
-            if(!serviceType || !div || !dist || !upa || !officeName || (!mobile && !email)) {
-                alert("দয়া করে প্রয়োজনীয় তথ্য পূরণ করুন।");
-                return;
-            }
-
-            const saveBtn = document.getElementById('saveBtn');
-            saveBtn.disabled = true;
-            saveBtn.innerText = "সেভ হচ্ছে...";
-
-            // Construct Details String (Combine Person Name + Email)
-            let detailsParts = [];
-            if(personName) detailsParts.push(personName);
-            if(email) detailsParts.push(email);
-            const detailsStr = detailsParts.join(" | ");
+        async function saveContact(e) {
+            e.preventDefault();
+            const btn = document.getElementById('saveBtn');
+            btn.disabled=true; btn.innerText="সেভ হচ্ছে...";
+            
+            const oName = document.getElementById('officeName').value;
+            const pName = document.getElementById('personName').value;
+            const mob = document.getElementById('mobileNumber').value;
+            const mail = document.getElementById('emailAddress').value;
+            
+            let details = [];
+            if(pName) details.push(pName);
+            if(mail) details.push(mail);
 
             try {
                 await addDoc(collection(db, "contacts"), {
-                    category: serviceType,
-                    division: div,
-                    district: dist,
-                    upazila: upa,
-                    name: officeName,
-                    phone: mobile,
-                    details: detailsStr,
+                    category: document.getElementById('serviceType').value,
+                    division: document.getElementById('editDivision').value,
+                    district: document.getElementById('editDistrict').value,
+                    upazila: document.getElementById('editUpazila').value,
+                    name: oName,
+                    phone: mob,
+                    details: details.join(" | "),
                     createdAt: new Date(),
                     source: "user_submission"
                 });
-
-                alert("তথ্য সফলভাবে যোগ করা হয়েছে!");
-                document.getElementById('addContactOverlay').style.display = 'none';
+                alert("সফলভাবে যুক্ত হয়েছে!");
+                document.getElementById('addContactOverlay').style.display='none';
                 document.getElementById('editForm').reset();
-                
-                // Refresh Search if matches
-                if(div === divisionSelect.value && upa === upazilaSelect.value) {
-                    performSearch();
-                }
-
-            } catch (e) {
-                console.error("Error adding doc: ", e);
-                alert("এরর: " + e.message);
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.innerText = "সেভ করুন";
-            }
+                performSearch();
+            } catch(er) { alert("এরর: "+er.message); }
+            finally { btn.disabled=false; btn.innerText="সেভ করুন"; }
         }
-        
-        // --- Form Validation Helper ---
-        const inputs = document.querySelectorAll('#editForm input, #editForm select');
-        inputs.forEach(input => {
-            input.addEventListener('input', validateAddForm);
-            input.addEventListener('change', validateAddForm);
-        });
 
         function validateAddForm() {
-             const saveBtn = document.getElementById('saveBtn');
-             const sType = document.getElementById('serviceType').value;
-             const div = document.getElementById('editDivision').value;
-             const dist = document.getElementById('editDistrict').value;
-             const upa = document.getElementById('editUpazila').value;
-             const oName = document.getElementById('officeName').value;
-             const mob = document.getElementById('mobileNumber').value;
-             const mail = document.getElementById('emailAddress').value;
-             
-             if(sType && div && dist && upa && oName && (mob || mail)) {
-                 saveBtn.disabled = false;
-             } else {
-                 saveBtn.disabled = true;
-             }
+            const o = document.getElementById('officeName').value;
+            const m = document.getElementById('mobileNumber').value;
+            const e = document.getElementById('emailAddress').value;
+            document.getElementById('saveBtn').disabled = !(o && (m || e));
         }
-
-        // --- GLOBAL HELPERS (Attached to Window for HTML OnClick) ---
-        window.resetSearch = function() {
-            document.getElementById('results-view-section').style.display = 'none';
-            document.getElementById('search-view-section').style.display = 'block';
-        };
-
-        window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('ই-মেইল কপি হয়েছে: ' + text);
-            });
-        };
-
-        // --- UI TOGGLES (Sidebar/Theme) ---
-        // (Copied purely UI logic)
-        const sidebar = document.querySelector('.sidebar');
-        const backdrop = document.querySelector('.sidebar-backdrop');
-        const toggleBtn = document.querySelector('.sidebar-toggle');
-        const closeBtn = document.querySelector('.sidebar-back-button');
-
-        if(toggleBtn) toggleBtn.addEventListener('click', (e) => { e.preventDefault(); sidebar.classList.add('is-open'); backdrop.classList.add('is-open'); });
-        const closeSidebar = () => { sidebar.classList.remove('is-open'); backdrop.classList.remove('is-open'); };
-        if(closeBtn) closeBtn.addEventListener('click', closeSidebar);
-        if(backdrop) backdrop.addEventListener('click', closeSidebar);
+        document.querySelectorAll('#editForm input').forEach(i => i.addEventListener('input', validateAddForm));
         
-        document.querySelectorAll(".dropdown-toggle").forEach((dt) => {
-            dt.addEventListener("click", (e) => {
-                e.preventDefault();
-                const c = dt.closest(".dropdown-container");
-                c.classList.toggle("open");
-                const m = c.querySelector(".dropdown-menu");
-                m.style.height = c.classList.contains("open") ? `${m.scrollHeight}px` : "0";
-            });
-        });
+        // Globals
+        window.resetSearch = () => {
+            document.getElementById('results-view-section').style.display='none';
+            document.getElementById('search-view-section').style.display='flex';
+        };
+        window.copyToClipboard = (t) => navigator.clipboard.writeText(t).then(()=>alert("কপি হয়েছে"));
 
-        const themeToggle = document.getElementById('theme-toggle');
-        if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-        if(themeToggle) themeToggle.addEventListener('click', (e) => {
+        // Overlay Close
+        document.querySelectorAll('.close-btn').forEach(b => b.addEventListener('click', function(){
+            this.closest('.passkey-overlay').style.display='none';
+        }));
+
+        // Sidebar UI
+        const sb = document.querySelector('.sidebar');
+        const bd = document.querySelector('.sidebar-backdrop');
+        const open = () => { sb.classList.add('is-open'); bd.classList.add('is-open'); };
+        const close = () => { sb.classList.remove('is-open'); bd.classList.remove('is-open'); };
+        document.querySelector('.sidebar-menu-button-header').addEventListener('click', (e)=>{e.preventDefault(); open();});
+        document.querySelector('.sidebar-back-button').addEventListener('click', (e)=>{e.preventDefault(); close();});
+        bd.addEventListener('click', close);
+
+        // Dropdown UI
+        document.querySelectorAll('.dropdown-toggle').forEach(d => d.addEventListener('click', function(e){
+            e.preventDefault();
+            const c = this.closest('.dropdown-container');
+            c.classList.toggle('open');
+            const m = c.querySelector('.dropdown-menu');
+            m.style.height = c.classList.contains('open') ? m.scrollHeight+'px' : '0';
+        }));
+        
+        // Theme
+        const themeBtn = document.getElementById('theme-toggle');
+        if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark-mode');
+        if(themeBtn) themeBtn.addEventListener('click', (e)=>{
             e.preventDefault();
             document.body.classList.toggle('dark-mode');
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode')?'dark':'light');
         });
-        
-        // --- ADMIN AUTH OVERLAY LOGIC ---
-        const adminFab = document.getElementById('adminFab');
-        const passOverlay = document.getElementById('passkeyOverlay');
-        const addOverlay = document.getElementById('addContactOverlay');
-        const passForm = document.getElementById('passkeyForm');
-        
-        if(adminFab) adminFab.addEventListener('click', () => { passOverlay.style.display = 'flex'; });
-        document.getElementById('closePasskeyBtn').addEventListener('click', () => { passOverlay.style.display = 'none'; });
-        document.getElementById('closeAddContactBtn').addEventListener('click', () => { addOverlay.style.display = 'none'; });
-
-        if(passForm) {
-            passForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const key = document.getElementById('passkey-input').value;
-                if(key === "123456") {
-                    passOverlay.style.display = 'none';
-                    document.getElementById('passkey-input').value = '';
-                    
-                    // Pre-fill Add Form based on current search
-                    if(divisionSelect.value) {
-                         const editDiv = document.getElementById('editDivision');
-                         editDiv.value = divisionSelect.value;
-                         editDiv.dispatchEvent(new Event('change'));
-                         
-                         setTimeout(() => {
-                             const editDist = document.getElementById('editDistrict');
-                             editDist.value = districtSelect.value;
-                             editDist.dispatchEvent(new Event('change'));
-                             
-                             setTimeout(() => {
-                                 document.getElementById('editUpazila').value = upazilaSelect.value;
-                             }, 100);
-                         }, 100);
-                    }
-                    
-                    // Pre-select service type if available
-                    if(currentSearchType) {
-                         document.getElementById('serviceType').value = currentSearchType;
-                    }
-
-                    addOverlay.style.display = 'flex';
-                } else {
-                    document.getElementById('passkey-error').innerText = "ভুল Pass Key!";
-                }
-            });
-        }
 
     </script>
 </body>
-    </html>
+</html>
