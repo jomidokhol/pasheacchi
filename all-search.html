@@ -339,9 +339,7 @@
                     </a>
                     <div class="auth-buttons">
                         <button class="btn btn-primary" onclick="resetSearch()" style="margin-right: 10px;">নতুন অনুসন্ধান</button>
-                        <div class="profile-container" id="profileContainer" onclick="window.location.href='profile.html'">
-                            <div class="profile-icon-btn"><i class="fas fa-user"></i></div>
-                        </div>
+                        <!-- Profile Button Removed -->
                         <a href="#" class="btn btn-outline sidebar-menu-button-header"><i class="fas fa-bars"></i></a>
                     </div>
                 </div>
@@ -355,7 +353,7 @@
                 
                 <div id="loadingSpinner" style="text-align: center; display: none; padding: 40px;">
                     <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
-                    <p class="mt-2">লোড হচ্ছে...</p>
+                    <p class="mt-2">ডাটা লোড হচ্ছে...</p>
                 </div>
 
                 <div id="resultsGrid" class="emergency-grid"></div>
@@ -419,13 +417,14 @@
     <div class="passkey-overlay" id="passkeyOverlay">
         <div class="passkey-container">
             <button id="closePasskeyBtn" class="close-btn"><i class="fas fa-times"></i></button>
-            <h1 class="passkey-title">Pass Key দিন</h1>
-            <center></center><c style="color: var(--text-light); margin-bottom: 20px;">৬ -সংখ্যার key দিন।</p></center>
+            <h1 class="passkey-title">Pass Key</h1>
+           <p style="color: var(--text-light); margin-bottom: 20px; text-align: center;">৬ -সংখ্যার পাস কে দিন।</p>
             <form id="passkeyForm">
                 <input type="tel" id="passkeyInput" maxlength="6" name="random_code_field" autocomplete="off" placeholder="_ _ _ _ _ _" required 
                        class="form-control" style="text-align: center; letter-spacing: 10px; font-size: 1.5rem;">
                 <div id="passkey-error" style="color: var(--primary); margin-top: 10px; min-height: 20px;"></div>
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">প্রবেশ করুন</button>
+                <a href="https://wa.me/8801851956615" style="display: block; text-align: center; margin-top: 15px; color: var(--primary); text-decoration: none; font-weight: 500;">এডমিনের থেকে PASS KEY নিন !</a>
             </form>
         </div>
     </div>
