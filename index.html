@@ -355,40 +355,35 @@
         .update-card { background: var(--card-bg); border-radius: var(--border-radius); box-shadow: var(--shadow); overflow: hidden; transition: var(--transition); }
         .update-card:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); }
         .update-card-image img { width: 100%; height: 200px; object-fit: cover; }
-        .update-card-content { padding: 20px; display: flex; flex-direction: column; }
+        .update-card-content { padding: 20px; display: flex; flex-direction: column; padding-bottom: 15px; }
         .update-card-content h3 { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary-dark); }
         
         .update-card-content p, .news-text-content { 
             font-size: 0.95rem; 
             color: var(--text-light); 
-            margin-bottom: 15px; 
+            margin-bottom: 10px; 
             white-space: pre-wrap; 
         }
 
         /* Updated Read More Button Style */
-        .read-more-container {
-            text-align: center;
-            margin: 10px auto;
-            width: 100%;
-        }
-        
         .read-more-btn {
             background: transparent;
             color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            border: none;
+            padding: 0;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.3s;
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            margin-top: 5px;
+            font-weight: 600;
         }
         
         .read-more-btn:hover {
-            background: var(--primary);
-            color: var(--white);
+            text-decoration: underline;
+            color: var(--primary-dark);
+            background: transparent;
         }
 
         .update-card-timestamp { font-size: 0.8rem; font-weight: 500; color: #999; text-align: right; margin-top: auto; }
@@ -613,7 +608,9 @@
 
     <aside class="sidebar">
       <header class="sidebar-header">
-        <a href="#" class="header-logo"></a>
+        <a href="#" class="header-logo">
+            <img src="https://i.ibb.co.com/QFtV51LQ/1000018745.png" alt="logo">
+        </a>
         
         <!-- Sidebar Auth Group: Placed BEFORE the back button -->
         <div class="sidebar-auth-group" id="sidebarAuthGroup">
@@ -945,7 +942,7 @@
             tickerContentDiv.innerHTML = `<span class="ticker-item">${defaultTickerNews.join('<span class="ticker-square"></span>')}</span>`;
         }
 
-        // Helper function for relative time with safety check (Fix for Problem 1)
+        // Helper function for relative time with safety check
         function timeAgo(timestamp) {
             if (!timestamp) return "অজানা সময়";
             
@@ -1074,7 +1071,7 @@
             container.appendChild(cardDiv);
         }
 
-        // --- Updates/News Logic (Fix for Problem 3) ---
+        // --- Updates/News Logic ---
         async function loadUpdates() {
             const updatesGrid = document.getElementById('updatesGrid');
             try {
@@ -1096,18 +1093,16 @@
                     const words = content.trim().split(/\s+/);
                     let contentHTML = '';
 
-                    // Changed: Button is now a block element centered below the text
+                    // Changed: Button is now a simple text link below the content
                     if (words.length > 30) { 
                         const shortText = words.slice(0, 30).join(" ");
                         contentHTML = `
                             <div class="news-text-content">
                                 <span class="short-text">${shortText}...</span>
                                 <span class="full-text" style="display:none;">${content}</span>
-                                <div class="read-more-container">
-                                    <button class="read-more-btn" onclick="this.parentElement.previousElementSibling.style.display='inline'; this.parentElement.previousElementSibling.previousElementSibling.style.display='none'; this.style.display='none';">
-                                        <i class="fas fa-chevron-circle-down"></i> আরও পড়ুন
-                                    </button>
-                                </div>
+                                <button class="read-more-btn" onclick="this.previousElementSibling.style.display='inline'; this.previousElementSibling.previousElementSibling.style.display='none'; this.style.display='none';">
+                                    <i class="fas fa-chevron-circle-down"></i> আরও পড়ুন
+                                </button>
                             </div>
                         `;
                     } else {
