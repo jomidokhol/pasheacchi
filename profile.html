@@ -21,7 +21,7 @@
             --header-bg: #fff;
             --card-bg: #fff;
             --footer-bg: #2c3e50;
-            --sidebar-bg: rgba(255, 255, 255, 0.65);
+            --sidebar-bg: rgba(255, 255, 255, 0.85);
             --sidebar-text: #333;
             --sidebar-hover-bg: #EEF2FF;
             --sidebar-hover-text: #151A2D;
@@ -36,7 +36,7 @@
             --header-bg: #1e1e1e;
             --card-bg: #2a2a2a;
             --footer-bg: #1e1e1e;
-            --sidebar-bg: rgba(26, 26, 26, 0.55);
+            --sidebar-bg: rgba(26, 26, 26, 0.9);
             --sidebar-text: #f5f5f5;
             --sidebar-hover-bg: #333;
             --sidebar-hover-text: #f5f5f5;
@@ -189,6 +189,32 @@
         .sidebar .sidebar-header { display: flex; position: relative; padding: 25px 20px; align-items: center; justify-content: space-between; }
         .sidebar-header .header-logo img { width: 46px; height: 46px; display: block; object-fit: contain; border-radius: 50%; }
         
+        /* Sidebar Auth Buttons Styling */
+        .sidebar-auth-group {
+            margin-left: auto;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-auth-btn {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .sidebar-auth-btn:hover { background: var(--primary-dark); }
+        .sidebar-auth-btn i { font-size: 0.8rem; }
+
         .sidebar-header .sidebar-back-button {
             height: 35px; width: 35px; color: var(--sidebar-text); border: none; cursor: pointer; display: flex;
             background: transparent; align-items: center; justify-content: center; border-radius: 8px; transition: 0.4s ease;
@@ -921,6 +947,17 @@
     <aside class="sidebar">
       <header class="sidebar-header">
         <a href="index.html" class="header-logo"><img src="https://i.ibb.co.com/QFtV51LQ/1000018745.png" alt="logo"></a>
+        
+        <!-- Sidebar Auth Group -->
+        <div class="sidebar-auth-group" id="sidebarAuthGroup">
+            <a href="login.html" class="sidebar-auth-btn" id="sidebarLoginBtn">
+                <i class="fas fa-sign-in-alt"></i> লগ ইন
+            </a>
+            <button class="sidebar-auth-btn" id="sidebarLogoutBtn" style="display: none; background: #333;">
+                <i class="fas fa-sign-out-alt"></i> লগ আউট
+            </button>
+        </div>
+
         <button class="sidebar-back-button">
           <span class="material-symbols-rounded">arrow_back</span>
         </button>
@@ -958,12 +995,6 @@
                   <span class="material-symbols-rounded light-mode-icon">light_mode</span>
                   <span class="material-symbols-rounded dark-mode-icon">dark_mode</span>
                   <span class="nav-label"></span>
-              </a>
-          </li>
-          <li class="nav-item" id="logout-button-item">
-              <a href="#" class="nav-link" id="logoutBtn">
-                  <span class="material-symbols-rounded">logout</span>
-                  <span class="nav-label">লগ আউট</span>
               </a>
           </li>
         </ul>
@@ -1285,6 +1316,12 @@
                 <div class="form-group"> <label for="em_location">প্রতিষ্ঠান / স্থান</label> <input type="text" id="em_location" class="form-control" placeholder="যেমন: ঢাকা মেডিকেল কলেজ" required> </div>
                 <div class="form-group"> <label for="em_mobile">মোবাইল নম্বর</label> <input type="tel" id="em_mobile" class="form-control" required> </div>
                 <div class="form-group"> <label for="em_deletionTime">ডিলেশন টাইম (কখন পোস্টটি অটো ডিলিট হবে)</label> <input type="datetime-local" id="em_deletionTime" class="form-control" required> </div>
+                
+                <!-- Added Details Textarea -->
+                <div class="form-group">
+                    <label for="em_details">বিস্তারিত তথ্য (অপশনাল)</label>
+                    <textarea id="em_details" class="form-control" rows="3" placeholder="রোগীর অবস্থা বা যোগাযোগের বিস্তারিত..."></textarea>
+                </div>
 
                 <div class="form-group">
                     <label for="em_division"><i class="fas fa-map-marker-alt"></i> বিভাগ</label>
@@ -1501,9 +1538,15 @@
             fetchContactSettings();
 
             onAuthStateChanged(auth, async (user) => {
+                const sidebarLoginBtn = document.getElementById('sidebarLoginBtn');
+                const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+
                 if (user) {
                     currentUser = user;
-                    document.getElementById('logout-button-item').style.display = 'block';
+                    
+                    // Update Sidebar Buttons (Show Logout, Hide Login)
+                    if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'none';
+                    if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'flex';
 
                     const docRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(docRef);
@@ -1522,29 +1565,28 @@
                     loadEmergencyCards();
                     checkDonorStatus(user.uid);
                 } else {
+                    // Update Sidebar Buttons (Show Login, Hide Logout)
+                    if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'flex';
+                    if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'none';
+                    
                     window.location.replace("login.html");
                 }
             });
 
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    signOut(auth).then(() => {
-                        window.location.href = "index.html";
-                    }).catch((error) => {
-                        console.error("Logout Error:", error);
-                    });
+            // Logout Functionality for Sidebar & Header Buttons
+            function performLogout() {
+                signOut(auth).then(() => {
+                    window.location.href = "index.html";
+                }).catch((error) => {
+                    console.error("Logout Error:", error);
                 });
             }
 
-            if (headerLogoutBtn) {
-                headerLogoutBtn.addEventListener('click', () => {
-                    signOut(auth).then(() => {
-                        window.location.href = "index.html";
-                    }).catch((error) => {
-                        console.error("Logout Error:", error);
-                    });
-                });
-            }
+            if (logoutBtn) logoutBtn.addEventListener('click', performLogout);
+            if (headerLogoutBtn) headerLogoutBtn.addEventListener('click', performLogout);
+            const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+            if (sidebarLogoutBtn) sidebarLogoutBtn.addEventListener('click', performLogout);
+
 
             function calculateAge(birthDateValue) {
                 if (!birthDateValue) return '';
@@ -1877,6 +1919,10 @@
                     
                     const selectedDistrictOption = emDistrict.options[emDistrict.selectedIndex];
                     const selectedUpazilaOption = emUpazila.options[emUpazila.selectedIndex];
+                    
+                    // Added: details handling
+                    const detailsInput = document.getElementById('em_details');
+                    const detailsValue = detailsInput ? detailsInput.value : "";
 
                     const emData = {
                         creatorId: currentUser.uid,
@@ -1892,7 +1938,9 @@
                         upazila: emUpazila.value,
                         upazilaText: selectedUpazilaOption ? selectedUpazilaOption.textContent : '',
                         creatorName: currentProfileData.name || 'অজানা',
-                        createdAt: new Date().toISOString()
+                        // Updated: Save details and use Date object for createdAt for index.html timeAgo function
+                        details: detailsValue,
+                        createdAt: new Date() 
                     };
 
                     try {
