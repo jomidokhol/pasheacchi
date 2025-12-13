@@ -1,11 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google" content="notranslate">
-    <title>রক্তদাতা অনুসন্ধান - পাশে আছি</title>
+    <title>অনুসন্ধান - পাশে আছি</title>
     
     <!-- External CSS Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -391,14 +391,14 @@
     <div id="search-view-section">
         <div class="search-view-content">
             <div class="search-container">
-                <h1 class="search-title" id="dynamicSearchTitle"><i class="fas fa-search"></i> রক্তদাতা সন্ধান</h1>
+                <h1 class="search-title" id="dynamicSearchTitle"><i class="fas fa-search"></i> রক্তদাতা অনুসন্ধান</h1>
                 
                 <form class="search-form" id="searchForm">
                     <div class="form-group">
                         <label for="division"><i class="fas fa-map-marker-alt"></i>বিভাগ</label>
                         <select id="division" class="form-control" required>
                             <option value="" disabled selected>বিভাগ নির্বাচন করুন</option>
-                            <!-- JS Will Populate (Bangla Names) -->
+                            <!-- JS Will Populate -->
                         </select>
                     </div>
                     <div class="form-group">
@@ -413,7 +413,6 @@
                             <option value="" disabled selected>প্রথমে জেলা নির্বাচন করুন</option>
                         </select>
                     </div>
-                    <!-- Blood Group Option Removed Here -->
                     <button type="submit" class="search-btn"><i class="fas fa-search"></i> খুঁজুন</button>
                 </form>
                 
@@ -450,7 +449,6 @@
                     <span class="nav-label">সেবাসমূহ</span>
                     <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
                   </a>
-                  <!-- Full Menu Restored with Correct Links -->
                   <ul class="dropdown-menu">
                     <li class="nav-item"><a href="all-search.html?type=donor" class="nav-link"><span class="material-symbols-rounded">bloodtype</span><span class="nav-label">ব্লাড ডোনার</span></a></li>
                     <li class="nav-item"><a href="all-search.html?type=police" class="nav-link"><span class="material-symbols-rounded">local_police</span><span class="nav-label">পুলিশ স্টেশন</span></a></li>
@@ -508,13 +506,18 @@
                     <h2 class="section-title" id="resultHeaderTitle">ফলাফল</h2>
                     <p id="searchCriteriaText" style="color: var(--text-light); margin-bottom: 20px;">ফিল্টার অনুযায়ী ফলাফল দেখানো হচ্ছে...</p>
                     
+                    <div id="loadingSpinner" style="text-align: center; display: none; padding: 40px;">
+                        <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                        <p class="mt-2">ডাটা লোড হচ্ছে...</p>
+                    </div>
+
                     <div id="resultsGrid" class="emergency-grid">
                         <!-- Cards will be injected here by JS -->
                     </div>
 
                     <div id="noResults" style="display:none; text-align: center; padding: 40px; color: var(--text-light);">
                         <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;"></i>
-                        <p>দুঃখিত, এই এলাকায় এই মুহূর্তে কোনো <span id="dynamicNoResultType">রক্তদাতা</span> পাওয়া যায়নি।</p>
+                        <p>দুঃখিত, এই এলাকায় এই মুহূর্তে কোনো <span id="dynamicNoResultType">তথ্য</span> পাওয়া যায়নি।</p>
                     </div>
                 </section>
             </div>
@@ -548,7 +551,7 @@
         <div class="passkey-container">
             <button id="closePasskeyBtn" class="close-btn" title="ফিরে যান"><i class="fas fa-times"></i></button>
             <h1 class="passkey-title">Pass Key দিন</h1>
-            <p style="color: var(--text-light); margin-bottom: 20px;">প্রশাসক প্যানেলে প্রবেশের জন্য ৬-সংখ্যার key -টি লিখুন।</p>
+            <p style="color: var(--text-light); margin-bottom: 20px;">ডাটা এন্ট্রির জন্য ৬-সংখ্যার key -টি লিখুন।</p>
             <form id="passkeyForm">
                 <input type="password" id="passkey-input" maxlength="6" autocomplete="off" placeholder="______" required>
                 <div id="passkey-error"></div>
@@ -574,11 +577,16 @@
                     <label for="serviceType">সেকশন</label>
                     <select id="serviceType" class="form-control" required>
                         <option value="" disabled>সেকশন নির্বাচন করুন</option>
-                        <option value="রক্তদাতা অনুসন্ধান" selected>ব্লাড ডোনার</option>
+                        <option value="ব্লাড ডোনার">ব্লাড ডোনার</option>
                         <option value="পুলিশ স্টেশন">পুলিশ স্টেশন</option>
                         <option value="হাসপাতাল">হাসপাতাল ও ডাক্তার</option>
                         <option value="এম্বুলেন্স">এম্বুলেন্স</option>
+                        <option value="বিদ্যুৎ জোনাল অফিস">বিদ্যুৎ জোনাল অফিস</option>
                         <option value="ফায়ার সার্ভিস">ফায়ার সার্ভিস</option>
+                        <option value="গ্যাস ফিলিং স্টেশন">গ্যাস ফিলিং স্টেশন</option>
+                        <option value="ওয়াসা">ওয়াসা</option>
+                        <option value="পেট্রোল পাম্প">পেট্রোল পাম্প</option>
+                        <option value="সরকারী কার্যালয়">সরকারী কার্যালয়</option>
                     </select>
                 </div>
                 
@@ -606,20 +614,19 @@
                 
                 <div class="form-group full-width">
                     <label for="personName">নাম (অপশনাল)</label>
-                    <input type="text" id="personName" class="form-control" placeholder="এখানে লিখুন......">
+                    <input type="text" id="personName" class="form-control" placeholder="ব্যক্তির নাম...">
                 </div>
                 <div class="form-group full-width">
-                    <label for="officeName">পদ / অফিস নাম</label>
-                    <input type="text" id="officeName" class="form-control" placeholder="এখানে লিখুন......." required>
+                    <label for="officeName">পদ / প্রতিষ্ঠান নাম</label>
+                    <input type="text" id="officeName" class="form-control" placeholder="প্রতিষ্ঠানের নাম..." required>
                 </div>
                 <div class="form-group">
                     <label for="mobileNumber">মোবাইল নম্বর</label>
-                    <input type="tel" id="mobileNumber" class="form-control" placeholder="01234567899">
+                    <input type="tel" id="mobileNumber" class="form-control" placeholder="017xxxxxxxx">
                 </div>
                 <div class="form-group">
                     <label for="emailAddress">ই-মেল (অপশনাল)</label>
-                    <input type="email" id="emailAddress" class="form-control" placeholder="pasheachhi@mail.com">
-                    <p style="font-size: 0.8rem; margin-top: 5px;">▪️ মোবাইল নম্বর দিলে ই-মেল না দিলেও হবে।</p>
+                    <input type="email" id="emailAddress" class="form-control" placeholder="example@mail.com">
                 </div>
                 <div class="form-group full-width">
                     <button type="submit" id="saveBtn" class="btn btn-primary save-btn" disabled>সেভ করুন</button>
@@ -628,12 +635,12 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Integration -->
+    <!-- Firebase Integration and Main Logic -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Configuration
+        // Firebase Configuration (Same as Admin)
         const firebaseConfig = {
             apiKey: "AIzaSyBnKQr2k2ZWnPlEZiJtMDewv6z3Z7p3kiU",
             authDomain: "pacheacchi.firebaseapp.com",
@@ -644,441 +651,500 @@
             measurementId: "G-M34YKMYHQ8"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Export db for use in the main script if needed, or put logic here
-        // Currently keeping logic separate in script below to maintain structure
-    </script>
+        // ==========================================
+        //  DATA & UTILITIES
+        // ==========================================
 
-    <!-- =========================================
-         JAVASCRIPT LOGIC
-         ========================================= -->
-    <script>
+        // Category Mapping (English Key in URL -> Bangla DB Value)
+        const categoryMap = {
+            "donor": "ব্লাড ডোনার",
+            "police": "পুলিশ স্টেশন",
+            "hospital": "হাসপাতাল",
+            "ambulance": "এম্বুলেন্স",
+            "electricity": "বিদ্যুৎ জোনাল অফিস",
+            "fire": "ফায়ার সার্ভিস",
+            "gas": "গ্যাস ফিলিং স্টেশন",
+            "wasa": "ওয়াসা",
+            "petrol": "পেট্রোল পাম্প",
+            "govt": "সরকারী কার্যালয়"
+        };
+
+        // Geo Data from Admin Panel (Corrected Upazilas)
+        const bdGeoData = {
+            "Dhaka": {
+                "Dhaka": ["Savar", "Dhamrai", "Keraniganj", "Nawabganj", "Dohar", "Hazaribagh", "Ramna", "Tejgaon", "Gulshan", "Mirpur", "Pallabi", "Kafrul", "Cantonment", "Uttara", "Mohammadpur", "Dhanmondi", "Badda", "Khilkhet", "Demra", "Jatrabari", "Lalbagh", "Kotwali", "Sutrapur"],
+                "Gazipur": ["Gazipur Sadar", "Kaliakair", "Kapasia", "Sreepur", "Kaliganj"],
+                "Narayanganj": ["Narayanganj Sadar", "Bandar", "Araihazar", "Rupganj", "Sonargaon"],
+                "Manikganj": ["Manikganj Sadar", "Singair", "Saturia", "Shivalaya", "Ghior", "Daulatpur", "Harirampur"],
+                "Munshiganj": ["Munshiganj Sadar", "Tongibari", "Sreenagar", "Lohajang", "Gajaria", "Sirajdikhan"],
+                "Narsingdi": ["Narsingdi Sadar", "Belabo", "Monohardi", "Palash", "Raipura", "Shibpur"],
+                "Tangail": ["Tangail Sadar", "Sakhipur", "Basail", "Madhupur", "Ghatail", "Kalihati", "Nagarpur", "Mirzapur", "Gopalpur", "Delduar", "Bhuapur", "Dhanbari"],
+                "Kishoreganj": ["Kishoreganj Sadar", "Hossainpur", "Pakundia", "Katiadi", "Karimganj", "Tarail", "Itna", "Mithamoin", "Austagram", "Nikli", "Bajitpur", "Kuliarchar", "Bhairab"],
+                "Faridpur": ["Faridpur Sadar", "Boalmari", "Alfadanga", "Madhukhali", "Bhanga", "Nagarkanda", "Charbhadrasan", "Sadarpur", "Saltha"],
+                "Gopalganj": ["Gopalganj Sadar", "Kashiani", "Tungipara", "Kotalipara", "Muksudpur"],
+                "Madaripur": ["Madaripur Sadar", "Kalkini", "Rajoir", "Shibchar"],
+                "Rajbari": ["Rajbari Sadar", "Goalanda", "Pangsa", "Baliakandi", "Kalukhali"],
+                "Shariatpur": ["Shariatpur Sadar", "Naria", "Zajira", "Gosairhat", "Bhedarganj", "Damudya"]
+            },
+            "Chittagong": {
+                "Chittagong": ["Chittagong Sadar", "Sitakunda", "Mirsharai", "Patiya", "Rangunia", "Anwara", "Boalkhali", "Raozan", "Hathazari", "Fatikchhari", "Sandwip", "Lohagara", "Satkania", "Banshkhali", "Chandanaish", "Karnaphuli"],
+                "Cox's Bazar": ["Cox's Bazar Sadar", "Chakaria", "Kutubdia", "Ukhiya", "Moheshkhali", "Pekua", "Ramu", "Teknaf"],
+                "Comilla": ["Comilla Sadar", "Barura", "Brahmanpara", "Burichong", "Chandina", "Chauddagram", "Daudkandi", "Debidwar", "Homna", "Laksam", "Muradnagar", "Nangalkot", "Meghna", "Titas", "Monohargonj", "Lalmai"],
+                "Brahmanbaria": ["Brahmanbaria Sadar", "Kasba", "Nasirnagar", "Sarail", "Ashuganj", "Akhaura", "Nabinagar", "Bancharampur", "Bijoynagar"],
+                "Chandpur": ["Chandpur Sadar", "Faridganj", "Haimchar", "Haziganj", "Kachua", "Matlab North", "Matlab South", "Shahrasti"],
+                "Noakhali": ["Noakhali Sadar", "Begumganj", "Chatkhil", "Companyganj", "Hatiya", "Senbagh", "Sonaimuri", "Subarnachar", "Kabirhat"],
+                "Feni": ["Feni Sadar", "Chhagalnaiya", "Daganbhuiyan", "Parshuram", "Fulgazi", "Sonagazi"],
+                "Lakshmipur": ["Lakshmipur Sadar", "Raipur", "Ramganj", "Ramgati", "Kamalnagar"],
+                "Khagrachhari": ["Khagrachhari Sadar", "Dighinala", "Panchhari", "Laxmichhari", "Mahalchhari", "Manikchhari", "Ramgarh", "Matiranga", "Guimara"],
+                "Rangamati": ["Rangamati Sadar", "Belaichhari", "Bagaichhari", "Barkal", "Juraichhari", "Rajasthali", "Kaptai", "Langadu", "Naniarchar", "Kaukhali"],
+                "Bandarban": ["Bandarban Sadar", "Ali Kadam", "Naikhongchhari", "Rowangchhari", "Lama", "Ruma", "Thanchi"]
+            },
+            "Sylhet": {
+                "Sylhet": ["Sylhet Sadar", "Beanibazar", "Bishwanath", "Dakshin Surma", "Balaganj", "Companiganj", "Fenchuganj", "Golapganj", "Gowainghat", "Jaintiapur", "Kanaighat", "Zakiganj", "Osmani Nagar"],
+                "Moulvibazar": ["Moulvibazar Sadar", "Barlekha", "Juri", "Kamalganj", "Kulaura", "Rajnagar", "Sreemangal"],
+                "Habiganj": ["Habiganj Sadar", "Azmiriganj", "Bahubal", "Baniyachong", "Chunarughat", "Lakhai", "Madhabpur", "Nabiganj", "Shayestaganj"],
+                "Sunamganj": ["Sunamganj Sadar", "Bishwamvarpur", "Chhatak", "Derai", "Dharamapasha", "Dowarabazar", "Jagannathpur", "Jamalganj", "Tahirpur", "Sullah", "Shantiganj"]
+            },
+            "Rajshahi": {
+                "Rajshahi": ["Rajshahi Sadar", "Bagha", "Bagmara", "Charghat", "Durgapur", "Godagari", "Mohanpur", "Paba", "Puthia", "Tanore"],
+                "Bogra": ["Bogra Sadar", "Adamdighi", "Dhupchanchia", "Gabtali", "Kahaloo", "Nandigram", "Sariakandi", "Sahajanpur", "Sherpur", "Shibganj", "Sonatala"],
+                "Naogaon": ["Naogaon Sadar", "Atrai", "Badalgachhi", "Dhamoirhat", "Manda", "Mohadevpur", "Niamatpur", "Patnitala", "Porsha", "Raninagar", "Sapahar"],
+                "Natore": ["Natore Sadar", "Bagatipara", "Baraigram", "Gurudaspur", "Lalpur", "Singra", "Naldanga"],
+                "Chapainawabganj": ["Chapainawabganj Sadar", "Gomastapur", "Nachole", "Bholahat", "Shibganj"],
+                "Pabna": ["Pabna Sadar", "Atgharia", "Bera", "Bhangura", "Chatmohar", "Faridpur", "Ishwardi", "Santhia", "Sujanagar"],
+                "Sirajganj": ["Sirajganj Sadar", "Belkuchi", "Chauhali", "Kamarkhanda", "Kazipur", "Raiganj", "Shahjadpur", "Tarash", "Ullahpara"],
+                "Joypurhat": ["Joypurhat Sadar", "Akkelpur", "Kalai", "Khetlal", "Panchbibi"]
+            },
+            "Khulna": {
+                "Khulna": ["Khulna Sadar", "Batiaghata", "Dacope", "Dumuria", "Dighalia", "Koyra", "Paikgachha", "Phultala", "Rupsha", "Terokhada"],
+                "Bagerhat": ["Bagerhat Sadar", "Chitalmari", "Fakirhat", "Kachua", "Mollahat", "Mongla", "Morrelganj", "Rampal", "Sarankhola"],
+                "Chuadanga": ["Chuadanga Sadar", "Alamdanga", "Damurhuda", "Jibannagar"],
+                "Jessore": ["Jessore Sadar", "Abhaynagar", "Bagherpara", "Chaugachha", "Jhikargachha", "Keshabpur", "Manirampur", "Sharsha"],
+                "Jhenaidah": ["Jhenaidah Sadar", "Harinakunda", "Kaliganj", "Kotchandpur", "Maheshpur", "Shailkupa"],
+                "Kushtia": ["Kushtia Sadar", "Bheramara", "Daulatpur", "Khoksa", "Kumarkhali", "Mirpur"],
+                "Magura": ["Magura Sadar", "Mohammadpur", "Shalikha", "Sreepur"],
+                "Meherpur": ["Meherpur Sadar", "Gangni", "Mujibnagar"],
+                "Narail": ["Narail Sadar", "Kalia", "Lohagara"],
+                "Satkhira": ["Satkhira Sadar", "Assasuni", "Debhata", "Kalaroa", "Kaliganj", "Shyamnagar", "Tala"]
+            },
+            "Barisal": {
+                "Barisal": ["Barisal Sadar", "Agailjhara", "Babuganj", "Bakerganj", "Banaripara", "Gaurnadi", "Hizla", "Mehendiganj", "Muladi", "Wazirpur"],
+                "Barguna": ["Barguna Sadar", "Amtali", "Bamna", "Betagi", "Patharghata", "Taltali"],
+                "Bhola": ["Bhola Sadar", "Burhanuddin", "Char Fasson", "Daulatkhan", "Lalmohan", "Manpura", "Tazumuddin"],
+                "Jhalokati": ["Jhalokati Sadar", "Kathalia", "Nalchity", "Rajapur"],
+                "Patuakhali": ["Patuakhali Sadar", "Bauphal", "Dashmina", "Galachipa", "Kalapara", "Mirzaganj", "Rangabali", "Dumki"],
+                "Pirojpur": ["Pirojpur Sadar", "Bhandaria", "Kawkhali", "Mathbaria", "Nazirpur", "Nesarabad", "Indurkani"]
+            },
+            "Rangpur": {
+                "Rangpur": ["Rangpur Sadar", "Badarganj", "Gangachhara", "Kaunia", "Mithapukur", "Pirgachha", "Pirganj", "Taraganj"],
+                "Dinajpur": ["Dinajpur Sadar", "Birampur", "Birganj", "Bochaganj", "Chirirbandar", "Fulbari", "Ghoraghat", "Hakimpur", "Kaharole", "Khansama", "Nawabganj", "Parbatipur", "Birol"],
+                "Gaibandha": ["Gaibandha Sadar", "Fulchhari", "Gobindaganj", "Palashbari", "Sadullapur", "Saghata", "Sundarganj"],
+                "Kurigram": ["Kurigram Sadar", "Bhurungamari", "Char Rajibpur", "Chilmari", "Phulbari", "Nageshwari", "Rajarhat", "Raomari", "Ulipur"],
+                "Lalmonirhat": ["Lalmonirhat Sadar", "Aditmari", "Hatibandha", "Kaliganj", "Patgram"],
+                "Nilphamari": ["Nilphamari Sadar", "Dimla", "Domar", "Jaldhaka", "Kishoreganj", "Saidpur"],
+                "Panchagarh": ["Panchagarh Sadar", "Atwari", "Boda", "Debiganj", "Tetulia"],
+                "Thakurgaon": ["Thakurgaon Sadar", "Baliadangi", "Haripur", "Pirganj", "Ranishankail"]
+            },
+            "Mymensingh": {
+                "Mymensingh": ["Mymensingh Sadar", "Bhaluka", "Dhobaura", "Fulbaria", "Gafargaon", "Gauripur", "Haluaghat", "Ishwarganj", "Muktagachha", "Nandail", "Phulpur", "Trishal", "Tara Khanda"],
+                "Jamalpur": ["Jamalpur Sadar", "Baksiganj", "Dewanganj", "Islampur", "Madarganj", "Melandaha", "Sarishabari"],
+                "Netrokona": ["Netrokona Sadar", "Atpara", "Barhatta", "Durgapur", "Khaliajuri", "Kalmakanda", "Kendua", "Madan", "Mohanganj", "Purbadhala"],
+                "Sherpur": ["Sherpur Sadar", "Jhenaigati", "Nakla", "Nalitabari", "Sreebardi"]
+            }
+        };
+
+        // DOM Elements
+        const divisionSelect = document.getElementById('division');
+        const districtSelect = document.getElementById('district');
+        const upazilaSelect = document.getElementById('upazila');
+        const searchForm = document.getElementById('searchForm');
+        
+        const editDivisionSelect = document.getElementById('editDivision');
+        const editDistrictSelect = document.getElementById('editDistrict');
+        const editUpazilaSelect = document.getElementById('editUpazila');
+        const editForm = document.getElementById('editForm');
+        
+        const resultsGrid = document.getElementById('resultsGrid');
+        const noResults = document.getElementById('noResults');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        // State
+        let currentSearchType = ""; // The mapped Bengali category
+        let currentSearchTypeTitle = ""; // For Display
+
+        // ==========================================
+        //  INIT & LOGIC
+        // ==========================================
+
         document.addEventListener('DOMContentLoaded', () => {
             
-            // 1. DYNAMIC HEADER TEXT BASED ON FILENAME OR QUERY PARAM
-            function getPageTitle() {
-                const params = new URLSearchParams(window.location.search);
-                const type = params.get('type');
-                
-                const typeMap = {
-                    "donor": "রক্তদাতা অনুসন্ধান",
-                    "police": "পুলিশ স্টেশন",
-                    "hospital": "হাসপাতাল ও ডাক্তার",
-                    "ambulance": "এম্বুলেন্স",
-                    "electricity": "বিদ্যুৎ জোনাল অফিস",
-                    "fire": "ফায়ার সার্ভিস",
-                    "gas": "গ্যাস ফিলিং স্টেশন",
-                    "wasa": "ওয়াসা",
-                    "petrol": "পেট্রোল পাম্প",
-                    "govt": "সরকারী কার্যালয়"
-                };
-
-                if (type && typeMap[type]) {
-                    return typeMap[type];
-                }
-
-                // Fallback to filename logic if no query param
-                const path = window.location.pathname;
-                const filename = path.split("/").pop().split(".")[0];
-                const titleMap = {
-                    "find_result": "রক্তদাতা অনুসন্ধান",
-                    "blood_search": "ব্লাড ডোনার খুঁজুন",
-                    "all-search": "অনুসন্ধান"
-                };
-                return titleMap[filename] || "অনুসন্ধান";
+            // 1. DETERMINE SEARCH TYPE
+            const params = new URLSearchParams(window.location.search);
+            const typeParam = params.get('type');
+            
+            if(typeParam && categoryMap[typeParam]) {
+                currentSearchType = categoryMap[typeParam];
+                currentSearchTypeTitle = currentSearchType;
+            } else {
+                currentSearchTypeTitle = "অনুসন্ধান";
             }
-
-            const headerTextVariable = getPageTitle(); 
-            document.getElementById('dynamicSearchTitle').innerHTML = `<i class="fas fa-search"></i> ${headerTextVariable}`;
-
-            // Global State for Search
-            let currentSearchDiv = '';
-            let currentSearchDist = '';
-            let currentSearchUpa = '';
-            let currentServiceTitle = headerTextVariable;
-
-            // 2. LOCATION DATA 
-            const locationData = {
-            barishal: { name: "বরিশাল", districts: { barguna: { name: "বরগুনা", upazilas: ["আমতলী", "বামনা", "বরগুনা সদর", "বেতাগী", "পাথরঘাটা", "তালতলী"] }, barishal: { name: "বরিশাল", upazilas: ["আগৈলঝাড়া", "বাবুগঞ্জ", "বাকেরগঞ্জ", "বানারীপাড়া", "গৌরনদী", "হিজলা", "বরিশাল সদর", "মেহেন্দিগঞ্জ", "মুলাদী", "উজিরপুর"] }, bhola: { name: "ভোলা", upazilas: ["ভোলা সদর", "বোরহানউদ্দিন", "চরফ্যাশন", "দৌলতখান", "লালমোহন", "মনপুরা", "তজুমদ্দিন"] }, jhalokati: { name: "ঝালকাঠি", upazilas: ["ঝালকাঠি সদর", "কাঁঠালিয়া", "নলছিটি", "রাজাপুর"] }, patuakhali: { name: "পটুয়াখালী", upazilas: ["বাউফল", "দশমিনা", "গলাচিপা", "কলাপাড়া", "মির্জাগঞ্জ", "পটুয়াখালী সদর", "দুমকি", "রাঙ্গাবালী"] }, pirojpur: { name: "পিরোজপুর", upazilas: ["ভান্ডারিয়া", "কাউখালী", "মঠবাড়িয়া", "নাজিরপুর", "পিরোজপুর সদর", "নেছারাবাদ", "ইন্দুরকানী"] } } },
-            chattogram: { name: "চট্টগ্রাম", districts: { bandarban: { name: "বান্দরবান", upazilas: ["আলীকদম", "থানচি", "নাইক্ষ্যংছড়ি", "বান্দরবান সদর", "রুমা", "রোয়াংছড়ি", "লামা"] }, brahmanbaria: { name: "ব্রাহ্মণবাড়িয়া", upazilas: ["আখাউড়া", "আশুগঞ্জ", "বাঞ্ছারামপুর", "বিজয়নগর", "ব্রাহ্মণবাড়িয়া সদর", "কসবা", "নবীনগর", "নাসিরনগর", "সরাইল"] }, chandpur: { name: "চাঁদপুর", upazilas: ["চাঁদপুর সদর", "ফরিদগঞ্জ", "হাইমচর", "হাজীগঞ্জ", "কচুয়া", "মতলব উত্তর", "মতলব দক্ষিণ", "শাহরাস্তি"] }, chattogram: { name: "চট্টগ্রাম", upazilas: ["আনোয়ারা", "বাঁশখালী", "বোয়ালখালী", "চন্দনাইশ", "ফটিকছড়ি", "হাটহাজারী", "কর্ণফুলী", "লোহাগাড়া", "মীরসরাই", "পটিয়া", "রাঙ্গুনিয়া", "রাউজান", "সন্দ্বীপ", "সাতকানিয়া", "সীতাকুণ্ড", "আগ্রাবাদ", "কোতয়ালী", "চট্টগ্রাম সদর"] }, cumilla: { name: "কুমিল্লা", upazilas: ["বরুড়া", "ব্রাহ্মণপাড়া", "বুড়িচং", "চান্দিনা", "চৌদ্দগ্রাম", "দাউদকান্দি", "দেবিদ্বার", "হোমনা", "লাকসাম", "লালমাই", "মনোহরগঞ্জ", "মেঘনা", "মুরাদনগর", "নাঙ্গলকোট", "কুমিল্লা সদর", "কুমিল্লা সদর দক্ষিণ", "তিতাস"] }, coxsbazar: { name: "কক্সবাজার", upazilas: ["চকরিয়া", "কক্সবাজার সদর", "কুতুবদিয়া", "মহেশখালী", "পেকুয়া", "রামু", "টেকনাফ", "উখিয়া", "ঈদগাঁও"] }, feni: { name: "ফেনী", upazilas: ["ছাগলনাইয়া", "দাগনভূঞা", "ফেনী সদর", "পরশুরাম", "সোনাগাজী", "ফুলগাজী"] }, khagrachhari: { name: "খাগড়াছড়ি", upazilas: ["দীঘিনালা", "খাগড়াছড়ি সদর", "লক্ষ্মীছড়ি", "মহালছড়ি", "মানিকছড়ি", "মাটিরাঙ্গা", "পানছড়ি", "রামগড়", "গুইমারা"] }, lakshmipur: { name: "লক্ষ্মীপুর", upazilas: ["লক্ষ্মীপুর সদর", "রায়পুর", "রামগঞ্জ", "রামগতি", "কমলনগর"] }, noakhali: { name: "নোয়াখালী", upazilas: ["বেগমগঞ্জ", "চাটখিল", "কোম্পানীগঞ্জ", "হাতিয়া", "সেনবাগ", "সুবর্ণচর", "সোনাইমুড়ী", "কবিরহাট", "নোয়াখালী সদর"] }, rangamati: { name: "রাঙ্গামাটি", upazilas: ["বাঘাইছড়ি", "বরকল", "নানিয়ারচর", "কাপ্তাই", "কাউখালী", "লংগদু", "রাঙ্গামাটি সদর", "রাজস্থলী", "বিলাইছড়ি", "জুরাছড়ি"] } } },
-            dhaka: { name: "ঢাকা", districts: { dhaka: { name: "ঢাকা", upazilas: ["সাভার", "ধামরাই", "কেরানীগঞ্জ", "নবাবগঞ্জ", "দোহার"] }, faridpur: { name: "ফরিদপুর", upazilas: ["ফরিদপুর সদর", "আলফাডাঙ্গা", "বোয়ালমারী", "মধুখালী", "নগরকান্দা", "সালথা", "ভাঙ্গা", "চরভদ্রাসন", "সদরপুর"] }, gazipur: { name: "গাজীপুর", upazilas: ["গাজীপুর সদর", "কালিয়াকৈর", "কালীগঞ্জ", "কাপাসিয়া", "শ্রীপুর"] }, gopalganj: { name: "গোপালগঞ্জ", upazilas: ["গোপালগঞ্জ সদর", "কাশিয়ানী", "কোটালীপাড়া", "মুকসুদপুর", "টুঙ্গিপাড়া"] }, kishoreganj: { name: "কিশোরগঞ্জ", upazilas: ["অষ্টগ্রাম", "বাজিতপুর", "ভৈরব", "হোসেনপুর", "ইটনা", "করিমগঞ্জ", "কটিয়াদী", "কিশোরগঞ্জ সদর", "কুলিয়ারচর", "মিঠামইন", "নিকলী", "পাকুন্দিয়া", "তাড়াইল"] }, madaripur: { name: "মাদারীপুর", upazilas: ["কালকিনি", "মাদারীপুর সদর", "রাজৈর", "শিবচর", "ডাসার"] }, manikganj: { name: "মানিকগঞ্জ", upazilas: ["দৌলতপুর", "ঘিওর", "হরিরামপুর", "মানিকগঞ্জ সদর", "সাটুরia", "শিবালয়", "সিঙ্গাইর"] }, munshiganj: { name: "মুন্সিগঞ্জ", upazilas: ["গজারিয়া", "লৌহজং", "মুন্সিগঞ্জ সদর", "সিরাজদিখান", "শ্রীনগর", "টঙ্গিবাড়ী"] }, narayanganj: { name: "নারায়ণগঞ্জ", upazilas: ["আড়াইহাজার", "বন্দর", "নারায়ণগঞ্জ সদর", "রূপগঞ্জ", "সোনারগাঁও"] }, narsingdi: { name: "নরসিংদী", upazilas: ["বেলাবো", "মনোহরদী", "নরসিংদী সদর", "পলাশ", "রায়পুরা", "শিবপুর"] }, rajbari: { name: "রাজবাড়ী", upazilas: ["বালিয়াকান্দি", "গোয়ালন্দ", "পাংশা", "কালুখালী", "রাজবাড়ী সদর"] }, shariatpur: { name: "শরীয়তপুর", upazilas: ["ভেদরগঞ্জ", "ডামুড্যা", "গোসাইরহাট", "নড়িয়া", "শরীয়তপুর সদর", "জাজিরা"] }, tangail: { name: "টাঙ্গাইল", upazilas: ["বাসাইল", "ভুঞাপুর", "দেলদুয়ার", "ঘাটাইল", "গোপালপুর", "কালিহাতী", "মধুপুর", "মির্জাপুর", "নাগরপুর", "সখিপুর", "টাঙ্গাইল সদর", "ধনবাড়ী"] } } },
-            khulna: { name: "খুলনা", districts: { bagerhat: { name: "বাগেরহাট", upazilas: ["বাগেরহাট সদর", "চিতলমারী", "ফকিরহাট", "কচুয়া", "মোল্লাহাট", "মোংলা", "মোরেলগঞ্জ", "রামপাল", "শরণখোলা"] }, chuadanga: { name: "চুয়াডাঙ্গা", upazilas: ["আলমডাঙ্গা", "চুয়াডাঙ্গা সদর", "দামুড়হুদা", "জীবননগর"] }, jashore: { name: "যশোর", upazilas: ["অভয়নগর", "বাঘারপাড়া", "চৌগাছা", "ঝিকরগাছা", "কেশবপুর", "যশোর সদর", "মণিরামপুর", "শার্শা"] }, jhenaidah: { name: "ঝিনাইদহ", upazilas: ["হরিণাকুণ্ডু", "ঝিনাইদহ সদর", "কালীগঞ্জ", "কোটচাঁদপুর", "মহেশপুর", "শৈলকুপা"] }, khulna: { name: "খুলনা", upazilas: ["বটিয়াঘাটা", "দাকোপ", "ডুমুরia", "দিঘলিয়া", "কয়রা", "পাইকগাছা", "ফুলতলা", "রূপসা", "তেরখাদা", "নিউমার্কেট", "সোনাডাঙ্গা"] }, kushtia: { name: "কুষ্টিয়া", upazilas: ["ভেড়ামারা", "দৌলতপুর", "খোকসা", "কুমারখালী", "কুষ্টিয়া সদর", "মিরপুর"] }, magura: { name: "মাগুরা", upazilas: ["মাগুরা সদর", "মহম্মদপুর", "শালিখা", "শ্রীপুর"] }, meherpur: { name: "মেহেরপুর", upazilas: ["গাংনী", "মেহেরপুর সদর", "মুজিবনগর"] }, narail: { name: "নড়াইল", upazilas: ["কালিয়া", "লোহাগড়া", "নড়াইল সদর"] }, satkhira: { name: "সাতক্ষীরা", upazilas: ["آশাশুনি", "দেবহাটা", "কলারোয়া", "কালীগঞ্জ", "সাতক্ষীরা সদর", "শ্যামনগর", "তালা"] } } },
-            mymensingh: { name: "ময়মনসিংহ", districts: { jamalpur: { name: "জামালপুর", upazilas: ["বকশীগঞ্জ", "দেওয়ানগঞ্জ", "ইসলামপুর", "জামালপুর সদর", "মাদারগঞ্জ", "মেলান্দহ", "সরিষাবাড়ী"] }, mymensingh: { name: "ময়মনসিংহ", upazilas: ["ভালুকা", " ত্রিশাল", "হালুয়াঘাট", "মুক্তাগাছা", "ধোবাউড়া", "ফুলবাড়ীয়া", "গফরগাঁও", "গৌরীপুর", "ঈশ্বরগঞ্জ", "ময়মনসিংহ সদর", "নান্দাইল", "ফুলপুর", "তারাকান্দা"] }, netrokona: { name: "নেত্রকোণা", upazilas: ["আটপাড়া", "বারহাট্টা", "দুর্গাপুর", "খালিয়াজুরী", "কলমাকান্দা", "কেন্দুয়া", "মদন", "মোহনগঞ্জ", "নেত্রকোণা সদর", "পূর্বধলা"] }, sherpur: { name: "শেরপুর", upazilas: ["ঝিনাইগাতী", "নকলা", "নালিতাবাড়ী", "শেরপুর সদর", "শ্রীবরদী"] } } },
-            rajshahi: { name: "রাজশাহী", districts: { bogura: { name: "বগুড়া", upazilas: ["আদমদীঘি", "বগুড়া সদর", "ধুনট", "দুপচাঁচিয়া", "গাবতলী", "কাহালু", "নন্দীগ্রাম", "সারিয়াকান্দি", "শাজাহানপুর", "শেরপুর", "শিবগঞ্জ", "সোনাতলা"] }, chapainawabganj: { name: "চাঁপাইনবাবগঞ্জ", upazilas: ["ভোলাহাট", "গোমস্তাপুর", "নাচোল", "নবাবগঞ্জ সদর", "শিবগঞ্জ"] }, joypurhat: { name: "জয়পুরহাট", upazilas: ["আক্কেলপুর", "জয়পুরহাট সদর", "কালাই", "ক্ষেতলাল", "পাঁচবিবি"] }, naogaon: { name: "নওগাঁ", upazilas: ["আত্রাই", "বদলগাছী", "ধামইরহাট", "মান্দা", "মহাদেবপুর", "নওগাঁ সদর", "নিয়ামতপুর", "পত্নীতলা", "পোরশা", "রানীনগর", "সাপাহার"] }, natore: { name: "নাটোর", upazilas: ["বাগাতিপাড়া", "বড়াইগ্রাম", "গুরুদাসপুর", "লালপুর", "নাটোর সদর", "সিংড়া", "নলডাঙ্গা"] }, pabna: { name: "পাবনা", upazilas: ["আটঘরিয়া", "বেড়া", "ভাঙ্গুড়া", "চাটমোহর", "ফরিদপুর", "ঈশ্বরদী", "পাবনা সদর", "সাঁথিয়া", "সুজানগর"] }, rajshahi: { name: "রাজশাহী", upazilas: ["বাঘা", "বাগমারা", "চারঘাট", "দুর্গাপুর", "গোদাগাড়ী", "মোহনপুর", "পবা", "পুঠিয়া", "তানোর", "রাজশাহী বিশ্ববিদ্যালয়"] }, sirajganj: { name: "সিরাজগঞ্জ", upazilas: ["বেলকুচি", "চৌহালী", "কামারখন্দ", "কাজীপুর", "রায়গঞ্জ", "শাহজাদপুর", "সিরাজগঞ্জ সদর", "তাড়াশ", "উল্লাপাড়া"] } } },
-            rangpur: { name: "রংপুর", districts: { dinajpur: { name: "দিনাজপুর", upazilas: ["বিরামপুর", "বীরগঞ্জ", "বিরল", "বোচাগঞ্জ", "চিরিরবন্দর", "ফুলবাড়ী", "ঘোড়াঘাট", "হাকিমপুর", "কাহারোল", "খানসামা", "দিনাজপুর সদর", "নবাবগঞ্জ", "পার্বতীপুর"] }, gaibandha: { name: "গাইবান্ধা", upazilas: ["ফুলছড়ি", "গাইবান্ধা সদর", "গোবিন্দগঞ্জ", "পলাশবাড়ী", "সাদুল্লাপুর", "সাঘাটা", "সুন্দরগঞ্জ"] }, kurigram: { name: "কুড়িগ্রাম", upazilas: ["ভুরুঙ্গামারী", "চর রাজিবপুর", "চিলমারী", "ফুলবাড়ী", "কুড়িগ্রাম সদর", "নাগেশ্বরী", "রাজারহাট", "রৌমারী", "উলিপুর"] }, lalmonirhat: { name: "লালমনিরহাট", upazilas: ["আদিতমারী", "হাতীবান্ধা", "কালীগঞ্জ", "লালমনিরহাট সদর", "পাটগ্রাম"] }, nilphamari: { name: "নীলফামারী", upazilas: ["ডোমার", "ডিমলা", "জলঢাকা", "কিশোরগঞ্জ", "নীলফামারী সদর", "সৈয়দপুর"] }, panchagarh: { name: "পঞ্চগড়", upazilas: ["আটোয়ারী", "বোদা", "দেবীগঞ্জ", "পঞ্চগড় সদর", "তেঁতুলিয়া"] }, rangamati: { name: "রংপুর", upazilas: ["বদরগঞ্জ", "গঙ্গাচড়া", "কাউনিয়া", "রংপুর সদর", "মিঠাপুকুর", "পীরগাছা", "পীরগঞ্জ", "তারাগঞ্জ"] }, thakurgaon: { name: "ঠাকুরগাঁও", upazilas: ["বালিয়াডাঙ্গী", "হরিপুর", "পীরগঞ্জ", "রানীশংকৈল", "ঠাকুরগাঁও সদর"] } } },
-            sylhet: { name: "সিলেট", districts: { habiganj: { name: "হবিগঞ্জ", upazilas: ["আজমিরীগঞ্জ", "বাহুবল", "বানিয়াচং", "চুনারুঘাট", "হবিগঞ্জ সদর", "লাখাই", "মাধবপুর", "নবীগঞ্জ", "শায়েস্তাগঞ্জ"] }, moulvibazar: { name: "মৌলভীবাজার", upazilas: ["বড়লেখা", "জুড়ী", "কমলগঞ্জ", "কুলাউড়া", "মৌলভীবাজার সদর", "রাজনগর", "শ্রীমঙ্গল"] }, sunamganj: { name: "সুনামগঞ্জ", upazilas: ["বিশ্বম্ভরপুর", "ছাতক", "দিরাই", "দোয়ারাবাজার", "জগন্নাথপুর", "জামালগঞ্জ", "শাল্লা", "সুনামগঞ্জ সদর", "তাহিরপুর", "ধর্মপাশা", "দক্ষিণ সুনামগঞ্জ", "মধ্যনগর"] }, sylhet: { name: "সিলেট", upazilas: ["বালাগঞ্জ", "বিয়ানীবাজার", "বিশ্বনাথ", "কোম্পানীগঞ্জ", "ফেঞ্চুগঞ্জ", "গোলাপগঞ্জ", "গোয়াইনঘাট", "জৈন্তাপুর", "কানাইঘাট", "সিলেট সদর", "জকিগঞ্জ", "দক্ষিণ সুরমা", "ওসমানী নগর", "আম্বরখানা", "জিন্দাবাজার"] } } }
-            };
             
-            // 3. MOCK DONOR DATABASE (Simulated)
-            const mockDonors = []; 
+            // Set Header
+            document.getElementById('dynamicSearchTitle').innerHTML = `<i class="fas fa-search"></i> ${currentSearchTypeTitle}`;
 
-            // 4. DOM ELEMENTS - MAIN SEARCH
-            const divisionSelect = document.getElementById('division');
-            const districtSelect = document.getElementById('district');
-            const upazilaSelect = document.getElementById('upazila');
-            const searchForm = document.getElementById('searchForm');
-            const searchView = document.getElementById('search-view-section');
-            const resultsView = document.getElementById('results-view-section');
-            const resultsGrid = document.getElementById('resultsGrid');
-            const noResults = document.getElementById('noResults');
-            const fabHint = document.getElementById('fabHint');
-            
-            // 5. DOM ELEMENTS - ADD CONTACT
-            const addContactOverlay = document.getElementById('addContactOverlay');
-            const closeAddContactBtn = document.getElementById('closeAddContactBtn');
-            const editForm = document.getElementById('editForm');
-            const editDivisionSelect = document.getElementById('editDivision');
-            const editDistrictSelect = document.getElementById('editDistrict');
-            const editUpazilaSelect = document.getElementById('editUpazila');
-            const serviceTypeSelect = document.getElementById('serviceType');
-            const saveBtn = document.getElementById('saveBtn');
-
-            // --- HELPER FUNCTIONS FOR DROPDOWNS ---
-            const populateDivisions = (selectElement) => {
-                selectElement.innerHTML = '<option value="" disabled selected>বিভাগ নির্বাচন করুন</option>';
-                for (const div in locationData) {
-                    const option = document.createElement('option');
-                    option.value = div;
-                    option.textContent = locationData[div].name; 
-                    selectElement.appendChild(option);
-                }
-            };
-
-            const populateDistricts = (divKey, distSelect, upaSelect) => {
-                distSelect.innerHTML = '<option value="" disabled selected>জেলা নির্বাচন করুন</option>';
-                distSelect.disabled = true;
-                if(upaSelect) {
-                    upaSelect.innerHTML = '<option value="" disabled selected>প্রথমে জেলা নির্বাচন করুন</option>';
-                    upaSelect.disabled = true;
-                }
-
-                if (divKey && locationData[divKey]) {
-                    const districts = locationData[divKey].districts;
-                    for (const key in districts) {
-                        const option = document.createElement('option');
-                        option.value = key;
-                        option.textContent = districts[key].name; 
-                        distSelect.appendChild(option);
-                    }
-                    distSelect.disabled = false;
-                }
-            };
-
-            const populateUpazilas = (divKey, distKey, upaSelect) => {
-                upaSelect.innerHTML = '<option value="" disabled selected>উপজেলা নির্বাচন করুন</option>';
-                upaSelect.disabled = true;
-                
-                if (divKey && distKey && locationData[divKey].districts[distKey]) {
-                    const upazilas = locationData[divKey].districts[distKey].upazilas;
-                    upazilas.forEach(upa => {
-                        const option = document.createElement('option');
-                        option.value = upa; 
-                        option.textContent = upa;
-                        upaSelect.appendChild(option);
-                    });
-                    upaSelect.disabled = false;
-                }
-            };
-
-            // INITIALIZE MAIN SEARCH DROPDOWNS
+            // 2. POPULATE DROPDOWNS (Main Search & Add Form)
             populateDivisions(divisionSelect);
-
-            divisionSelect.addEventListener('change', function() {
-                populateDistricts(this.value, districtSelect, upazilaSelect);
-            });
-            districtSelect.addEventListener('change', function() {
-                populateUpazilas(divisionSelect.value, this.value, upazilaSelect);
-            });
-
-            // INITIALIZE ADD CONTACT DROPDOWNS
             populateDivisions(editDivisionSelect);
 
-            editDivisionSelect.addEventListener('change', function() {
-                populateDistricts(this.value, editDistrictSelect, editUpazilaSelect);
-                validateForm();
-            });
-            editDistrictSelect.addEventListener('change', function() {
-                populateUpazilas(editDivisionSelect.value, this.value, editUpazilaSelect);
-                validateForm();
-            });
+            setupDropdownListeners(divisionSelect, districtSelect, upazilaSelect);
+            setupDropdownListeners(editDivisionSelect, editDistrictSelect, editUpazilaSelect);
 
-            // 6. SEARCH LOGIC
-            searchForm.addEventListener('submit', function(e) {
+            // 3. SEARCH HANDLER
+            searchForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-
-                // Store selected values globally
-                currentSearchDiv = divisionSelect.value;
-                currentSearchDist = districtSelect.value;
-                currentSearchUpa = upazilaSelect.value;
-                
-                runSearchAndRender();
+                await performSearch();
             });
 
-            function runSearchAndRender() {
-                // Step 1: Hide Search View
-                searchView.style.display = 'none';
-
-                // Filter Data
-                const results = mockDonors.filter(donor => {
-                    return donor.districtKey === currentSearchDist &&
-                            (donor.upazila === currentSearchUpa || currentSearchUpa === ""); 
-                });
-
-                // Prepare Bangla names for Header and Location
-                const divNameBn = locationData[currentSearchDiv].name;
-                const distNameBn = locationData[currentSearchDiv].districts[currentSearchDist].name;
-
-                // Header Update
-                document.getElementById('resultHeaderTitle').textContent = `${currentServiceTitle} | ${currentSearchUpa}`;
-                
-                document.getElementById('searchCriteriaText').innerHTML = 
-                    `<i class="fas fa-map-marker-alt"></i> ${currentSearchUpa}, ${distNameBn}, ${divNameBn}`;
-
-                // Update No Result Text dynamically
-                document.getElementById('dynamicNoResultType').textContent = currentServiceTitle;
-
-                // Render Cards with Bangla Location
-                renderCards(results, divNameBn, distNameBn);
-
-                // Step 2: Show Results Instantly
-                resultsView.style.display = 'block';
-                window.scrollTo(0, 0);
-
-                // Show FAB Hint for 3 seconds
-                if(fabHint) {
-                    setTimeout(() => { fabHint.classList.add('show'); }, 500);
-                    setTimeout(() => { fabHint.classList.remove('show'); }, 3500);
-                }
-            }
-
-            // COPY TO CLIPBOARD HELPER
-            window.copyToClipboard = function(text) {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('ই-মেইল কপি হয়েছে: ' + text);
-                }).catch(err => {
-                    console.error('Copy failed', err);
-                });
-            };
-
-            // 7. RENDER CARDS
-            function renderCards(data, divNameBn, distNameBn) {
-                resultsGrid.innerHTML = '';
-                if (data.length === 0) {
-                    noResults.style.display = 'block';
-                    return;
-                }
-                noResults.style.display = 'none';
-
-                data.forEach(donor => {
-                    const card = document.createElement('div');
-                    card.className = 'emergency-card';
-                    
-                    // Logic to show Email Button only if email exists
-                    const emailButton = (donor.email && donor.email.trim() !== "") 
-                        ? `<button class="btn btn-sm btn-outline" onclick="copyToClipboard('${donor.email}')"><i class="fas fa-copy"></i> ই-মেইল</button>` 
-                        : '';
-
-                    card.innerHTML = `
-                        <div class="e-card-top">
-                            <div class="creator-info">
-                                <span class="creator-name"><i class="fas fa-user-circle"></i> ${donor.name}</span>
-                            </div>
-                        </div>
-                        <div class="e-details">
-                            <h4>${donor.officeName}</h4>
-                            <p><i class="fas fa-calendar-check"></i> শেষ আপডেট: ${donor.lastUpdate || 'সদ্য যুক্ত'}</p>
-                            <p><i class="fas fa-map-marked-alt"></i> ${donor.upazila}, ${distNameBn}</p>
-                        </div>
-                        <div class="e-actions">
-                            <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${donor.mobile}'">
-                                <i class="fas fa-phone-alt"></i> কল করুন
-                            </button>
-                            ${emailButton}
-                        </div>
-                    `;
-                    resultsGrid.appendChild(card);
-                });
-            }
-
-            // 8. UTILITIES (Sidebar Toggle)
-            const sidebar = document.querySelector('.sidebar');
-            const backdrop = document.querySelector('.sidebar-backdrop');
-            const toggleBtn = document.querySelector('.sidebar-toggle');
-            const closeBtn = document.querySelector('.sidebar-back-button');
-
-            if(toggleBtn) {
-                toggleBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    sidebar.classList.add('is-open');
-                    backdrop.classList.add('is-open');
-                });
-            }
-            const closeSidebar = () => {
-                sidebar.classList.remove('is-open');
-                backdrop.classList.remove('is-open');
-            };
-            if(closeBtn) closeBtn.addEventListener('click', closeSidebar);
-            if(backdrop) backdrop.addEventListener('click', closeSidebar);
-
-            // Dropdown Toggle Logic
-            document.querySelectorAll(".dropdown-toggle").forEach((dropdownToggle) => {
-              dropdownToggle.addEventListener("click", (e) => {
+            // 4. ADD CONTACT HANDLER
+            editForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const container = dropdownToggle.closest(".dropdown-container");
-                const menu = container.querySelector(".dropdown-menu");
-                const isOpen = container.classList.contains("open");
-                
-                container.classList.toggle("open", !isOpen);
-                
-                if (!isOpen) {
-                    menu.style.height = `${menu.scrollHeight}px`;
-                } else {
-                    menu.style.height = "0";
-                }
-              });
+                await saveContact();
             });
-
-            // Theme Toggle Logic
-            const themeToggle = document.getElementById('theme-toggle');
-            if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-            if(themeToggle) {
-                themeToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    document.body.classList.toggle('dark-mode');
-                    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-                });
-            }
-
-            window.resetSearch = function() {
-                resultsView.style.display = 'none';
-                searchView.style.display = 'block';
-            };
-
-            // 9. ADMIN FAB & PASSKEY LOGIC
-            const adminFab = document.getElementById('adminFab');
-            const passkeyOverlay = document.getElementById('passkeyOverlay');
-            const passkeyForm = document.getElementById('passkeyForm');
-            const passkeyInput = document.getElementById('passkey-input');
-            const passkeyError = document.getElementById('passkey-error');
-            const closePasskeyBtn = document.getElementById('closePasskeyBtn');
-            const CORRECT_PASS_KEY = "123456"; 
-
-            if(adminFab) {
-                adminFab.addEventListener('click', () => {
-                   passkeyOverlay.style.display = 'flex';
-                });
-            }
-
-            if(closePasskeyBtn) {
-                closePasskeyBtn.addEventListener('click', () => {
-                    passkeyOverlay.style.display = 'none';
-                    passkeyInput.value = '';
-                    passkeyError.textContent = '';
-                });
-            }
-
-            if(passkeyForm) {
-                passkeyForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    
-                    if (passkeyInput.value === CORRECT_PASS_KEY) {
-                        passkeyInput.value = '';
-                        passkeyError.textContent = '';
-                        passkeyOverlay.style.display = 'none'; // Close Passkey Overlay
-                        
-                        // OPEN ADD CONTACT OVERLAY
-                        openAddContactOverlay();
-                        
-                    } else {
-                        passkeyError.textContent = 'ভুল Pass Key! আবার চেষ্টা করুন।';
-                        passkeyInput.value = '';
-                        setTimeout(() => { passkeyError.textContent = ''; }, 3000);
-                    }
-                });
-            }
-
-            // 10. ADD CONTACT LOGIC
-            
-            function openAddContactOverlay() {
-                // Pre-fill location based on search
-                editDivisionSelect.value = currentSearchDiv;
-                populateDistricts(currentSearchDiv, editDistrictSelect, editUpazilaSelect);
-                editDistrictSelect.value = currentSearchDist;
-                populateUpazilas(currentSearchDiv, currentSearchDist, editUpazilaSelect);
-                editUpazilaSelect.value = currentSearchUpa;
-
-                // Auto Select Service Section based on current search context
-                // If header is "রক্তদাতা অনুসন্ধান", auto select that option
-                const serviceOptions = serviceTypeSelect.options;
-                for (let i = 0; i < serviceOptions.length; i++) {
-                    if (serviceOptions[i].value === currentServiceTitle) {
-                        serviceTypeSelect.selectedIndex = i;
-                        break;
-                    }
-                }
-
-                validateForm();
-                addContactOverlay.style.display = 'flex';
-            }
-
-            closeAddContactBtn.addEventListener('click', () => {
-                addContactOverlay.style.display = 'none';
-                document.getElementById('editForm').reset();
-            });
-
-            // Form Validation Logic
-            const personNameInput = document.getElementById('personName');
-            const officeNameInput = document.getElementById('officeName');
-            const mobileNumberInput = document.getElementById('mobileNumber');
-            const emailAddressInput = document.getElementById('emailAddress');
-
-            const allInputs = [serviceTypeSelect, editDivisionSelect, editDistrictSelect, editUpazilaSelect, personNameInput, officeNameInput, mobileNumberInput, emailAddressInput];
-            allInputs.forEach(input => input.addEventListener('input', validateForm));
-            allInputs.forEach(select => select.addEventListener('change', validateForm));
-
-            function validateForm() {
-                const isContactInfoEntered = mobileNumberInput.value.trim() !== "" || emailAddressInput.value.trim() !== "";
-                saveBtn.disabled = !(serviceTypeSelect.value && editDivisionSelect.value && editDistrictSelect.value && editUpazilaSelect.value && officeNameInput.value.trim() && isContactInfoEntered);
-            }
-
-            // Handle New Contact Save
-            editForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (saveBtn.disabled) return;
-
-                const newDonor = {
-                    id: Date.now(), // Fake ID
-                    serviceType: serviceTypeSelect.value,
-                    name: personNameInput.value || "নাম নেই",
-                    officeName: officeNameInput.value,
-                    mobile: mobileNumberInput.value,
-                    email: emailAddressInput.value, // Added Email Saving Logic
-                    divisionKey: editDivisionSelect.value,
-                    districtKey: editDistrictSelect.value,
-                    upazila: editUpazilaSelect.value,
-                    lastUpdate: new Date().toLocaleDateString('bn-BD')
-                };
-
-                // Add to Mock Database
-                mockDonors.push(newDonor);
-
-                // Close Overlay
-                addContactOverlay.style.display = 'none';
-                
-                // Clear Form
-                editForm.reset();
-
-                // Show Alert
-                alert("তথ্য সফলভাবে যোগ করা হয়েছে!");
-
-                // Re-render Search Results
-                runSearchAndRender();
-            });
-
         });
+
+        // --- Dropdown Helpers ---
+        function populateDivisions(selectElement) {
+            selectElement.innerHTML = '<option value="" disabled selected>বিভাগ নির্বাচন করুন</option>';
+            Object.keys(bdGeoData).forEach(div => {
+                const option = document.createElement('option');
+                option.value = div;
+                option.textContent = div; // Use English name to match DB
+                selectElement.appendChild(option);
+            });
+        }
+
+        function setupDropdownListeners(divSelect, distSelect, upaSelect) {
+            divSelect.addEventListener('change', function() {
+                // Populate Districts
+                distSelect.innerHTML = '<option value="" disabled selected>জেলা নির্বাচন করুন</option>';
+                distSelect.disabled = false;
+                upaSelect.innerHTML = '<option value="" disabled selected>প্রথমে জেলা নির্বাচন করুন</option>';
+                upaSelect.disabled = true;
+
+                const districts = bdGeoData[this.value];
+                if(districts) {
+                    Object.keys(districts).forEach(dist => {
+                        const opt = document.createElement('option');
+                        opt.value = dist;
+                        opt.textContent = dist;
+                        distSelect.appendChild(opt);
+                    });
+                }
+            });
+
+            distSelect.addEventListener('change', function() {
+                // Populate Upazilas
+                upaSelect.innerHTML = '<option value="" disabled selected>উপজেলা নির্বাচন করুন</option>';
+                upaSelect.disabled = false;
+
+                const upazilas = bdGeoData[divSelect.value][this.value];
+                if(upazilas) {
+                    upazilas.forEach(upz => {
+                        const opt = document.createElement('option');
+                        opt.value = upz;
+                        opt.textContent = upz;
+                        upaSelect.appendChild(opt);
+                    });
+                }
+            });
+            
+            // Extra for Add Form: validate on change
+            if(editForm.contains(divSelect)) {
+                [divSelect, distSelect, upaSelect].forEach(el => {
+                    el.addEventListener('change', validateAddForm);
+                });
+            }
+        }
+
+        // --- SEARCH FUNCTION ---
+        async function performSearch() {
+            const div = divisionSelect.value;
+            const dist = districtSelect.value;
+            const upa = upazilaSelect.value;
+
+            if(!div || !dist || !upa) return;
+
+            // Switch UI
+            document.getElementById('search-view-section').style.display = 'none';
+            document.getElementById('results-view-section').style.display = 'block';
+            window.scrollTo(0,0);
+            
+            // Set Titles
+            document.getElementById('resultHeaderTitle').textContent = `${currentSearchTypeTitle || 'ফলাফল'} | ${upa}`;
+            document.getElementById('searchCriteriaText').textContent = `${upa}, ${dist}, ${div}`;
+            document.getElementById('dynamicNoResultType').textContent = currentSearchTypeTitle;
+
+            // Load Data
+            resultsGrid.innerHTML = '';
+            loadingSpinner.style.display = 'block';
+            noResults.style.display = 'none';
+
+            try {
+                // Query Firestore: Category + Division + District + Upazila
+                let q;
+                if(currentSearchType) {
+                    q = query(collection(db, "contacts"), 
+                        where("category", "==", currentSearchType),
+                        where("division", "==", div),
+                        where("district", "==", dist),
+                        where("upazila", "==", upa)
+                    );
+                } else {
+                    // Fallback generic search if no category in URL
+                     q = query(collection(db, "contacts"), 
+                        where("division", "==", div),
+                        where("district", "==", dist),
+                        where("upazila", "==", upa)
+                    );
+                }
+
+                const querySnapshot = await getDocs(q);
+                loadingSpinner.style.display = 'none';
+
+                if(querySnapshot.empty) {
+                    noResults.style.display = 'block';
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const d = doc.data();
+                        renderCard(d);
+                    });
+                    
+                    // Show FAB Hint
+                    const fabHint = document.getElementById('fabHint');
+                    if(fabHint) {
+                        setTimeout(() => { fabHint.classList.add('show'); }, 500);
+                        setTimeout(() => { fabHint.classList.remove('show'); }, 3500);
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error getting documents: ", error);
+                loadingSpinner.style.display = 'none';
+                resultsGrid.innerHTML = `<div style="text-align:center; color:red; width:100%;">ডাটা লোড করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।</div>`;
+            }
+        }
+
+        function renderCard(data) {
+            const card = document.createElement('div');
+            card.className = 'emergency-card';
+            
+            // Parse Details (Often contains Person name or extra info)
+            // Admin Panel structure: name (Office/Main), phone, details
+            
+            // Check if details contains email (simple check)
+            let emailBtn = '';
+            const detailsText = data.details || '';
+            const emailMatch = detailsText.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+            
+            if(emailMatch && emailMatch[0]) {
+                emailBtn = `<button class="btn btn-sm btn-outline" onclick="copyToClipboard('${emailMatch[0]}')"><i class="fas fa-copy"></i> ই-মেইল</button>`;
+            }
+
+            card.innerHTML = `
+                <div class="e-card-top">
+                    <div class="creator-info">
+                        <span class="creator-name"><i class="fas fa-building"></i> ${data.name}</span>
+                    </div>
+                </div>
+                <div class="e-details">
+                    <p class="text-dark fw-bold"><i class="fas fa-info-circle"></i> ${data.details || 'বিস্তারিত তথ্য নেই'}</p>
+                    <p><i class="fas fa-phone"></i> ${data.phone}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${data.upazila}, ${data.district}</p>
+                </div>
+                <div class="e-actions">
+                    <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${data.phone}'">
+                        <i class="fas fa-phone-alt"></i> কল করুন
+                    </button>
+                    ${emailBtn}
+                </div>
+            `;
+            resultsGrid.appendChild(card);
+        }
+
+        // --- SAVE CONTACT FUNCTION ---
+        async function saveContact() {
+            const serviceType = document.getElementById('serviceType').value;
+            const div = document.getElementById('editDivision').value;
+            const dist = document.getElementById('editDistrict').value;
+            const upa = document.getElementById('editUpazila').value;
+            const officeName = document.getElementById('officeName').value; // Saved as 'name'
+            const personName = document.getElementById('personName').value; 
+            const mobile = document.getElementById('mobileNumber').value; // Saved as 'phone'
+            const email = document.getElementById('emailAddress').value;
+
+            // Validation
+            if(!serviceType || !div || !dist || !upa || !officeName || (!mobile && !email)) {
+                alert("দয়া করে প্রয়োজনীয় তথ্য পূরণ করুন।");
+                return;
+            }
+
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+            saveBtn.innerText = "সেভ হচ্ছে...";
+
+            // Construct Details String (Combine Person Name + Email)
+            let detailsParts = [];
+            if(personName) detailsParts.push(personName);
+            if(email) detailsParts.push(email);
+            const detailsStr = detailsParts.join(" | ");
+
+            try {
+                await addDoc(collection(db, "contacts"), {
+                    category: serviceType,
+                    division: div,
+                    district: dist,
+                    upazila: upa,
+                    name: officeName,
+                    phone: mobile,
+                    details: detailsStr,
+                    createdAt: new Date(),
+                    source: "user_submission"
+                });
+
+                alert("তথ্য সফলভাবে যোগ করা হয়েছে!");
+                document.getElementById('addContactOverlay').style.display = 'none';
+                document.getElementById('editForm').reset();
+                
+                // Refresh Search if matches
+                if(div === divisionSelect.value && upa === upazilaSelect.value) {
+                    performSearch();
+                }
+
+            } catch (e) {
+                console.error("Error adding doc: ", e);
+                alert("এরর: " + e.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = "সেভ করুন";
+            }
+        }
+        
+        // --- Form Validation Helper ---
+        const inputs = document.querySelectorAll('#editForm input, #editForm select');
+        inputs.forEach(input => {
+            input.addEventListener('input', validateAddForm);
+            input.addEventListener('change', validateAddForm);
+        });
+
+        function validateAddForm() {
+             const saveBtn = document.getElementById('saveBtn');
+             const sType = document.getElementById('serviceType').value;
+             const div = document.getElementById('editDivision').value;
+             const dist = document.getElementById('editDistrict').value;
+             const upa = document.getElementById('editUpazila').value;
+             const oName = document.getElementById('officeName').value;
+             const mob = document.getElementById('mobileNumber').value;
+             const mail = document.getElementById('emailAddress').value;
+             
+             if(sType && div && dist && upa && oName && (mob || mail)) {
+                 saveBtn.disabled = false;
+             } else {
+                 saveBtn.disabled = true;
+             }
+        }
+
+        // --- GLOBAL HELPERS (Attached to Window for HTML OnClick) ---
+        window.resetSearch = function() {
+            document.getElementById('results-view-section').style.display = 'none';
+            document.getElementById('search-view-section').style.display = 'block';
+        };
+
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('ই-মেইল কপি হয়েছে: ' + text);
+            });
+        };
+
+        // --- UI TOGGLES (Sidebar/Theme) ---
+        // (Copied purely UI logic)
+        const sidebar = document.querySelector('.sidebar');
+        const backdrop = document.querySelector('.sidebar-backdrop');
+        const toggleBtn = document.querySelector('.sidebar-toggle');
+        const closeBtn = document.querySelector('.sidebar-back-button');
+
+        if(toggleBtn) toggleBtn.addEventListener('click', (e) => { e.preventDefault(); sidebar.classList.add('is-open'); backdrop.classList.add('is-open'); });
+        const closeSidebar = () => { sidebar.classList.remove('is-open'); backdrop.classList.remove('is-open'); };
+        if(closeBtn) closeBtn.addEventListener('click', closeSidebar);
+        if(backdrop) backdrop.addEventListener('click', closeSidebar);
+        
+        document.querySelectorAll(".dropdown-toggle").forEach((dt) => {
+            dt.addEventListener("click", (e) => {
+                e.preventDefault();
+                const c = dt.closest(".dropdown-container");
+                c.classList.toggle("open");
+                const m = c.querySelector(".dropdown-menu");
+                m.style.height = c.classList.contains("open") ? `${m.scrollHeight}px` : "0";
+            });
+        });
+
+        const themeToggle = document.getElementById('theme-toggle');
+        if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+        if(themeToggle) themeToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+        
+        // --- ADMIN AUTH OVERLAY LOGIC ---
+        const adminFab = document.getElementById('adminFab');
+        const passOverlay = document.getElementById('passkeyOverlay');
+        const addOverlay = document.getElementById('addContactOverlay');
+        const passForm = document.getElementById('passkeyForm');
+        
+        if(adminFab) adminFab.addEventListener('click', () => { passOverlay.style.display = 'flex'; });
+        document.getElementById('closePasskeyBtn').addEventListener('click', () => { passOverlay.style.display = 'none'; });
+        document.getElementById('closeAddContactBtn').addEventListener('click', () => { addOverlay.style.display = 'none'; });
+
+        if(passForm) {
+            passForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const key = document.getElementById('passkey-input').value;
+                if(key === "123456") {
+                    passOverlay.style.display = 'none';
+                    document.getElementById('passkey-input').value = '';
+                    
+                    // Pre-fill Add Form based on current search
+                    if(divisionSelect.value) {
+                         const editDiv = document.getElementById('editDivision');
+                         editDiv.value = divisionSelect.value;
+                         editDiv.dispatchEvent(new Event('change'));
+                         
+                         setTimeout(() => {
+                             const editDist = document.getElementById('editDistrict');
+                             editDist.value = districtSelect.value;
+                             editDist.dispatchEvent(new Event('change'));
+                             
+                             setTimeout(() => {
+                                 document.getElementById('editUpazila').value = upazilaSelect.value;
+                             }, 100);
+                         }, 100);
+                    }
+                    
+                    // Pre-select service type if available
+                    if(currentSearchType) {
+                         document.getElementById('serviceType').value = currentSearchType;
+                    }
+
+                    addOverlay.style.display = 'flex';
+                } else {
+                    document.getElementById('passkey-error').innerText = "ভুল Pass Key!";
+                }
+            });
+        }
+
     </script>
 </body>
-</html>
+    </html>
