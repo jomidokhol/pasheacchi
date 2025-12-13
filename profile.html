@@ -1315,7 +1315,7 @@
                 <div class="form-group"> <label for="em_problem">রুগীর সমস্যা</label> <input type="text" id="em_problem" class="form-control" required> </div>
                 <div class="form-group"> <label for="em_location">প্রতিষ্ঠান / স্থান</label> <input type="text" id="em_location" class="form-control" placeholder="যেমন: ঢাকা মেডিকেল কলেজ" required> </div>
                 <div class="form-group"> <label for="em_mobile">মোবাইল নম্বর</label> <input type="tel" id="em_mobile" class="form-control" required> </div>
-                <div class="form-group"> <label for="em_deletionTime">ডিলেশন টাইম (কখন পোস্টটি অটো ডিলিট হবে)</label> <input type="datetime-local" id="em_deletionTime" class="form-control" required> </div>
+                <div class="form-group"> <label for="em_deletionTime">ডিলেশন টাইম (কখন পোস্টটি অটো ডিলিট হবে)</label> <input type="datetime-local" id="em_deletionTime" class="form-control"> </div>
                 
                 <!-- Added Details Textarea -->
                 <div class="form-group">
@@ -1853,9 +1853,25 @@
                 
                 onSnapshot(q, (snapshot) => {
                     emergencyPostContainer.innerHTML = '';
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        renderEmergencyCard({ ...data, id: doc.id });
+                    snapshot.forEach(async (documentSnapshot) => {
+                        const data = documentSnapshot.data();
+
+                        // Auto-delete logic
+                        if (data.deletionTime) {
+                            const deleteTime = new Date(data.deletionTime);
+                            const now = new Date();
+                            if (now > deleteTime) {
+                                try {
+                                    await deleteDoc(doc(db, "emergency_requests", documentSnapshot.id));
+                                    console.log("Expired post auto-deleted");
+                                } catch (err) {
+                                    console.error("Error auto-deleting:", err);
+                                }
+                                return; // Stop execution, don't render this card
+                            }
+                        }
+
+                        renderEmergencyCard({ ...data, id: documentSnapshot.id });
                     });
                 });
             }
@@ -2041,7 +2057,18 @@
                 try {
                     const docRef = doc(db, "donors", uid);
                     const docSnap = await getDoc(docRef);
-                    updatePublishIcon(docSnap.exists());
+                    const isPublished = docSnap.exists();
+                    updatePublishIcon(isPublished);
+
+                    // Added Notification Logic
+                    if (isPublished) {
+                        // User is a donor
+                        showNotification('আপনি কি সাম্প্রতিক সময়ে রক্তদান করেছেন?', 'private');
+                    } else {
+                        // New user or not a donor yet
+                        showNotification('আপনি কি ডোনার হতে ইচ্ছুক?', 'success');
+                    }
+
                 } catch (error) {
                     console.error(error);
                 }
@@ -2158,4 +2185,4 @@
         });
     </script>
 </body>
-</html>
+ </html>
