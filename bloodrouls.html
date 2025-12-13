@@ -15,7 +15,7 @@
             font-style: normal;
         }
 
-        /* --- Global Styles from index.html --- */
+        /* --- Global Styles --- */
         :root {
             --primary: #e53935;
             --primary-dark: #c62828;
@@ -31,7 +31,7 @@
             --header-bg: #fff;
             --card-bg: #fff;
             --footer-bg: #2c3e50;
-            --sidebar-bg: rgba(255, 255, 255, 0.85); /* Slightly increased opacity for better visibility of header items */
+            --sidebar-bg: rgba(255, 255, 255, 0.65); /* Updated transparency */
             --sidebar-text: #333;
             --sidebar-hover-bg: #EEF2FF;
             --sidebar-hover-text: #151A2D;
@@ -44,7 +44,7 @@
             --header-bg: #1e1e1e;
             --card-bg: #2a2a2a;
             --footer-bg: #1e1e1e;
-            --sidebar-bg: rgba(26, 26, 26, 0.85);
+            --sidebar-bg: rgba(26, 26, 26, 0.55);
             --sidebar-text: #f5f5f5;
             --sidebar-hover-bg: #333;
             --sidebar-hover-text: #f5f5f5;
@@ -256,7 +256,7 @@
         }
         .sidebar.is-open { transform: translateX(0); }
 
-        /* Sidebar Header Modified */
+        /* Sidebar Header Modified (Matches about-us.html) */
         .sidebar .sidebar-header { 
             display: flex; 
             position: relative; 
@@ -266,14 +266,6 @@
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         
-        /* Layout for Sidebar Logo and Auth Button */
-        .sidebar-header-left {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: flex-start;
-        }
-
         .sidebar-header .header-logo img { 
             height: 40px; 
             display: block; 
@@ -324,7 +316,6 @@
         
         .sidebar-nav .secondary-nav { position: absolute; bottom: 35px; width: 100%; background: transparent; }
 
-        /* Hidden in nav list as moved to header */
         #logout-button-item { display: none; } 
         
         #theme-toggle .dark-mode-icon { display: none; }
@@ -459,25 +450,24 @@
 
     <div class="sidebar-backdrop"></div>
 
+    <!-- Sidebar Modified (Matches about-us.html) -->
     <aside class="sidebar">
       <header class="sidebar-header">
-        <!-- Logo and Auth Buttons Group -->
-        <div class="sidebar-header-left">
-            <a href="index.html" class="header-logo">
-                <img id="sidebarLogo" src="" alt="Logo">
-            </a>
-            <!-- Sidebar Auth Buttons -->
+        <a href="index.html" class="header-logo">
+            <img id="sidebarLogo" src="" alt="Logo">
+        </a>
+        
+        <div style="display: flex; align-items: center; gap: 10px;">
             <a href="login.html" id="sidebarLoginBtn" class="sidebar-auth-btn">
                 <i class="fas fa-sign-in-alt"></i> লগ ইন
             </a>
             <button id="sidebarLogoutBtn" class="sidebar-auth-btn" style="display: none;">
                 <i class="fas fa-sign-out-alt"></i> লগ আউট
             </button>
+            <button class="sidebar-back-button">
+              <span class="material-symbols-rounded">arrow_back</span>
+            </button>
         </div>
-
-        <button class="sidebar-back-button">
-          <span class="material-symbols-rounded">arrow_back</span>
-        </button>
       </header>
       <nav class="sidebar-nav">
         <ul class="nav-list primary-nav">
@@ -521,6 +511,7 @@
     </aside>
 
     <main class="main-content">
+        <!-- Header from Index (Updated: No Login Button) -->
         <header>
             <div class="container">
                 <div class="header-content">
@@ -529,11 +520,10 @@
                         <span id="siteName">পাশে আছি</span>
                     </a>
                     <div class="auth-buttons">
-                        <!-- Main Header Login Button Removed as per request -->
-                        
                         <!-- Profile Icon (Hidden by default) -->
                         <div class="profile-container" id="profileContainer" onclick="window.location.href='profile.html'">
                             <div class="profile-icon-btn">
+                                <!-- Image or Icon will be set via JS -->
                                 <i class="fas fa-user"></i>
                             </div>
                         </div>
@@ -623,6 +613,7 @@
             </div>
         </section>
 
+        <!-- Footer from Index -->
         <footer>
             <div class="container">
                 <div class="footer-content">
@@ -687,8 +678,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- Auth State Change Logic ---
+        // --- Auth State Change Logic (Updated for Sidebar Header) ---
         onAuthStateChanged(auth, (user) => {
+            const loginBtn = document.getElementById('loginBtn');
             const profileContainer = document.getElementById('profileContainer');
             const profileIconBtn = document.querySelector('.profile-icon-btn');
             
@@ -698,28 +690,37 @@
 
             if (user) {
                 // User is signed in
+                if(loginBtn) loginBtn.style.display = 'none';
+                
+                // Update Sidebar Buttons
                 if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'none';
                 if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'inline-flex';
-                
-                profileContainer.style.display = 'block';
-                document.body.classList.add('user-logged-in');
 
-                if (user.photoURL) {
-                    profileIconBtn.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
-                } else {
-                    profileIconBtn.innerHTML = `<i class="fas fa-user"></i>`;
+                if(profileContainer) profileContainer.style.display = 'block';
+                document.body.classList.add('user-logged-in'); 
+
+                // Set profile picture if available
+                if (profileIconBtn) {
+                    if (user.photoURL) {
+                        profileIconBtn.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
+                    } else {
+                        profileIconBtn.innerHTML = `<i class="fas fa-user"></i>`;
+                    }
                 }
             } else {
                 // User is signed out
+                if(loginBtn) loginBtn.style.display = 'inline-flex';
+                
+                // Update Sidebar Buttons
                 if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'inline-flex';
                 if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'none';
-                
-                profileContainer.style.display = 'none';
+
+                if(profileContainer) profileContainer.style.display = 'none';
                 document.body.classList.remove('user-logged-in');
             }
         });
 
-        // Logout functionality for Sidebar Button
+        // Logout functionality
         const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
         if(sidebarLogoutBtn) {
             sidebarLogoutBtn.addEventListener('click', (e) => {
@@ -739,25 +740,35 @@
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+
+                    // Update Logo
                     if (data.logoUrl) {
-                        document.getElementById('siteLogo').src = data.logoUrl;
-                        document.getElementById('sidebarLogo').src = data.logoUrl;
+                        const headerLogo = document.getElementById('siteLogo');
+                        const sidebarLogo = document.getElementById('sidebarLogo');
+                        if (headerLogo) headerLogo.src = data.logoUrl;
+                        if (sidebarLogo) sidebarLogo.src = data.logoUrl;
+                    } else {
+                         // Default logo if not in DB
+                         const defaultLogo = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
+                         const headerLogo = document.getElementById('siteLogo');
+                         const sidebarLogo = document.getElementById('sidebarLogo');
+                         if (headerLogo) headerLogo.src = defaultLogo;
+                         if (sidebarLogo) sidebarLogo.src = defaultLogo;
                     }
-                    if (data.siteName) document.getElementById('siteName').innerText = data.siteName;
+
+                    // Update Site Name
+                    if (data.siteName) {
+                        const siteName = document.getElementById('siteName');
+                        if (siteName) siteName.innerText = data.siteName;
+                    }
                 } else {
-                    loadDefaultSettings();
+                    // Fallback
+                    document.getElementById('siteLogo').src = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
+                    document.getElementById('sidebarLogo').src = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
                 }
             } catch (error) {
-                console.error("Error getting document:", error);
-                loadDefaultSettings();
+                console.error("Error fetching settings:", error);
             }
-        }
-
-        function loadDefaultSettings() {
-             const defaultLogo = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
-             const savedLogo = localStorage.getItem('siteLogo') || defaultLogo;
-             document.getElementById('siteLogo').src = savedLogo;
-             document.getElementById('sidebarLogo').src = savedLogo;
         }
 
         async function fetchContactSettings() {
@@ -872,4 +883,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
