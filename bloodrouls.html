@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রক্তদানের নিয়মাবলী - পাশে আছি</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        @font-face {
+            font-family: 'Jagoron';
+            src: url('fonts/jagoron.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* --- Global Styles from index.html --- */
+        :root {
+            --primary: #e53935;
+            --primary-dark: #c62828;
+            --secondary: #f5f5f5;
+            --white: #fff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s ease;
+            --border-radius: 12px;
+            --background-color: #fbe9e7;
+            --text-color: #333;
+            --text-light: #666;
+            --header-bg: #fff;
+            --card-bg: #fff;
+            --footer-bg: #2c3e50;
+            --sidebar-bg: rgba(255, 255, 255, 0.85); /* Slightly increased opacity for better visibility of header items */
+            --sidebar-text: #333;
+            --sidebar-hover-bg: #EEF2FF;
+            --sidebar-hover-text: #151A2D;
+        }
+        
+        body.dark-mode {
+            --background-color: #121212;
+            --text-color: #f5f5f5;
+            --text-light: #a0a0a0;
+            --header-bg: #1e1e1e;
+            --card-bg: #2a2a2a;
+            --footer-bg: #1e1e1e;
+            --sidebar-bg: rgba(26, 26, 26, 0.85);
+            --sidebar-text: #f5f5f5;
+            --sidebar-hover-bg: #333;
+            --sidebar-hover-text: #f5f5f5;
+            --shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        
+        input:focus, button:focus, a:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        
+        html { scroll-behavior: smooth; }
+
+        body { 
+            color: var(--text-color); 
+            background-color: var(--background-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a1a1a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loader {
+            position: relative;
+            width: 2.5em;
+            height: 2.5em;
+            transform: rotate(165deg);
+        }
+
+        .loader:before, .loader:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: block;
+            width: 0.5em;
+            height: 0.5em;
+            border-radius: 0.25em;
+            transform: translate(-50%, -50%);
+        }
+
+        .loader:before { animation: before8 2s infinite; }
+        .loader:after { animation: after6 2s infinite; }
+
+        @keyframes before8 {
+            0% { width: 0.5em; box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75); }
+            35% { width: 2.5em; box-shadow: 0 -0.5em rgba(225, 20, 98, 0.75), 0 0.5em rgba(111, 202, 220, 0.75); }
+            70% { width: 0.5em; box-shadow: -1em -0.5em rgba(225, 20, 98, 0.75), 1em 0.5em rgba(111, 202, 220, 0.75); }
+            100% { box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75); }
+        }
+
+        @keyframes after6 {
+            0% { height: 0.5em; box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75); }
+            35% { height: 2.5em; box-shadow: 0.5em 0 rgba(61, 184, 143, 0.75), -0.5em 0 rgba(233, 169, 32, 0.75); }
+            70% { height: 0.5em; box-shadow: 0.5em -1em rgba(61, 184, 143, 0.75), -0.5em 1em rgba(233, 169, 32, 0.75); }
+            100% { box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75); }
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .btn {
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        body.dark-mode .btn-outline { color: var(--primary); }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        body.dark-mode .btn-outline:hover { color: black; }
+
+        /* Header Styles */
+        header {
+            background-color: var(--header-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            animation: slideDown 0.5s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            height: 80px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .header-content::-webkit-scrollbar { display: none; }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .logo img { height: 40px; }
+        .logo span { font-family: 'Jagoron', sans-serif; font-size: 2.0rem; font-weight: bold; margin-left: 10px; }
+        
+        .auth-buttons { 
+            display: flex; 
+            gap: 15px; 
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .profile-container {
+            position: relative;
+            display: none;
+            cursor: pointer;
+        }
+        
+        .profile-icon-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--secondary);
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .profile-icon-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-icon-btn i { font-size: 1.5rem; color: var(--text-light); }
+        .profile-icon-btn:hover { transform: scale(1.05); box-shadow: var(--shadow); }
+
+        /* Sidebar Styles */
+        .sidebar-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0;
+            pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .sidebar-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+        .sidebar {
+            position: fixed; top: 0; left: 0; z-index: 1001; width: 270px; height: 100vh;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            font-family: "Poppins", sans-serif;
+            transform: translateX(-100%);
+            transition: transform 0.4s ease, background-color 0.4s ease;
+        }
+        .sidebar.is-open { transform: translateX(0); }
+
+        /* Sidebar Header Modified */
+        .sidebar .sidebar-header { 
+            display: flex; 
+            position: relative; 
+            padding: 20px 15px; 
+            align-items: center; 
+            justify-content: space-between; 
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        /* Layout for Sidebar Logo and Auth Button */
+        .sidebar-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .sidebar-header .header-logo img { 
+            height: 40px; 
+            display: block; 
+            object-fit: contain; 
+        }
+        
+        .sidebar-auth-btn {
+            padding: 6px 15px;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            text-decoration: none;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+        .sidebar-auth-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .sidebar-header .sidebar-back-button {
+            height: 35px; width: 35px; color: var(--sidebar-text); border: none; cursor: pointer; display: flex;
+            background: transparent; align-items: center; justify-content: center; border-radius: 8px; transition: 0.4s ease;
+        }
+        .sidebar-header .sidebar-back-button:hover { background: rgba(0, 0, 0, 0.1); }
+        body.dark-mode .sidebar-header .sidebar-back-button:hover { background: rgba(255, 255, 255, 0.1); }
+        .sidebar-header .sidebar-back-button span { font-size: 1.75rem; }
+
+        .sidebar-nav .nav-list { list-style: none; display: flex; gap: 4px; padding: 0 15px; flex-direction: column; transform: translateY(15px); transition: 0.4s ease; }
+        .sidebar .sidebar-nav .primary-nav { overflow-y: auto; scrollbar-width: thin; padding-bottom: 20px; height: calc(100vh - 227px); scrollbar-color: transparent transparent; }
+        .sidebar .sidebar-nav .primary-nav:hover { scrollbar-color: #EEF2FF transparent; }
+        
+        .sidebar-nav .nav-item .nav-link { 
+            color: var(--sidebar-text); 
+            display: flex; gap: 12px; white-space: nowrap; border-radius: 8px; 
+            padding: 11px 15px; align-items: center; text-decoration: none; 
+            border: 1px solid transparent; transition: 0.4s ease; 
+        }
+        .sidebar-nav .nav-item:hover > .nav-link { 
+            color: var(--sidebar-hover-text); 
+            background: var(--sidebar-hover-bg);
+        }
+        
+        .sidebar-nav .secondary-nav { position: absolute; bottom: 35px; width: 100%; background: transparent; }
+
+        /* Hidden in nav list as moved to header */
+        #logout-button-item { display: none; } 
+        
+        #theme-toggle .dark-mode-icon { display: none; }
+        body.dark-mode #theme-toggle .light-mode-icon { display: none; }
+        body.dark-mode #theme-toggle .dark-mode-icon { display: block; }
+        
+        .sidebar-nav .nav-item { position: relative; }
+        .sidebar-nav .dropdown-container .dropdown-icon { margin-left: auto; transition: transform 0.4s ease; }
+        .sidebar-nav .dropdown-container.open .dropdown-icon { transform: rotate(180deg); }
+        .sidebar-nav .dropdown-menu {
+            list-style: none;
+            padding-left: 25px;
+            height: 0;
+            overflow: hidden;
+            transition: height 0.4s ease;
+        }
+        .sidebar-nav .dropdown-menu .nav-link {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Footer Styles */
+        footer { background: var(--footer-bg); color: var(--white); padding: 60px 0 20px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-column h3 { font-size: 1.3rem; margin-bottom: 20px; position: relative; padding-bottom: 10px; }
+        .footer-column h3::after { content: ''; position: absolute; bottom: 0; left: 0; width: 50px; height: 2px; background: var(--primary); }
+        .footer-links { list-style: none; padding-left: 0; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: #ddd; text-decoration: none; transition: var(--transition); }
+        .footer-links a:hover { color: var(--primary); padding-left: 5px; }
+        .social-links { display: flex; gap: 15px; margin-top: 20px; }
+        .social-links a { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; color: var(--white); transition: var(--transition); }
+        .social-links a:hover { background: var(--primary); transform: translateY(-3px); }
+        .copyright { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.9rem; color: #aaa; }
+
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* --- Specific Styles for Rules Page --- */
+        .rules-section {
+            padding: 80px 0;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--text-color);
+        }
+        .rules-container {
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .rule-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .rule-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .rule-image {
+            flex-shrink: 0;
+            width: 300px;
+            height: 220px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background-color: #f0f4f8;
+        }
+        .rule-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .rule-item:hover .rule-image img {
+            transform: scale(1.08);
+        }
+        .rule-text h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .rule-text p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        .rule-text strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        
+        body.dark-mode .rule-text strong {
+            color: #ff6b6b;
+        }
+        
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .rules-container { gap: 40px; }
+            .rule-item, .rule-item:nth-child(even) { flex-direction: column; padding: 25px; gap: 25px; }
+            .rule-image { width: 100%; height: 200px; }
+            .rule-text h3 { font-size: 1.5rem; }
+            .rule-text p { font-size: 1rem; }
+            .section-title { font-size: 2rem; margin-bottom: 40px; }
+            .header-content { flex-direction: row; flex-wrap: nowrap; justify-content: space-between; overflow-x: auto; }
+            .auth-buttons { margin-top: 0; width: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <div class="sidebar-backdrop"></div>
+
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <!-- Logo and Auth Buttons Group -->
+        <div class="sidebar-header-left">
+            <a href="index.html" class="header-logo">
+                <img id="sidebarLogo" src="" alt="Logo">
+            </a>
+            <!-- Sidebar Auth Buttons -->
+            <a href="login.html" id="sidebarLoginBtn" class="sidebar-auth-btn">
+                <i class="fas fa-sign-in-alt"></i> লগ ইন
+            </a>
+            <button id="sidebarLogoutBtn" class="sidebar-auth-btn" style="display: none;">
+                <i class="fas fa-sign-out-alt"></i> লগ আউট
+            </button>
+        </div>
+
+        <button class="sidebar-back-button">
+          <span class="material-symbols-rounded">arrow_back</span>
+        </button>
+      </header>
+      <nav class="sidebar-nav">
+        <ul class="nav-list primary-nav">
+          <li class="nav-item"><a href="index.html" class="nav-link"><span class="material-symbols-rounded">home</span><span class="nav-label">হোম</span></a></li>
+          
+          <li class="nav-item dropdown-container">
+            <a href="#" class="nav-link dropdown-toggle">
+              <span class="material-symbols-rounded">medical_services</span>
+              <span class="nav-label">সেবাসমূহ</span>
+              <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item"><a href="donar_find.html" class="nav-link"><span class="material-symbols-rounded">bloodtype</span><span class="nav-label">ব্লাড ডোনার</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=police" class="nav-link"><span class="material-symbols-rounded">local_police</span><span class="nav-label">পুলিশ স্টেশন</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=hospital" class="nav-link"><span class="material-symbols-rounded">health_and_safety</span><span class="nav-label">হাসপাতাল ও ডাক্তার</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=ambulance" class="nav-link"><span class="material-symbols-rounded">ambulance</span><span class="nav-label">এম্বুল্যান্স</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=electricity" class="nav-link"><span class="material-symbols-rounded">electrical_services</span><span class="nav-label">বিদ্যুৎ জোনাল অফিস</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=fire" class="nav-link"><span class="material-symbols-rounded">fire_truck</span><span class="nav-label">ফায়ার সার্ভিস</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=gas" class="nav-link"><span class="material-symbols-rounded">gas_meter</span><span class="nav-label">গ্যাস ফিলিং স্টেশন</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=wasa" class="nav-link"><span class="material-symbols-rounded">water_drop</span><span class="nav-label">ওয়াসা</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=petrol" class="nav-link"><span class="material-symbols-rounded">local_gas_station</span><span class="nav-label">পেট্রোল পাম্প</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=govt" class="nav-link"><span class="material-symbols-rounded">account_balance</span><span class="nav-label">সরকারী কার্যালয়</span></a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item"><a href="bloodrouls.html" class="nav-link"><span class="material-symbols-rounded">rule</span><span class="nav-label">রক্তদানের নিয়ম</span></a></li>
+          <li class="nav-item"><a href="emergency-find-blood.html" class="nav-link"><span class="material-symbols-rounded">emergency</span><span class="nav-label">ইমারজেন্সি ব্লাড</span></a></li>
+          <li class="nav-item"><a href="#" class="nav-link"><span class="material-symbols-rounded">campaign</span><span class="nav-label">নিউজ এন্ড আপডেটস</span></a></li>
+          <li class="nav-item"><a href="https://wa.me/8801851956615" class="nav-link"><span class="material-symbols-rounded">contact_support</span><span class="nav-label">সাপোর্ট</span></a></li>
+        </ul>
+        <ul class="nav-list secondary-nav">
+          <li class="nav-item">
+              <a href="#" class="nav-link" id="theme-toggle">
+                  <span class="material-symbols-rounded light-mode-icon">light_mode</span>
+                  <span class="material-symbols-rounded dark-mode-icon">dark_mode</span>
+                  <span class="nav-label"></span>
+              </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <a href="index.html" class="logo">
+                        <img id="siteLogo" src="" alt="পাশে আছি লোগো" style="height: 40px;"> 
+                        <span id="siteName">পাশে আছি</span>
+                    </a>
+                    <div class="auth-buttons">
+                        <!-- Main Header Login Button Removed as per request -->
+                        
+                        <!-- Profile Icon (Hidden by default) -->
+                        <div class="profile-container" id="profileContainer" onclick="window.location.href='profile.html'">
+                            <div class="profile-icon-btn">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+
+                        <a href="#" class="btn btn-outline sidebar-menu-button-header">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content: Donation Rules -->
+        <section class="rules-section">
+            <div class="container">
+                <h2 class="section-title">রক্তদানের পূর্ববর্তী ও পরবর্তী নিয়মাবলী</h2>
+
+                <div class="rules-container">
+                    
+                    <!-- Rule 1 -->
+                    <div class="rule-item">
+                        <div class="rule-image">
+                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/blood-donor-5629903-4695029.png" alt="সাধারণ যোগ্যতা কার্টুন">
+                        </div>
+                        <div class="rule-text">
+                            <h3><i class="fas fa-heartbeat"></i>সাধারণ যোগ্যতা</h3>
+                            <p>রক্তদাতার বয়স <strong>১৮ থেকে ৬০ বছরের মধ্যে</strong> হতে হবে। পুরুষের সর্বনিম্ন ওজন <strong>৫০ কেজি</strong> এবং নারীদের ক্ষেত্রে সর্বনিম্ন ওজন <strong>৪৫ কেজি</strong> হতে হবে। রক্তদানের সময় <strong>রক্তচাপ ও শরীরের তাপমাত্রা স্বাভাবিক</strong> থাকতে হবে।</p>
+                        </div>
+                    </div>
+
+                    <!-- Rule 2 -->
+                    <div class="rule-item">
+                        <div class="rule-image">
+                            <img src="https://i.ibb.co/KxmcVnbK/person-enjoys-vibrant-meal-surrounded-by-variety-fresh-fruits-vegetables-ready-dive-into-healthy-lif.jpg" alt="স্বাস্থ্যকর খাবার কার্টুন">
+                        </div>
+                        <div class="rule-text">
+                            <h3><i class="fas fa-utensils"></i> রক্তদানের পূর্বে</h3>
+                            <p>রক্তদানের আগে <strong>স্বাস্থ্যকর ও হালকা খাবার</strong> গ্রহণ করুন, বিশেষ করে আয়রন সমৃদ্ধ খাবার। <strong>পর্যাপ্ত পরিমাণে পানি ও তরল</strong> পান করুন। রক্তদানের অন্তত <strong>৬ ঘণ্টা আগে ধূমপান ও অ্যালকোহল গ্রহণ থেকে বিরত</strong> থাকুন।</p>
+                        </div>
+                    </div>
+
+                    <!-- Rule 3 -->
+                    <div class="rule-item">
+                        <div class="rule-image">
+                            <img src="https://i.ibb.co/vxbvjfZZ/Screenshot-2025-11-07-18-34-51-547-com-android-chrome-edit.jpg" alt="পর্যাপ্ত ঘুম কার্টুন">
+                        </div>
+                        <div class="rule-text">
+                            <h3><i class="fas fa-bed"></i> পর্যাপ্ত বিশ্রাম</h3>
+                            <p>রক্তদানের আগের রাতে <strong>কমপক্ষে ৬-৮ ঘণ্টা ঘুমানো</strong> অত্যন্ত জরুরি। পর্যাপ্ত বিশ্রাম শরীরকে রক্তদানের জন্য প্রস্তুত করে এবং রক্তদানের পরে ক্লান্তি বা দুর্বলতা অনুভব করার সম্ভাবনা কমিয়ে দেয়।</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Rule 4 -->
+                    <div class="rule-item">
+                        <div class="rule-image">
+                            <img src="https://i.ibb.co/Xxn2G1bx/Screenshot-2025-11-07-18-37-41-097-com-android-chrome-edit.jpg" alt="অসুস্থতা কার্টুন">
+                        </div>
+                        <div class="rule-text">
+                            <h3><i class="fas fa-notes-medical"></i> শারীরিক অসুস্থতা</h3>
+                            <p><strong>জ্বর, সর্দি-কাশি বা অন্য কোনো সংক্রমণে আক্রান্ত</strong> অবস্থায় রক্তদান করা যাবে না। এছাড়াও, <strong>অ্যান্টিবায়োটিক গ্রহণ করলে</strong>, বড় কোনো সার্জারি হলে, বা গত এক বছরের মধ্যে জন্ডিস হলে রক্তদান থেকে বিরত থাকতে হবে।</p>
+                        </div>
+                    </div>
+
+                    <!-- Rule 5 -->
+                    <div class="rule-item">
+                        <div class="rule-image">
+                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/man-relaxing-on-the-chair-and-reading-a-book-3488421-2922434.png" alt="রক্তদানের পর বিশ্রাম কার্টুন">
+                        </div>
+                        <div class="rule-text">
+                            <h3><i class="fas fa-chair"></i> রক্তদানের পরে</h3>
+                            <p>রক্তদানের পর <strong>১০-১৫ মিনিট বিশ্রাম</strong> নিন। <strong>প্রচুর পরিমাণে পানি ও জুস</strong> পান করুন। अगले <strong>২৪ ঘণ্টা পর্যন্ত ভারী ব্যায়াম বা কঠোর শারীরিক পরিশ্রম</strong> থেকে বিরত থাকুন। মাথা ঘোরালে বা অসুস্থ বোধ করলে শুয়ে পড়ুন।</p>
+                        </div>
+                    </div>
+
+                    <!-- Rule 6 -->
+                    <div class="rule-item">
+                        <div class="rule-image">
+                            <img src="https://i.ibb.co/FL0kpmxx/blood-donation-2d-isolated-illustration-man-in-chair-on-blood-transfusion-donor-with-smiling-nurse-f.jpg" alt="পরবর্তী রক্তদান কার্টুন">
+                        </div>
+                        <div class="rule-text">
+                            <h3><i class="fas fa-calendar-alt"></i> পরবর্তী রক্তদানের সময়</h3>
+                            <p>একজন সুস্থ পুরুষ প্রতি <strong>৩ মাস পর পর</strong> এবং একজন সুস্থ নারী প্রতি <strong>৪ মাস পর পর</strong> রক্তদান করতে পারেন। নিয়মিত রক্তদান শরীরকে সুস্থ রাখতে সাহায্য করে এবং অন্যের জীবন বাঁচাতে গুরুত্বপূর্ণ ভূমিকা রাখে।</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-column">
+                        <h3>পাশে আছি</h3>
+                        <p>জীবন বাঁচাতে রক্ত দিন। আমাদের প্ল্যাটফর্ম জরুরী অবস্থায় রক্তের প্রয়োজনীয়তা মেটাতে সাহায্য করে।</p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/profile.php?id=61583966346088"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://x.com/PasheAachi"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.instagram.com/pasheachhi?igsh=aGJyeHpmM3llazY5"><i class="fab fa-instagram"></i></a>
+                            <a href="https://bd.linkedin.com/in/pashe-aachi-65b5a6392"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-column">
+                        <h3>লিংকস</h3>
+                        <ul class="footer-links">
+                            <li><a href="index.html">হোম</a></li>
+                            <li><a href="all-search.html?type=donor">রক্তদাতা</a></li>
+                            <li><a href="emergency-find-blood.html">ইমারজেন্সি ব্লাড</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>সহায়তা</h3>
+                         <ul class="footer-links">
+                            <li><a href="https://wa.me/8801851956615">সাপোর্ট</a></li>
+                             <li><a href="about-us.html">আমাদের সম্পর্কে</a></li>
+                             <li><a href="condition.html">টার্মস এন্ড কন্ডিশন</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>যোগাযোগ</h3>
+                        <ul class="footer-links">
+                            <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress">ঢাকা, বাংলাদেশ</span></li>
+                            <li><i class="fas fa-phone"></i> <span id="footerPhone">+880 1XXX-XXXXXX</span></li>
+                            <li><i class="fas fa-envelope"></i> <span id="footerEmail">info@bloodlink.com</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="copyright">
+                    <p>&copy; ২০২৫ পাশে আছি. সকল অধিকার সংরক্ষিত।</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnKQr2k2ZWnPlEZiJtMDewv6z3Z7p3kiU",
+            authDomain: "pacheacchi.firebaseapp.com",
+            projectId: "pacheacchi",
+            storageBucket: "pacheacchi.firebasestorage.app",
+            messagingSenderId: "679996219070",
+            appId: "1:679996219070:web:871b64fb4a5be296eac8ef",
+            measurementId: "G-M34YKMYHQ8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- Auth State Change Logic ---
+        onAuthStateChanged(auth, (user) => {
+            const profileContainer = document.getElementById('profileContainer');
+            const profileIconBtn = document.querySelector('.profile-icon-btn');
+            
+            // Sidebar Auth Buttons
+            const sidebarLoginBtn = document.getElementById('sidebarLoginBtn');
+            const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+
+            if (user) {
+                // User is signed in
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'none';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'inline-flex';
+                
+                profileContainer.style.display = 'block';
+                document.body.classList.add('user-logged-in');
+
+                if (user.photoURL) {
+                    profileIconBtn.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
+                } else {
+                    profileIconBtn.innerHTML = `<i class="fas fa-user"></i>`;
+                }
+            } else {
+                // User is signed out
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'inline-flex';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'none';
+                
+                profileContainer.style.display = 'none';
+                document.body.classList.remove('user-logged-in');
+            }
+        });
+
+        // Logout functionality for Sidebar Button
+        const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+        if(sidebarLogoutBtn) {
+            sidebarLogoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                signOut(auth).then(() => {
+                    window.location.reload();
+                }).catch((error) => {
+                    console.error("Logout Error:", error);
+                });
+            });
+        }
+
+        async function fetchSiteSettings() {
+            try {
+                const docRef = doc(db, "settings", "siteConfig");
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.logoUrl) {
+                        document.getElementById('siteLogo').src = data.logoUrl;
+                        document.getElementById('sidebarLogo').src = data.logoUrl;
+                    }
+                    if (data.siteName) document.getElementById('siteName').innerText = data.siteName;
+                } else {
+                    loadDefaultSettings();
+                }
+            } catch (error) {
+                console.error("Error getting document:", error);
+                loadDefaultSettings();
+            }
+        }
+
+        function loadDefaultSettings() {
+             const defaultLogo = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
+             const savedLogo = localStorage.getItem('siteLogo') || defaultLogo;
+             document.getElementById('siteLogo').src = savedLogo;
+             document.getElementById('sidebarLogo').src = savedLogo;
+        }
+
+        async function fetchContactSettings() {
+            try {
+                const docRef = doc(db, "settings", "contact");
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if(data.address) document.getElementById('footerAddress').innerText = data.address;
+                    if(data.phone) document.getElementById('footerPhone').innerText = data.phone;
+                    if(data.email) document.getElementById('footerEmail').innerText = data.email;
+                }
+            } catch (error) {
+                console.error("Error fetching contact settings:", error);
+            }
+        }
+
+        fetchSiteSettings();
+        fetchContactSettings();
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const preloader = document.getElementById('preloader');
+            window.addEventListener('load', () => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            });
+
+            const sidebar = document.querySelector(".sidebar");
+            const backdrop = document.querySelector(".sidebar-backdrop");
+            const openMenuBtn = document.querySelector(".sidebar-menu-button-header");
+            const closeMenuBtn = document.querySelector(".sidebar-back-button");
+
+            const openSidebar = () => {
+                sidebar.classList.add("is-open");
+                backdrop.classList.add("is-open");
+            };
+            const closeSidebar = () => {
+                sidebar.classList.remove("is-open");
+                backdrop.classList.remove("is-open");
+            };
+
+            openMenuBtn.addEventListener("click", (e) => { e.preventDefault(); openSidebar(); });
+            closeMenuBtn.addEventListener("click", (e) => { e.preventDefault(); closeSidebar(); });
+            backdrop.addEventListener("click", (e) => { e.preventDefault(); closeSidebar(); });
+            
+            const themeToggleButton = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+            }
+
+            themeToggleButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                body.classList.toggle('dark-mode');
+                
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            const toggleDropdown = (dropdown, menu, isOpen) => {
+                dropdown.classList.toggle("open", isOpen);
+                menu.style.height = isOpen ? `${menu.scrollHeight}px` : "0";
+            };
+            
+            const closeAllDropdowns = () => {
+                document.querySelectorAll(".dropdown-container.open").forEach((openDropdown) => {
+                    toggleDropdown(openDropdown, openDropdown.querySelector(".dropdown-menu"), false);
+                });
+            };
+            
+            document.querySelectorAll(".dropdown-toggle").forEach((dropdownToggle) => {
+                dropdownToggle.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const dropdown = dropdownToggle.closest(".dropdown-container");
+                    const menu = dropdown.querySelector(".dropdown-menu");
+                    const isOpen = dropdown.classList.contains("open");
+                    closeAllDropdowns();
+                    if (!isOpen) {
+                        toggleDropdown(dropdown, menu, true);
+                    }
+                });
+            });
+
+            // Rules Page specific animation logic
+            const ruleItems = document.querySelectorAll('.rule-item');
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.2 };
+            
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            ruleItems.forEach(item => {
+                observer.observe(item);
+            });
+        });
+    </script>
+</body>
+</html>
