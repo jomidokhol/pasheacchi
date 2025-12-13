@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -157,7 +156,7 @@
             top: 0; left: 0;
             z-index: 50;
             overflow-y: auto;
-            background-color: var(--background-color); /* Matches body bg */
+            background-color: var(--background-color); 
         }
         
         .search-container { 
@@ -165,7 +164,9 @@
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 30px; 
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); 
-            padding: 40px; width: 90%; max-width: 500px; 
+            padding: 50px 40px; /* Increased padding */
+            width: 90%; 
+            max-width: 600px; /* Restored Width */
             position: relative; overflow: hidden; 
         }
 
@@ -182,7 +183,7 @@
         /* =========================================
            4. VIEW: RESULTS PAGE (Has Header & Footer)
            ========================================= */
-        #results-view-section { display: none; } /* Hidden by default */
+        #results-view-section { display: none; }
 
         /* Header */
         header { background-color: var(--header-bg); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 999; animation: slideDown 0.5s ease; }
@@ -425,7 +426,6 @@
             <h1 class="passkey-title">Pass Key দিন</h1>
             <p style="color: var(--text-light); margin-bottom: 20px;">ডাটা এন্ট্রির জন্য ৬-সংখ্যার key -টি লিখুন।</p>
             <form id="passkeyForm">
-                <!-- Using type="tel" and autocomplete="off" to prevent password managers -->
                 <input type="tel" id="passkeyInput" maxlength="6" name="random_code_field" autocomplete="off" placeholder="______" required 
                        class="form-control" style="text-align: center; letter-spacing: 10px; font-size: 1.5rem;">
                 <div id="passkey-error" style="color: var(--primary); margin-top: 10px; min-height: 20px;"></div>
@@ -500,7 +500,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Data Maps
+        // Data Maps with Bengali Display Names and English DB Values
         const categoryMap = {
             "donor": "ব্লাড ডোনার", "police": "পুলিশ স্টেশন", "hospital": "হাসপাতাল", "ambulance": "এম্বুলেন্স",
             "electricity": "বিদ্যুৎ জোনাল অফিস", "fire": "ফায়ার সার্ভিস", "gas": "গ্যাস ফিলিং স্টেশন",
@@ -508,14 +508,110 @@
         };
 
         const locationData = {
-            "Dhaka": { name: "ঢাকা", districts: { "Dhaka": { name: "ঢাকা", upazilas: ["Savar", "Dhamrai", "Keraniganj", "Nawabganj", "Dohar", "Hazaribagh", "Ramna", "Tejgaon", "Gulshan", "Mirpur", "Pallabi", "Kafrul", "Cantonment", "Uttara", "Mohammadpur", "Dhanmondi", "Badda", "Khilkhet", "Demra", "Jatrabari", "Lalbagh", "Kotwali", "Sutrapur"] }, "Gazipur": { name: "গাজীপুর", upazilas: ["Gazipur Sadar", "Kaliakair", "Kapasia", "Sreepur", "Kaliganj"] }, "Narayanganj": { name: "নারায়ণগঞ্জ", upazilas: ["Narayanganj Sadar", "Bandar", "Araihazar", "Rupganj", "Sonargaon"] }, "Manikganj": { name: "মানিকগঞ্জ", upazilas: ["Manikganj Sadar", "Singair", "Saturia", "Shivalaya", "Ghior", "Daulatpur", "Harirampur"] }, "Munshiganj": { name: "মুন্সিগঞ্জ", upazilas: ["Munshiganj Sadar", "Tongibari", "Sreenagar", "Lohajang", "Gajaria", "Sirajdikhan"] }, "Narsingdi": { name: "নরসিংদী", upazilas: ["Narsingdi Sadar", "Belabo", "Monohardi", "Palash", "Raipura", "Shibpur"] }, "Tangail": { name: "টাঙ্গাইল", upazilas: ["Tangail Sadar", "Sakhipur", "Basail", "Madhupur", "Ghatail", "Kalihati", "Nagarpur", "Mirzapur", "Gopalpur", "Delduar", "Bhuapur", "Dhanbari"] }, "Kishoreganj": { name: "কিশোরগঞ্জ", upazilas: ["Kishoreganj Sadar", "Hossainpur", "Pakundia", "Katiadi", "Karimganj", "Tarail", "Itna", "Mithamoin", "Austagram", "Nikli", "Bajitpur", "Kuliarchar", "Bhairab"] }, "Faridpur": { name: "ফরিদপুর", upazilas: ["Faridpur Sadar", "Boalmari", "Alfadanga", "Madhukhali", "Bhanga", "Nagarkanda", "Charbhadrasan", "Sadarpur", "Saltha"] }, "Gopalganj": { name: "গোপালগঞ্জ", upazilas: ["Gopalganj Sadar", "Kashiani", "Tungipara", "Kotalipara", "Muksudpur"] }, "Madaripur": { name: "মাদারীপুর", upazilas: ["Madaripur Sadar", "Kalkini", "Rajoir", "Shibchar"] }, "Rajbari": { name: "রাজবাড়ী", upazilas: ["Rajbari Sadar", "Goalanda", "Pangsa", "Baliakandi", "Kalukhali"] }, "Shariatpur": { name: "শরীয়তপুর", upazilas: ["Shariatpur Sadar", "Naria", "Zajira", "Gosairhat", "Bhedarganj", "Damudya"] } } },
-            "Chittagong": { name: "চট্টগ্রাম", districts: { "Chittagong": { name: "চট্টগ্রাম", upazilas: ["Chittagong Sadar", "Sitakunda", "Mirsharai", "Patiya", "Rangunia", "Anwara", "Boalkhali", "Raozan", "Hathazari", "Fatikchhari", "Sandwip", "Lohagara", "Satkania", "Banshkhali", "Chandanaish", "Karnaphuli"] }, "Cox's Bazar": { name: "কক্সবাজার", upazilas: ["Cox's Bazar Sadar", "Chakaria", "Kutubdia", "Ukhiya", "Moheshkhali", "Pekua", "Ramu", "Teknaf"] }, "Comilla": { name: "কুমিল্লা", upazilas: ["Comilla Sadar", "Barura", "Brahmanpara", "Burichong", "Chandina", "Chauddagram", "Daudkandi", "Debidwar", "Homna", "Laksam", "Muradnagar", "Nangalkot", "Meghna", "Titas", "Monohargonj", "Lalmai"] }, "Brahmanbaria": { name: "ব্রাহ্মণবাড়িয়া", upazilas: ["Brahmanbaria Sadar", "Kasba", "Nasirnagar", "Sarail", "Ashuganj", "Akhaura", "Nabinagar", "Bancharampur", "Bijoynagar"] }, "Chandpur": { name: "চাঁদপুর", upazilas: ["Chandpur Sadar", "Faridganj", "Haimchar", "Haziganj", "Kachua", "Matlab North", "Matlab South", "Shahrasti"] }, "Noakhali": { name: "নোয়াখালী", upazilas: ["Noakhali Sadar", "Begumganj", "Chatkhil", "Companyganj", "Hatiya", "Senbagh", "Sonaimuri", "Subarnachar", "Kabirhat"] }, "Feni": { name: "ফেনী", upazilas: ["Feni Sadar", "Chhagalnaiya", "Daganbhuiyan", "Parshuram", "Fulgazi", "Sonagazi"] }, "Lakshmipur": { name: "লক্ষ্মীপুর", upazilas: ["Lakshmipur Sadar", "Raipur", "Ramganj", "Ramgati", "Kamalnagar"] }, "Khagrachhari": { name: "খাগড়াছড়ি", upazilas: ["Khagrachhari Sadar", "Dighinala", "Panchhari", "Laxmichhari", "Mahalchhari", "Manikchhari", "Ramgarh", "Matiranga", "Guimara"] }, "Rangamati": { name: "রাঙ্গামাটি", upazilas: ["Rangamati Sadar", "Belaichhari", "Bagaichhari", "Barkal", "Juraichhari", "Rajasthali", "Kaptai", "Langadu", "Naniarchar", "Kaukhali"] }, "Bandarban": { name: "বান্দরবান", upazilas: ["Bandarban Sadar", "Ali Kadam", "Naikhongchhari", "Rowangchhari", "Lama", "Ruma", "Thanchi"] } } },
-            "Rajshahi": { name: "রাজশাহী", districts: { "Rajshahi": { name: "রাজশাহী", upazilas: ["Rajshahi Sadar", "Bagha", "Bagmara", "Charghat", "Durgapur", "Godagari", "Mohanpur", "Paba", "Puthia", "Tanore"] }, "Bogra": { name: "বগুড়া", upazilas: ["Bogra Sadar", "Adamdighi", "Dhupchanchia", "Gabtali", "Kahaloo", "Nandigram", "Sariakandi", "Sahajanpur", "Sherpur", "Shibganj", "Sonatala"] }, "Naogaon": { name: "নওগাঁ", upazilas: ["Naogaon Sadar", "Atrai", "Badalgachhi", "Dhamoirhat", "Manda", "Mohadevpur", "Niamatpur", "Patnitala", "Porsha", "Raninagar", "Sapahar"] }, "Natore": { name: "নাটোর", upazilas: ["Natore Sadar", "Bagatipara", "Baraigram", "Gurudaspur", "Lalpur", "Singra", "Naldanga"] }, "Chapainawabganj": { name: "চাঁপাইনবাবগঞ্জ", upazilas: ["Chapainawabganj Sadar", "Gomastapur", "Nachole", "Bholahat", "Shibganj"] }, "Pabna": { name: "পাবনা", upazilas: ["Pabna Sadar", "Atgharia", "Bera", "Bhangura", "Chatmohar", "Faridpur", "Ishwardi", "Santhia", "Sujanagar"] }, "Sirajganj": { name: "সিরাজগঞ্জ", upazilas: ["Sirajganj Sadar", "Belkuchi", "Chauhali", "Kamarkhanda", "Kazipur", "Raiganj", "Shahjadpur", "Tarash", "Ullahpara"] }, "Joypurhat": { name: "জয়পুরহাট", upazilas: ["Joypurhat Sadar", "Akkelpur", "Kalai", "Khetlal", "Panchbibi"] } } },
-            "Khulna": { name: "খুলনা", districts: { "Khulna": { name: "খুলনা", upazilas: ["Khulna Sadar", "Batiaghata", "Dacope", "Dumuria", "Dighalia", "Koyra", "Paikgachha", "Phultala", "Rupsha", "Terokhada"] }, "Bagerhat": { name: "বাগেরহাট", upazilas: ["Bagerhat Sadar", "Chitalmari", "Fakirhat", "Kachua", "Mollahat", "Mongla", "Morrelganj", "Rampal", "Sarankhola"] }, "Chuadanga": { name: "চুয়াডাঙ্গা", upazilas: ["Chuadanga Sadar", "Alamdanga", "Damurhuda", "Jibannagar"] }, "Jessore": { name: "যশোর", upazilas: ["Jessore Sadar", "Abhaynagar", "Bagherpara", "Chaugachha", "Jhikargachha", "Keshabpur", "Manirampur", "Sharsha"] }, "Jhenaidah": { name: "ঝিনাইদহ", upazilas: ["Jhenaidah Sadar", "Harinakunda", "Kaliganj", "Kotchandpur", "Maheshpur", "Shailkupa"] }, "Kushtia": { name: "কুষ্টিয়া", upazilas: ["Kushtia Sadar", "Bheramara", "Daulatpur", "Khoksa", "Kumarkhali", "Mirpur"] }, "Magura": { name: "মাগুরা", upazilas: ["Magura Sadar", "Mohammadpur", "Shalikha", "Sreepur"] }, "Meherpur": { name: "মেহেরপুর", upazilas: ["Meherpur Sadar", "Gangni", "Mujibnagar"] }, "Narail": { name: "নড়াইল", upazilas: ["Narail Sadar", "Kalia", "Lohagara"] }, "Satkhira": { name: "সাতক্ষীরা", upazilas: ["Satkhira Sadar", "Assasuni", "Debhata", "Kalaroa", "Kaliganj", "Shyamnagar", "Tala"] } } },
-            "Barisal": { name: "বরিশাল", districts: { "Barisal": { name: "বরিশাল", upazilas: ["Barisal Sadar", "Agailjhara", "Babuganj", "Bakerganj", "Banaripara", "Gaurnadi", "Hizla", "Mehendiganj", "Muladi", "Wazirpur"] }, "Barguna": { name: "বরগুনা", upazilas: ["Barguna Sadar", "Amtali", "Bamna", "Betagi", "Patharghata", "Taltali"] }, "Bhola": { name: "ভোলা", upazilas: ["Bhola Sadar", "Burhanuddin", "Char Fasson", "Daulatkhan", "Lalmohan", "Manpura", "Tazumuddin"] }, "Jhalokati": { name: "ঝালকাঠি", upazilas: ["Jhalokati Sadar", "Kathalia", "Nalchity", "Rajapur"] }, "Patuakhali": { name: "পটুয়াখালী", upazilas: ["Patuakhali Sadar", "Bauphal", "Dashmina", "Galachipa", "Kalapara", "Mirzaganj", "Rangabali", "Dumki"] }, "Pirojpur": { name: "পিরোজপুর", upazilas: ["Pirojpur Sadar", "Bhandaria", "Kawkhali", "Mathbaria", "Nazirpur", "Nesarabad", "Indurkani"] } } },
-            "Sylhet": { name: "সিলেট", districts: { "Sylhet": { name: "সিলেট", upazilas: ["Sylhet Sadar", "Beanibazar", "Bishwanath", "Dakshin Surma", "Balaganj", "Companiganj", "Fenchuganj", "Golapganj", "Gowainghat", "Jaintiapur", "Kanaighat", "Zakiganj", "Osmani Nagar"] }, "Moulvibazar": { name: "মৌলভীবাজার", upazilas: ["Moulvibazar Sadar", "Barlekha", "Juri", "Kamalganj", "Kulaura", "Rajnagar", "Sreemangal"] }, "Habiganj": { name: "হবিগঞ্জ", upazilas: ["Habiganj Sadar", "Azmiriganj", "Bahubal", "Baniyachong", "Chunarughat", "Lakhai", "Madhabpur", "Nabiganj", "Shayestaganj"] }, "Sunamganj": { name: "সুনামগঞ্জ", upazilas: ["Sunamganj Sadar", "Bishwamvarpur", "Chhatak", "Derai", "Dharamapasha", "Dowarabazar", "Jagannathpur", "Jamalganj", "Tahirpur", "Sullah", "Shantiganj"] } } },
-            "Rangpur": { name: "রংপুর", districts: { "Rangpur": { name: "রংপুর", upazilas: ["Rangpur Sadar", "Badarganj", "Gangachhara", "Kaunia", "Mithapukur", "Pirgachha", "Pirganj", "Taraganj"] }, "Dinajpur": { name: "দিনাজপুর", upazilas: ["Dinajpur Sadar", "Birampur", "Birganj", "Bochaganj", "Chirirbandar", "Fulbari", "Ghoraghat", "Hakimpur", "Kaharole", "Khansama", "Nawabganj", "Parbatipur", "Birol"] }, "Gaibandha": { name: "গাইবান্ধা", upazilas: ["Gaibandha Sadar", "Fulchhari", "Gobindaganj", "Palashbari", "Sadullapur", "Saghata", "Sundarganj"] }, "Kurigram": { name: "কুড়িগ্রাম", upazilas: ["Kurigram Sadar", "Bhurungamari", "Char Rajibpur", "Chilmari", "Phulbari", "Nageshwari", "Rajarhat", "Raomari", "Ulipur"] }, "Lalmonirhat": { name: "লালমনিরহাট", upazilas: ["Lalmonirhat Sadar", "Aditmari", "Hatibandha", "Kaliganj", "Patgram"] }, "Nilphamari": { name: "নীলফামারী", upazilas: ["Nilphamari Sadar", "Dimla", "Domar", "Jaldhaka", "Kishoreganj", "Saidpur"] }, "Panchagarh": { name: "পঞ্চগড়", upazilas: ["Panchagarh Sadar", "Atwari", "Boda", "Debiganj", "Tetulia"] }, "Thakurgaon": { name: "ঠাকুরগাঁও", upazilas: ["Thakurgaon Sadar", "Baliadangi", "Haripur", "Pirganj", "Ranishankail"] } } },
-            "Mymensingh": { name: "ময়মনসিংহ", districts: { "Mymensingh": { name: "ময়মনসিংহ", upazilas: ["Mymensingh Sadar", "Bhaluka", "Dhobaura", "Fulbaria", "Gafargaon", "Gauripur", "Haluaghat", "Ishwarganj", "Muktagachha", "Nandail", "Phulpur", "Trishal", "Tara Khanda"] }, "Jamalpur": { name: "জামালপুর", upazilas: ["Jamalpur Sadar", "Baksiganj", "Dewanganj", "Islampur", "Madarganj", "Melandaha", "Sarishabari"] }, "Netrokona": { name: "নেত্রকোণা", upazilas: ["Netrokona Sadar", "Atpara", "Barhatta", "Durgapur", "Khaliajuri", "Kalmakanda", "Kendua", "Madan", "Mohanganj", "Purbadhala"] }, "Sherpur": { name: "শেরপুর", upazilas: ["Sherpur Sadar", "Jhenaigati", "Nakla", "Nalitabari", "Sreebardi"] } } }
+            "Dhaka": { 
+                name: "ঢাকা", 
+                districts: { 
+                    "Dhaka": { name: "ঢাকা", upazilas: [{v:"Savar",t:"সাভার"},{v:"Dhamrai",t:"ধামরাই"},{v:"Keraniganj",t:"কেরানীগঞ্জ"},{v:"Nawabganj",t:"নবাবগঞ্জ"},{v:"Dohar",t:"দোহার"},{v:"Hazaribagh",t:"হাজারীবাগ"},{v:"Ramna",t:"রমনা"},{v:"Tejgaon",t:"তেজগাঁও"},{v:"Gulshan",t:"গুলশান"},{v:"Mirpur",t:"মিরপুর"},{v:"Pallabi",t:"পল্লবী"},{v:"Kafrul",t:"কাফরুল"},{v:"Cantonment",t:"ক্যান্টনমেন্ট"},{v:"Uttara",t:"উত্তরা"},{v:"Mohammadpur",t:"মোহাম্মদপুর"},{v:"Dhanmondi",t:"ধানমন্ডি"},{v:"Badda",t:"বাড্ডা"},{v:"Khilkhet",t:"খিলক্ষেত"},{v:"Demra",t:"ডেমরা"},{v:"Jatrabari",t:"যাত্রাবাড়ী"},{v:"Lalbagh",t:"লালবাগ"},{v:"Kotwali",t:"কোতয়ালী"},{v:"Sutrapur",t:"সূত্রাপুর"}] }, 
+                    "Gazipur": { name: "গাজীপুর", upazilas: [{v:"Gazipur Sadar",t:"গাজীপুর সদর"},{v:"Kaliakair",t:"কালিয়াকৈর"},{v:"Kapasia",t:"কাপাসিয়া"},{v:"Sreepur",t:"শ্রীপুর"},{v:"Kaliganj",t:"কালীগঞ্জ"}] }, 
+                    "Narayanganj": { name: "নারায়ণগঞ্জ", upazilas: [{v:"Narayanganj Sadar",t:"নারায়ণগঞ্জ সদর"},{v:"Bandar",t:"বন্দর"},{v:"Araihazar",t:"আড়াইহাজার"},{v:"Rupganj",t:"রূপগঞ্জ"},{v:"Sonargaon",t:"সোনারগাঁও"}] }, 
+                    "Manikganj": { name: "মানিকগঞ্জ", upazilas: [{v:"Manikganj Sadar",t:"মানিকগঞ্জ সদর"},{v:"Singair",t:"সিংগাইর"},{v:"Saturia",t:"সাটুরিয়া"},{v:"Shivalaya",t:"শিবালয়"},{v:"Ghior",t:"ঘিওর"},{v:"Daulatpur",t:"দৌলতপুর"},{v:"Harirampur",t:"হরিরামপুর"}] }, 
+                    "Munshiganj": { name: "মুন্সিগঞ্জ", upazilas: [{v:"Munshiganj Sadar",t:"মুন্সিগঞ্জ সদর"},{v:"Tongibari",t:"টংগিবাড়ী"},{v:"Sreenagar",t:"শ্রীনগর"},{v:"Lohajang",t:"লৌহজং"},{v:"Gajaria",t:"গজারিয়া"},{v:"Sirajdikhan",t:"সিরাজদিখান"}] }, 
+                    "Narsingdi": { name: "নরসিংদী", upazilas: [{v:"Narsingdi Sadar",t:"নরসিংদী সদর"},{v:"Belabo",t:"বেলাবো"},{v:"Monohardi",t:"মনোহরদী"},{v:"Palash",t:"পলাশ"},{v:"Raipura",t:"রায়পুরা"},{v:"Shibpur",t:"শিবপুর"}] }, 
+                    "Tangail": { name: "টাঙ্গাইল", upazilas: [{v:"Tangail Sadar",t:"টাঙ্গাইল সদর"},{v:"Sakhipur",t:"সখিপুর"},{v:"Basail",t:"বাসাইল"},{v:"Madhupur",t:"মধুপুর"},{v:"Ghatail",t:"ঘাটাইল"},{v:"Kalihati",t:"কালিহাতী"},{v:"Nagarpur",t:"নাগরপুর"},{v:"Mirzapur",t:"মির্জাপুর"},{v:"Gopalpur",t:"গোপালপুর"},{v:"Delduar",t:"দেলদুয়ার"},{v:"Bhuapur",t:"ভূয়াপুর"},{v:"Dhanbari",t:"ধনবাড়ী"}] }, 
+                    "Kishoreganj": { name: "কিশোরগঞ্জ", upazilas: [{v:"Kishoreganj Sadar",t:"কিশোরগঞ্জ সদর"},{v:"Hossainpur",t:"হোসেনপুর"},{v:"Pakundia",t:"পাকুন্দিয়া"},{v:"Katiadi",t:"কটিয়াদী"},{v:"Karimganj",t:"করিমগঞ্জ"},{v:"Tarail",t:"তাড়াইল"},{v:"Itna",t:"ইটনা"},{v:"Mithamoin",t:"মিঠামইন"},{v:"Austagram",t:"অষ্টগ্রাম"},{v:"Nikli",t:"নিকলী"},{v:"Bajitpur",t:"বাজিতপুর"},{v:"Kuliarchar",t:"কুলিয়ারচর"},{v:"Bhairab",t:"ভৈরব"}] }, 
+                    "Faridpur": { name: "ফরিদপুর", upazilas: [{v:"Faridpur Sadar",t:"ফরিদপুর সদর"},{v:"Boalmari",t:"বোয়ালমারী"},{v:"Alfadanga",t:"আলফাডাঙ্গা"},{v:"Madhukhali",t:"মধুখালী"},{v:"Bhanga",t:"ভাঙ্গা"},{v:"Nagarkanda",t:"নগরকান্দা"},{v:"Charbhadrasan",t:"চরভদ্রাসন"},{v:"Sadarpur",t:"সদরপুর"},{v:"Saltha",t:"সালথা"}] }, 
+                    "Gopalganj": { name: "গোপালগঞ্জ", upazilas: [{v:"Gopalganj Sadar",t:"গোপালগঞ্জ সদর"},{v:"Kashiani",t:"কাশিয়ানী"},{v:"Tungipara",t:"টুঙ্গিপাড়া"},{v:"Kotalipara",t:"কোটালীপাড়া"},{v:"Muksudpur",t:"মুকসুদপুর"}] }, 
+                    "Madaripur": { name: "মাদারীপুর", upazilas: [{v:"Madaripur Sadar",t:"মাদারীপুর সদর"},{v:"Kalkini",t:"কালকিনি"},{v:"Rajoir",t:"রাজৈর"},{v:"Shibchar",t:"শিবচর"}] }, 
+                    "Rajbari": { name: "রাজবাড়ী", upazilas: [{v:"Rajbari Sadar",t:"রাজবাড়ী সদর"},{v:"Goalanda",t:"গোয়ালন্দ"},{v:"Pangsa",t:"পাংশা"},{v:"Baliakandi",t:"বালিয়াকান্দি"},{v:"Kalukhali",t:"কালুখালী"}] }, 
+                    "Shariatpur": { name: "শরীয়তপুর", upazilas: [{v:"Shariatpur Sadar",t:"শরীয়তপুর সদর"},{v:"Naria",t:"নড়িয়া"},{v:"Zajira",t:"জাজিরা"},{v:"Gosairhat",t:"গোসাইরহাট"},{v:"Bhedarganj",t:"ভেদরগঞ্জ"},{v:"Damudya",t:"ডামুড্যা"}] } 
+                } 
+            },
+            "Chittagong": { 
+                name: "চট্টগ্রাম", 
+                districts: { 
+                    "Chittagong": { name: "চট্টগ্রাম", upazilas: [{v:"Chittagong Sadar",t:"চট্টগ্রাম সদর"},{v:"Sitakunda",t:"সীতাকুণ্ড"},{v:"Mirsharai",t:"মীরসরাই"},{v:"Patiya",t:"পটিয়া"},{v:"Rangunia",t:"রাঙ্গুনিয়া"},{v:"Anwara",t:"আনোয়ারা"},{v:"Boalkhali",t:"বোয়ালখালী"},{v:"Raozan",t:"রাউজান"},{v:"Hathazari",t:"হাটহাজারী"},{v:"Fatikchhari",t:"ফটিকছড়ি"},{v:"Sandwip",t:"সন্দ্বীপ"},{v:"Lohagara",t:"লোহাগাড়া"},{v:"Satkania",t:"সাতকানিয়া"},{v:"Banshkhali",t:"বাঁশখালী"},{v:"Chandanaish",t:"চন্দনাইশ"},{v:"Karnaphuli",t:"কর্ণফুলী"}] }, 
+                    "Cox's Bazar": { name: "কক্সবাজার", upazilas: [{v:"Cox's Bazar Sadar",t:"কক্সবাজার সদর"},{v:"Chakaria",t:"চকরিয়া"},{v:"Kutubdia",t:"কুতুবদিয়া"},{v:"Ukhiya",t:"উখিয়া"},{v:"Moheshkhali",t:"মহেশখালী"},{v:"Pekua",t:"পেকুয়া"},{v:"Ramu",t:"রামু"},{v:"Teknaf",t:"টেকনাফ"}] }, 
+                    "Comilla": { name: "কুমিল্লা", upazilas: [{v:"Comilla Sadar",t:"কুমিল্লা সদর"},{v:"Barura",t:"বরুড়া"},{v:"Brahmanpara",t:"ব্রাহ্মণপাড়া"},{v:"Burichong",t:"বুড়িচং"},{v:"Chandina",t:"চান্দিনা"},{v:"Chauddagram",t:"চৌদ্দগ্রাম"},{v:"Daudkandi",t:"দাউদকান্দি"},{v:"Debidwar",t:"দেবিদ্বার"},{v:"Homna",t:"হোমনা"},{v:"Laksam",t:"লাকসাম"},{v:"Muradnagar",t:"মুরাদনগর"},{v:"Nangalkot",t:"নাঙ্গলকোট"},{v:"Meghna",t:"মেঘনা"},{v:"Titas",t:"তিতাস"},{v:"Monohargonj",t:"মনোহরগঞ্জ"},{v:"Lalmai",t:"লালমাই"}] }, 
+                    "Brahmanbaria": { name: "ব্রাহ্মণবাড়িয়া", upazilas: [{v:"Brahmanbaria Sadar",t:"ব্রাহ্মণবাড়িয়া সদর"},{v:"Kasba",t:"কসবা"},{v:"Nasirnagar",t:"নাসিরনগর"},{v:"Sarail",t:"সরাইল"},{v:"Ashuganj",t:"আশুগঞ্জ"},{v:"Akhaura",t:"আখাউড়া"},{v:"Nabinagar",t:"নবীনগর"},{v:"Bancharampur",t:"বাঞ্ছারামপুর"},{v:"Bijoynagar",t:"বিজয়নগর"}] }, 
+                    "Chandpur": { name: "চাঁদপুর", upazilas: [{v:"Chandpur Sadar",t:"চাঁদপুর সদর"},{v:"Faridganj",t:"ফরিদগঞ্জ"},{v:"Haimchar",t:"হাইমচর"},{v:"Haziganj",t:"হাজীগঞ্জ"},{v:"Kachua",t:"কচুয়া"},{v:"Matlab North",t:"মতলব উত্তর"},{v:"Matlab South",t:"মতলব দক্ষিণ"},{v:"Shahrasti",t:"শাহরাস্তি"}] }, 
+                    "Noakhali": { name: "নোয়াখালী", upazilas: [{v:"Noakhali Sadar",t:"নোয়াখালী সদর"},{v:"Begumganj",t:"বেগমগঞ্জ"},{v:"Chatkhil",t:"চাটখিল"},{v:"Companyganj",t:"কোম্পানীগঞ্জ"},{v:"Hatiya",t:"হাতিয়া"},{v:"Senbagh",t:"সেনবাগ"},{v:"Sonaimuri",t:"সোনাইমুড়ী"},{v:"Subarnachar",t:"সুবর্ণচর"},{v:"Kabirhat",t:"কবিরহাট"}] }, 
+                    "Feni": { name: "ফেনী", upazilas: [{v:"Feni Sadar",t:"ফেনী সদর"},{v:"Chhagalnaiya",t:"ছাগলনাইয়া"},{v:"Daganbhuiyan",t:"দাগনভূঞা"},{v:"Parshuram",t:"পরশুরাম"},{v:"Fulgazi",t:"ফুলগাজী"},{v:"Sonagazi",t:"সোনাগাজী"}] }, 
+                    "Lakshmipur": { name: "লক্ষ্মীপুর", upazilas: [{v:"Lakshmipur Sadar",t:"লক্ষ্মীপুর সদর"},{v:"Raipur",t:"রায়পুর"},{v:"Ramganj",t:"রামগঞ্জ"},{v:"Ramgati",t:"রামগতি"},{v:"Kamalnagar",t:"কমলনগর"}] }, 
+                    "Khagrachhari": { name: "খাগড়াছড়ি", upazilas: [{v:"Khagrachhari Sadar",t:"খাগড়াছড়ি সদর"},{v:"Dighinala",t:"দীঘিনালা"},{v:"Panchhari",t:"পানছড়ি"},{v:"Laxmichhari",t:"লক্ষ্মীছড়ি"},{v:"Mahalchhari",t:"মহালছড়ি"},{v:"Manikchhari",t:"মানিকছড়ি"},{v:"Ramgarh",t:"রামগড়"},{v:"Matiranga",t:"মাটিরাঙ্গা"},{v:"Guimara",t:"গুইমারা"}] }, 
+                    "Rangamati": { name: "রাঙ্গামাটি", upazilas: [{v:"Rangamati Sadar",t:"রাঙ্গামাটি সদর"},{v:"Belaichhari",t:"বিলাইছড়ি"},{v:"Bagaichhari",t:"বাঘাইছড়ি"},{v:"Barkal",t:"বরকল"},{v:"Juraichhari",t:"জুরাছড়ি"},{v:"Rajasthali",t:"রাজস্থলী"},{v:"Kaptai",t:"কাপ্তাই"},{v:"Langadu",t:"লংগদু"},{v:"Naniarchar",t:"নানিয়ারচর"},{v:"Kaukhali",t:"কাউখালী"}] }, 
+                    "Bandarban": { name: "বান্দরবান", upazilas: [{v:"Bandarban Sadar",t:"বান্দরবান সদর"},{v:"Ali Kadam",t:"আলীকদম"},{v:"Naikhongchhari",t:"নাইক্ষ্যংছড়ি"},{v:"Rowangchhari",t:"রোয়াংছড়ি"},{v:"Lama",t:"লামা"},{v:"Ruma",t:"রুমা"},{v:"Thanchi",t:"থানচি"}] } 
+                } 
+            },
+            "Rajshahi": { 
+                name: "রাজশাহী", 
+                districts: { 
+                    "Rajshahi": { name: "রাজশাহী", upazilas: [{v:"Rajshahi Sadar",t:"রাজশাহী সদর"},{v:"Bagha",t:"বাঘা"},{v:"Bagmara",t:"বাগমারা"},{v:"Charghat",t:"চারঘাট"},{v:"Durgapur",t:"দুর্গাপুর"},{v:"Godagari",t:"গোদাগাড়ী"},{v:"Mohanpur",t:"মোহনপুর"},{v:"Paba",t:"পবা"},{v:"Puthia",t:"পুঠিয়া"},{v:"Tanore",t:"তানোর"}] }, 
+                    "Bogra": { name: "বগুড়া", upazilas: [{v:"Bogra Sadar",t:"বগুড়া সদর"},{v:"Adamdighi",t:"আদমদিঘী"},{v:"Dhupchanchia",t:"ধুপচাঁচিয়া"},{v:"Gabtali",t:"গাবতলী"},{v:"Kahaloo",t:"কাহালু"},{v:"Nandigram",t:"নন্দীগ্রাম"},{v:"Sariakandi",t:"সারিয়াকান্দি"},{v:"Sahajanpur",t:"শাজাহানপুর"},{v:"Sherpur",t:"শেরপুর"},{v:"Shibganj",t:"শিবগঞ্জ"},{v:"Sonatala",t:"সোনাতলা"}] }, 
+                    "Naogaon": { name: "নওগাঁ", upazilas: [{v:"Naogaon Sadar",t:"নওগাঁ সদর"},{v:"Atrai",t:"আত্রাই"},{v:"Badalgachhi",t:"বদলগাছী"},{v:"Dhamoirhat",t:"ধামইরহাট"},{v:"Manda",t:"মান্দা"},{v:"Mohadevpur",t:"মহাদেবপুর"},{v:"Niamatpur",t:"নিয়ামতপুর"},{v:"Patnitala",t:"পত্নীতলা"},{v:"Porsha",t:"পোরশা"},{v:"Raninagar",t:"রানীনগর"},{v:"Sapahar",t:"সাপাহার"}] }, 
+                    "Natore": { name: "নাটোর", upazilas: [{v:"Natore Sadar",t:"নাটোর সদর"},{v:"Bagatipara",t:"বাগাতিপাড়া"},{v:"Baraigram",t:"বড়াইগ্রাম"},{v:"Gurudaspur",t:"গুরুদাসপুর"},{v:"Lalpur",t:"লালপুর"},{v:"Singra",t:"সিংড়া"},{v:"Naldanga",t:"নলডাঙ্গা"}] }, 
+                    "Chapainawabganj": { name: "চাঁপাইনবাবগঞ্জ", upazilas: [{v:"Chapainawabganj Sadar",t:"চাঁপাইনবাবগঞ্জ সদর"},{v:"Gomastapur",t:"গোমস্তাপুর"},{v:"Nachole",t:"নাচোল"},{v:"Bholahat",t:"ভোলাহাট"},{v:"Shibganj",t:"শিবগঞ্জ"}] }, 
+                    "Pabna": { name: "পাবনা", upazilas: [{v:"Pabna Sadar",t:"পাবনা সদর"},{v:"Atgharia",t:"আটঘরিয়া"},{v:"Bera",t:"বেড়া"},{v:"Bhangura",t:"ভাঙ্গুড়া"},{v:"Chatmohar",t:"চাটমোহর"},{v:"Faridpur",t:"ফরিদপুর"},{v:"Ishwardi",t:"ঈশ্বরদী"},{v:"Santhia",t:"সাঁথিয়া"},{v:"Sujanagar",t:"সুজানগর"}] }, 
+                    "Sirajganj": { name: "সিরাজগঞ্জ", upazilas: [{v:"Sirajganj Sadar",t:"সিরাজগঞ্জ সদর"},{v:"Belkuchi",t:"বেলকুচি"},{v:"Chauhali",t:"চৌহালী"},{v:"Kamarkhanda",t:"কামারখন্দ"},{v:"Kazipur",t:"কাজীপুর"},{v:"Raiganj",t:"রায়গঞ্জ"},{v:"Shahjadpur",t:"শাহজাদপুর"},{v:"Tarash",t:"তাড়াশ"},{v:"Ullahpara",t:"উল্লাপাড়া"}] }, 
+                    "Joypurhat": { name: "জয়পুরহাট", upazilas: [{v:"Joypurhat Sadar",t:"জয়পুরহাট সদর"},{v:"Akkelpur",t:"আক্কেলপুর"},{v:"Kalai",t:"কালাই"},{v:"Khetlal",t:"ক্ষেতলাল"},{v:"Panchbibi",t:"পাঁচবিবি"}] } 
+                } 
+            },
+            "Khulna": { 
+                name: "খুলনা", 
+                districts: { 
+                    "Khulna": { name: "খুলনা", upazilas: [{v:"Khulna Sadar",t:"খুলনা সদর"},{v:"Batiaghata",t:"বটিয়াঘাটা"},{v:"Dacope",t:"দাকোপ"},{v:"Dumuria",t:"ডুমুরিয়া"},{v:"Dighalia",t:"দিঘলিয়া"},{v:"Koyra",t:"কয়রা"},{v:"Paikgachha",t:"পাইকগাছা"},{v:"Phultala",t:"ফুলতলা"},{v:"Rupsha",t:"রূপসা"},{v:"Terokhada",t:"তেরখাদা"}] }, 
+                    "Bagerhat": { name: "বাগেরহাট", upazilas: [{v:"Bagerhat Sadar",t:"বাগেরহাট সদর"},{v:"Chitalmari",t:"চিতলমারী"},{v:"Fakirhat",t:"ফকিরহাট"},{v:"Kachua",t:"কচুয়া"},{v:"Mollahat",t:"মোল্লাহাট"},{v:"Mongla",t:"মোংলা"},{v:"Morrelganj",t:"মোড়েলগঞ্জ"},{v:"Rampal",t:"রামপাল"},{v:"Sarankhola",t:"শরণখোলা"}] }, 
+                    "Chuadanga": { name: "চুয়াডাঙ্গা", upazilas: [{v:"Chuadanga Sadar",t:"চুয়াডাঙ্গা সদর"},{v:"Alamdanga",t:"আলমডাঙ্গা"},{v:"Damurhuda",t:"দামুড়হুদা"},{v:"Jibannagar",t:"জীবননগর"}] }, 
+                    "Jessore": { name: "যশোর", upazilas: [{v:"Jessore Sadar",t:"যশোর সদর"},{v:"Abhaynagar",t:"অভয়নগর"},{v:"Bagherpara",t:"বাঘারপাড়া"},{v:"Chaugachha",t:"চৌগাছা"},{v:"Jhikargachha",t:"ঝিকরগাছা"},{v:"Keshabpur",t:"কেশবপুর"},{v:"Manirampur",t:"মনিরামপুর"},{v:"Sharsha",t:"শার্শা"}] }, 
+                    "Jhenaidah": { name: "ঝিনাইদহ", upazilas: [{v:"Jhenaidah Sadar",t:"ঝিনাইদহ সদর"},{v:"Harinakunda",t:"হরিণাকুণ্ডু"},{v:"Kaliganj",t:"কালীগঞ্জ"},{v:"Kotchandpur",t:"কোটচাঁদপুর"},{v:"Maheshpur",t:"মহেশপুর"},{v:"Shailkupa",t:"শৈলকুপা"}] }, 
+                    "Kushtia": { name: "কুষ্টিয়া", upazilas: [{v:"Kushtia Sadar",t:"কুষ্টিয়া সদর"},{v:"Bheramara",t:"ভেড়ামারা"},{v:"Daulatpur",t:"দৌলতপুর"},{v:"Khoksa",t:"খোকসা"},{v:"Kumarkhali",t:"কুমারখালী"},{v:"Mirpur",t:"মিরপুর"}] }, 
+                    "Magura": { name: "মাগুরা", upazilas: [{v:"Magura Sadar",t:"মাগুরা সদর"},{v:"Mohammadpur",t:"মহম্মদপুর"},{v:"Shalikha",t:"শালিখা"},{v:"Sreepur",t:"শ্রীপুর"}] }, 
+                    "Meherpur": { name: "মেহেরপুর", upazilas: [{v:"Meherpur Sadar",t:"মেহেরপুর সদর"},{v:"Gangni",t:"গাংনী"},{v:"Mujibnagar",t:"মুজিবনগর"}] }, 
+                    "Narail": { name: "নড়াইল", upazilas: [{v:"Narail Sadar",t:"নড়াইল সদর"},{v:"Kalia",t:"কালিয়া"},{v:"Lohagara",t:"লোহাগড়া"}] }, 
+                    "Satkhira": { name: "সাতক্ষীরা", upazilas: [{v:"Satkhira Sadar",t:"সাতক্ষীরা সদর"},{v:"Assasuni",t:"আশাশুনি"},{v:"Debhata",t:"দেবহাটা"},{v:"Kalaroa",t:"কলারোয়া"},{v:"Kaliganj",t:"কালীগঞ্জ"},{v:"Shyamnagar",t:"শ্যামনগর"},{v:"Tala",t:"তালা"}] } 
+                } 
+            },
+            "Barisal": { 
+                name: "বরিশাল", 
+                districts: { 
+                    "Barisal": { name: "বরিশাল", upazilas: [{v:"Barisal Sadar",t:"বরিশাল সদর"},{v:"Agailjhara",t:"আগৈলঝাড়া"},{v:"Babuganj",t:"বাবুগঞ্জ"},{v:"Bakerganj",t:"বাকেরগঞ্জ"},{v:"Banaripara",t:"বানারীপাড়া"},{v:"Gaurnadi",t:"গৌরনদী"},{v:"Hizla",t:"হিজলা"},{v:"Mehendiganj",t:"মেহেন্দিগঞ্জ"},{v:"Muladi",t:"মুলাদী"},{v:"Wazirpur",t:"উজিরপুর"}] }, 
+                    "Barguna": { name: "বরগুনা", upazilas: [{v:"Barguna Sadar",t:"বরগুনা সদর"},{v:"Amtali",t:"আমতলী"},{v:"Bamna",t:"বামনা"},{v:"Betagi",t:"বেতাগী"},{v:"Patharghata",t:"পাথরঘাটা"},{v:"Taltali",t:"তালতলী"}] }, 
+                    "Bhola": { name: "ভোলা", upazilas: [{v:"Bhola Sadar",t:"ভোলা সদর"},{v:"Burhanuddin",t:"বোরহানউদ্দিন"},{v:"Char Fasson",t:"চরফ্যাশন"},{v:"Daulatkhan",t:"দৌলতখান"},{v:"Lalmohan",t:"লালমোহন"},{v:"Manpura",t:"মনপুরা"},{v:"Tazumuddin",t:"তজুমদ্দিন"}] }, 
+                    "Jhalokati": { name: "ঝালকাঠি", upazilas: [{v:"Jhalokati Sadar",t:"ঝালকাঠি সদর"},{v:"Kathalia",t:"কাঁঠালিয়া"},{v:"Nalchity",t:"নলছিটি"},{v:"Rajapur",t:"রাজাপুর"}] }, 
+                    "Patuakhali": { name: "পটুয়াখালী", upazilas: [{v:"Patuakhali Sadar",t:"পটুয়াখালী সদর"},{v:"Bauphal",t:"বাউফল"},{v:"Dashmina",t:"দশমিনা"},{v:"Galachipa",t:"গলাচিপা"},{v:"Kalapara",t:"কলাপাড়া"},{v:"Mirzaganj",t:"মির্জাগঞ্জ"},{v:"Rangabali",t:"রাঙ্গাবালী"},{v:"Dumki",t:"দুমকি"}] }, 
+                    "Pirojpur": { name: "পিরোজপুর", upazilas: [{v:"Pirojpur Sadar",t:"পিরোজপুর সদর"},{v:"Bhandaria",t:"ভান্ডারিয়া"},{v:"Kawkhali",t:"কাউখালী"},{v:"Mathbaria",t:"মঠবাড়িয়া"},{v:"Nazirpur",t:"নাজিরপুর"},{v:"Nesarabad",t:"নেছারাবাদ"},{v:"Indurkani",t:"ইন্দুরকানী"}] } 
+                } 
+            },
+            "Sylhet": { 
+                name: "সিলেট", 
+                districts: { 
+                    "Sylhet": { name: "সিলেট", upazilas: [{v:"Sylhet Sadar",t:"সিলেট সদর"},{v:"Beanibazar",t:"বিয়ানীবাজার"},{v:"Bishwanath",t:"বিশ্বনাথ"},{v:"Dakshin Surma",t:"দক্ষিণ সুরমা"},{v:"Balaganj",t:"বালাগঞ্জ"},{v:"Companiganj",t:"কোম্পানীগঞ্জ"},{v:"Fenchuganj",t:"ফেঞ্চুগঞ্জ"},{v:"Golapganj",t:"গোলাপগঞ্জ"},{v:"Gowainghat",t:"গোয়াইনঘাট"},{v:"Jaintiapur",t:"জৈন্তাপুর"},{v:"Kanaighat",t:"কানাইঘাট"},{v:"Zakiganj",t:"জকিগঞ্জ"},{v:"Osmani Nagar",t:"ওসমানী নগর"}] }, 
+                    "Moulvibazar": { name: "মৌলভীবাজার", upazilas: [{v:"Moulvibazar Sadar",t:"মৌলভীবাজার সদর"},{v:"Barlekha",t:"বড়লেখা"},{v:"Juri",t:"জুড়ী"},{v:"Kamalganj",t:"কমলগঞ্জ"},{v:"Kulaura",t:"কুলাউড়া"},{v:"Rajnagar",t:"রাজনগর"},{v:"Sreemangal",t:"শ্রীমঙ্গল"}] }, 
+                    "Habiganj": { name: "হবিগঞ্জ", upazilas: [{v:"Habiganj Sadar",t:"হবিগঞ্জ সদর"},{v:"Azmiriganj",t:"আজমিরীগঞ্জ"},{v:"Bahubal",t:"বাহুবল"},{v:"Baniyachong",t:"বানিয়াচং"},{v:"Chunarughat",t:"চুনারুঘাট"},{v:"Lakhai",t:"লাখাই"},{v:"Madhabpur",t:"মাধবপুর"},{v:"Nabiganj",t:"নবীগঞ্জ"},{v:"Shayestaganj",t:"শায়েস্তাগঞ্জ"}] }, 
+                    "Sunamganj": { name: "সুনামগঞ্জ", upazilas: [{v:"Sunamganj Sadar",t:"সুনামগঞ্জ সদর"},{v:"Bishwamvarpur",t:"বিশ্বম্ভরপুর"},{v:"Chhatak",t:"ছাতক"},{v:"Derai",t:"দিরাই"},{v:"Dharamapasha",t:"ধর্মপাশা"},{v:"Dowarabazar",t:"দোয়ারাবাজার"},{v:"Jagannathpur",t:"জগন্নাথপুর"},{v:"Jamalganj",t:"জামালগঞ্জ"},{v:"Tahirpur",t:"তাহিরপুর"},{v:"Sullah",t:"শাল্লা"},{v:"Shantiganj",t:"শান্তিগঞ্জ"}] } 
+                } 
+            },
+            "Rangpur": { 
+                name: "রংপুর", 
+                districts: { 
+                    "Rangpur": { name: "রংপুর", upazilas: [{v:"Rangpur Sadar",t:"রংপুর সদর"},{v:"Badarganj",t:"বদরগঞ্জ"},{v:"Gangachhara",t:"গংগাচড়া"},{v:"Kaunia",t:"কাউনিয়া"},{v:"Mithapukur",t:"মিঠাপুকুর"},{v:"Pirgachha",t:"পীরগাছা"},{v:"Pirganj",t:"পীরগঞ্জ"},{v:"Taraganj",t:"তারাগঞ্জ"}] }, 
+                    "Dinajpur": { name: "দিনাজপুর", upazilas: [{v:"Dinajpur Sadar",t:"দিনাজপুর সদর"},{v:"Birampur",t:"বিরামপুর"},{v:"Birganj",t:"বীরগঞ্জ"},{v:"Bochaganj",t:"বোচাগঞ্জ"},{v:"Chirirbandar",t:"চিরিরবন্দর"},{v:"Fulbari",t:"ফুলবাড়ী"},{v:"Ghoraghat",t:"ঘোড়াঘাট"},{v:"Hakimpur",t:"হাকিমপুর"},{v:"Kaharole",t:"কাহারোল"},{v:"Khansama",t:"খানসামা"},{v:"Nawabganj",t:"নবাবগঞ্জ"},{v:"Parbatipur",t:"পার্বতীপুর"},{v:"Birol",t:"বিরল"}] }, 
+                    "Gaibandha": { name: "গাইবান্ধা", upazilas: [{v:"Gaibandha Sadar",t:"গাইবান্ধা সদর"},{v:"Fulchhari",t:"ফুলছড়ি"},{v:"Gobindaganj",t:"গোবিন্দগঞ্জ"},{v:"Palashbari",t:"পলাশবাড়ী"},{v:"Sadullapur",t:"সাদুল্লাপুর"},{v:"Saghata",t:"সাঘাটা"},{v:"Sundarganj",t:"সুন্দরগঞ্জ"}] }, 
+                    "Kurigram": { name: "কুড়িগ্রাম", upazilas: [{v:"Kurigram Sadar",t:"কুড়িগ্রাম সদর"},{v:"Bhurungamari",t:"ভুরুঙ্গামারী"},{v:"Char Rajibpur",t:"চর রাজিবপুর"},{v:"Chilmari",t:"চিলমারী"},{v:"Phulbari",t:"ফুলবাড়ী"},{v:"Nageshwari",t:"নাগেশ্বরী"},{v:"Rajarhat",t:"রাজারহাট"},{v:"Raomari",t:"রৌমারী"},{v:"Ulipur",t:"উলিপুর"}] }, 
+                    "Lalmonirhat": { name: "লালমনিরহাট", upazilas: [{v:"Lalmonirhat Sadar",t:"লালমনিরহাট সদর"},{v:"Aditmari",t:"আদিতমারী"},{v:"Hatibandha",t:"হাতীবান্ধা"},{v:"Kaliganj",t:"কালীগঞ্জ"},{v:"Patgram",t:"পাটগ্রাম"}] }, 
+                    "Nilphamari": { name: "নীলফামারী", upazilas: [{v:"Nilphamari Sadar",t:"নীলফামারী সদর"},{v:"Dimla",t:"ডিমলা"},{v:"Domar",t:"ডোমার"},{v:"Jaldhaka",t:"জলঢাকা"},{v:"Kishoreganj",t:"কিশোরগঞ্জ"},{v:"Saidpur",t:"সৈয়দপুর"}] }, 
+                    "Panchagarh": { name: "পঞ্চগড়", upazilas: [{v:"Panchagarh Sadar",t:"পঞ্চগড় সদর"},{v:"Atwari",t:"আটোয়ারী"},{v:"Boda",t:"বোদা"},{v:"Debiganj",t:"দেবীগঞ্জ"},{v:"Tetulia",t:"তেঁতুলিয়া"}] }, 
+                    "Thakurgaon": { name: "ঠাকুরগাঁও", upazilas: [{v:"Thakurgaon Sadar",t:"ঠাকুরগাঁও সদর"},{v:"Baliadangi",t:"বালিয়াডাঙ্গী"},{v:"Haripur",t:"হরিপুর"},{v:"Pirganj",t:"পীরগঞ্জ"},{v:"Ranishankail",t:"রাণীশংকৈল"}] } 
+                } 
+            },
+            "Mymensingh": { 
+                name: "ময়মনসিংহ", 
+                districts: { 
+                    "Mymensingh": { name: "ময়মনসিংহ", upazilas: [{v:"Mymensingh Sadar",t:"ময়মনসিংহ সদর"},{v:"Bhaluka",t:"ভালুকা"},{v:"Dhobaura",t:"ধোবাউড়া"},{v:"Fulbaria",t:"ফুলবাড়ীয়া"},{v:"Gafargaon",t:"গফরগাঁও"},{v:"Gauripur",t:"গৌরীপুর"},{v:"Haluaghat",t:"হালুয়াঘাট"},{v:"Ishwarganj",t:"ঈশ্বরগঞ্জ"},{v:"Muktagachha",t:"মুক্তাগাছা"},{v:"Nandail",t:"নান্দাইল"},{v:"Phulpur",t:"ফুলপুর"},{v:"Trishal",t:"ত্রিশাল"},{v:"Tara Khanda",t:"তারাকান্দা"}] }, 
+                    "Jamalpur": { name: "জামালপুর", upazilas: [{v:"Jamalpur Sadar",t:"জামালপুর সদর"},{v:"Baksiganj",t:"বকশীগঞ্জ"},{v:"Dewanganj",t:"দেওয়ানগঞ্জ"},{v:"Islampur",t:"ইসলামপুর"},{v:"Madarganj",t:"মাদারগঞ্জ"},{v:"Melandaha",t:"মেলান্দহ"},{v:"Sarishabari",t:"সরিষাবাড়ী"}] }, 
+                    "Netrokona": { name: "নেত্রকোণা", upazilas: [{v:"Netrokona Sadar",t:"নেত্রকোণা সদর"},{v:"Atpara",t:"আটপাড়া"},{v:"Barhatta",t:"বারহাট্টা"},{v:"Durgapur",t:"দুর্গাপুর"},{v:"Khaliajuri",t:"খালিয়াজুরী"},{v:"Kalmakanda",t:"কলমাকান্দা"},{v:"Kendua",t:"কেন্দুয়া"},{v:"Madan",t:"মদন"},{v:"Mohanganj",t:"মোহনগঞ্জ"},{v:"Purbadhala",t:"পূর্বধলা"}] }, 
+                    "Sherpur": { name: "শেরপুর", upazilas: [{v:"Sherpur Sadar",t:"শেরপুর সদর"},{v:"Jhenaigati",t:"ঝিনাইগাতী"},{v:"Nakla",t:"নকলা"},{v:"Nalitabari",t:"নালিতাবাড়ী"},{v:"Sreebardi",t:"শ্রীবরদী"}] } 
+                } 
+            }
         };
 
         // UI & Auth Init
@@ -594,7 +690,7 @@
                 const upas = locationData[divSel.value].districts[this.value].upazilas;
                 upas.forEach(u => {
                     const opt = document.createElement('option');
-                    opt.value=u; opt.textContent=u;
+                    opt.value=u.v; opt.textContent=u.t;
                     upaSel.appendChild(opt);
                 });
             });
@@ -618,7 +714,6 @@
                 const err = document.getElementById('passkey-error');
                 
                 // Fetch key from settings/admin/passkey (fallback 123456)
-                // Assuming admin panel saves it in: settings -> admin -> passKey
                 let realKey = "123456"; 
                 try {
                     const snap = await getDoc(doc(db, "settings", "admin"));
@@ -681,12 +776,22 @@
                         const mailMatch = (data.details || '').match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
                         if(mailMatch) emailBtn = `<button class="btn btn-sm btn-outline" onclick="copyToClipboard('${mailMatch[0]}')"><i class="fas fa-copy"></i> ই-মেইল</button>`;
                         
+                        let displayUpa = data.upazila;
+                        let displayDist = data.district;
+                        
+                        // Simple lookup for display
+                        try {
+                           displayDist = locationData[data.division].districts[data.district].name;
+                           const uObj = locationData[data.division].districts[data.district].upazilas.find(u => u.v === data.upazila);
+                           if(uObj) displayUpa = uObj.t;
+                        } catch(e) {}
+
                         card.innerHTML = `
                         <div class="e-card-top"><div class="creator-info"><span class="creator-name"><i class="fas fa-building"></i> ${data.name}</span></div></div>
                         <div class="e-details">
                             <p class="text-dark fw-bold"><i class="fas fa-info-circle"></i> ${data.details || 'বিস্তারিত তথ্য নেই'}</p>
                             <p><i class="fas fa-phone"></i> ${data.phone}</p>
-                            <p><i class="fas fa-map-marker-alt"></i> ${data.upazila}, ${data.district}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ${displayUpa}, ${displayDist}</p>
                         </div>
                         <div class="e-actions">
                             <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${data.phone}'"><i class="fas fa-phone-alt"></i> কল করুন</button>
