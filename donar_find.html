@@ -178,8 +178,17 @@
         
         .sidebar .sidebar-header { display: flex; padding: 20px; align-items: center; justify-content: space-between; flex-shrink: 0; }
         .sidebar-header .header-logo img { width: 46px; height: 46px; border-radius: 50%; }
-        .sidebar-header .sidebar-back-button { height: 35px; width: 35px; color: var(--sidebar-text); border: none; cursor: pointer; display: flex; background: transparent; align-items: center; justify-content: center; border-radius: 8px; font-size: 1.5rem; }
         
+        /* Sidebar Auth Buttons Styling */
+        .sidebar-auth-group { margin-left: auto; margin-right: 10px; display: flex; align-items: center; }
+        .sidebar-auth-btn { background: var(--primary); color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; text-decoration: none; display: flex; align-items: center; gap: 5px; border: none; cursor: pointer; transition: 0.3s; }
+        .sidebar-auth-btn:hover { background: var(--primary-dark); }
+        .sidebar-auth-btn i { font-size: 0.8rem; }
+
+        .sidebar-header .sidebar-back-button { height: 35px; width: 35px; color: var(--sidebar-text); border: none; cursor: pointer; display: flex; background: transparent; align-items: center; justify-content: center; border-radius: 8px; font-size: 1.5rem; }
+        .sidebar-header .sidebar-back-button:hover { background: rgba(0, 0, 0, 0.1); }
+        body.dark-mode .sidebar-header .sidebar-back-button:hover { background: rgba(255, 255, 255, 0.1); }
+
         .sidebar-nav { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 20px; }
         .nav-list { list-style: none; display: flex; flex-direction: column; gap: 5px; padding: 0 15px; }
         .nav-list.primary-nav { flex-grow: 1; }
@@ -308,6 +317,17 @@
         <a href="index.html" class="header-logo">
              <img src="https://i.ibb.co/QFtV51LQ/1000018745.png" alt="logo">
         </a>
+        
+        <!-- Sidebar Auth Group Added -->
+        <div class="sidebar-auth-group" id="sidebarAuthGroup">
+            <a href="login.html" class="sidebar-auth-btn" id="sidebarLoginBtn">
+                <i class="fas fa-sign-in-alt"></i> লগ ইন
+            </a>
+            <button class="sidebar-auth-btn" id="sidebarLogoutBtn" style="display: none; background: #333;">
+                <i class="fas fa-sign-out-alt"></i> লগ আউট
+            </button>
+        </div>
+
         <button class="sidebar-back-button">
           <span class="material-symbols-rounded">arrow_back</span>
         </button>
@@ -462,7 +482,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBnKQr2k2ZWnPlEZiJtMDewv6z3Z7p3kiU",
@@ -509,13 +529,21 @@
         fetchSiteSettings();
         fetchContactSettings();
 
-        // --- Auth State & Donor Button ---
+        // --- Auth State & Sidebar/Donor Button ---
         onAuthStateChanged(auth, async (user) => {
             const btnWrapper = document.getElementById('donorBtnWrapper');
             const btn = document.getElementById('beADonorBtn');
             const dialog = document.getElementById('donorDialog');
             
+            // Sidebar Auth Buttons
+            const sidebarLoginBtn = document.getElementById('sidebarLoginBtn');
+            const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+            
             if (user) {
+                // Sidebar: Show Logout, Hide Login
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'none';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'flex';
+
                 const donorDoc = await getDoc(doc(db, "donors", user.uid));
                 if (donorDoc.exists()) {
                     btnWrapper.style.display = 'none';
@@ -524,6 +552,10 @@
                     btn.href = 'profile.html';
                 }
             } else {
+                // Sidebar: Show Login, Hide Logout
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'flex';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'none';
+
                 btnWrapper.style.display = 'block';
                 btn.href = 'login.html';
             }
@@ -535,6 +567,19 @@
                 }, 3000);
             }
         });
+
+        // Logout Functionality for Sidebar
+        const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+        if(sidebarLogoutBtn) {
+            sidebarLogoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                signOut(auth).then(() => {
+                    window.location.reload();
+                }).catch((error) => {
+                    console.error("Logout Error:", error);
+                });
+            });
+        }
 
         // --- Load Donors from Firestore ---
         window.allDonors = []; 
@@ -802,20 +847,35 @@
 
             function timeAgo(timestamp) {
                 if(!timestamp) return "এইমাত্র";
-                const date = new Date(timestamp);
+                
+                let date;
+                // Handle Firestore Timestamp or Date object or string
+                if (typeof timestamp.toDate === 'function') {
+                    date = timestamp.toDate();
+                } else {
+                    date = new Date(timestamp);
+                }
+
+                if (isNaN(date.getTime())) return "অজানা সময়";
+
                 const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
                 
                 let interval = seconds / 31536000;
-                if (interval > 1) return Math.floor(interval) + " বছর আগে";
+                if (interval > 1) return convertToBanglaNumber(Math.floor(interval)) + " বছর আগে";
                 interval = seconds / 2592000;
-                if (interval > 1) return Math.floor(interval) + " মাস আগে";
+                if (interval > 1) return convertToBanglaNumber(Math.floor(interval)) + " মাস আগে";
                 interval = seconds / 86400;
-                if (interval > 1) return Math.floor(interval) + " দিন আগে";
+                if (interval > 1) return convertToBanglaNumber(Math.floor(interval)) + " দিন আগে";
                 interval = seconds / 3600;
-                if (interval > 1) return Math.floor(interval) + " ঘণ্টা আগে";
+                if (interval > 1) return convertToBanglaNumber(Math.floor(interval)) + " ঘণ্টা আগে";
                 interval = seconds / 60;
-                if (interval > 1) return Math.floor(interval) + " মিনিট আগে";
+                if (interval > 1) return convertToBanglaNumber(Math.floor(interval)) + " মিনিট আগে";
                 return "এইমাত্র";
+            }
+
+            function convertToBanglaNumber(num) {
+                const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+                return num.toString().split('').map(d => bengaliDigits[d] || d).join('');
             }
 
             function getAvailability(lastDonationDateStr) {
@@ -835,11 +895,13 @@
 
             function createCardHTML(donor) {
                 const availability = getAvailability(donor.lastDonationDate);
-                // Use lastDonationDate directly from DB as update time (or fallback to 'now' but preferably explicit)
-                const updateSource = donor.lastDonationDate || new Date(); 
-                const updatedTime = timeAgo(updateSource); 
-                const dateBengali = formatDateToBengali(donor.lastDonationDate);
                 
+                // --- Updated Time Logic (Goal 2) ---
+                // Prefer lastUpdateTimestamp, otherwise fallback to lastDonationDate
+                const updateSource = donor.lastUpdateTimestamp || donor.lastDonationDate; 
+                const updatedTime = timeAgo(updateSource); 
+                
+                const dateBengali = formatDateToBengali(donor.lastDonationDate);
                 const imageUrl = donor.imageUrl || 'https://via.placeholder.com/60';
                 
                 const loc = `${donor.upazilaText || donor.upazila || ''}, ${donor.districtText || donor.district || ''}`;
