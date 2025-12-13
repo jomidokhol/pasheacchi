@@ -23,7 +23,7 @@
             --primary: #e53935;
             --primary-dark: #c62828;
             --white: #fff;
-            --secondary: #f5f5f5; /* Added from index */
+            --secondary: #f5f5f5;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
 
@@ -138,7 +138,7 @@
             font-weight: 700;
         }
         
-        /* --- Header Styles (From Index) --- */
+        /* --- Header Styles --- */
         header {
             background-color: var(--header-bg);
             box-shadow: var(--shadow);
@@ -179,7 +179,7 @@
             flex-shrink: 0;
         }
         
-        /* Profile Icon Styles (From Index) */
+        /* Profile Icon Styles */
         .profile-container {
             position: relative;
             display: none; /* Initially hidden, shown by JS */
@@ -220,7 +220,7 @@
             .auth-buttons { margin-top: 0; width: auto; }
         }
 
-        /* --- Footer Styles (From Index) --- */
+        /* --- Footer Styles --- */
         footer { background: var(--footer-bg); color: var(--white); padding: 60px 0 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
         .footer-column h3 { font-size: 1.3rem; margin-bottom: 20px; position: relative; padding-bottom: 10px; }
@@ -404,7 +404,7 @@
         .partner-logo img { max-height: 100%; filter: grayscale(100%); transition: var(--transition); }
         .partner-logo img:hover { filter: grayscale(0%); transform: scale(1.1); }
         
-        /* Sidebar Styles (From Index) */
+        /* Sidebar Styles (Updated for Header Buttons) */
         .sidebar-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0;
@@ -423,9 +423,41 @@
         }
         .sidebar.is-open { transform: translateX(0); }
 
-        .sidebar .sidebar-header { display: flex; position: relative; padding: 25px 20px; align-items: center; justify-content: space-between; }
-        .sidebar-header .header-logo img { width: 46px; height: 46px; display: block; object-fit: contain; border-radius: 50%; }
+        /* Sidebar Header Modified */
+        .sidebar .sidebar-header { 
+            display: flex; 
+            position: relative; 
+            padding: 20px 15px; 
+            align-items: center; 
+            justify-content: space-between; 
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
         
+        .sidebar-header .header-logo img { 
+            height: 40px; 
+            display: block; 
+            object-fit: contain; 
+        }
+        
+        .sidebar-auth-btn {
+            padding: 6px 15px;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            text-decoration: none;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+        .sidebar-auth-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
         .sidebar-header .sidebar-back-button {
             height: 35px; width: 35px; color: var(--sidebar-text); border: none; cursor: pointer; display: flex;
             background: transparent; align-items: center; justify-content: center; border-radius: 8px; transition: 0.4s ease;
@@ -452,7 +484,6 @@
         .sidebar-nav .secondary-nav { position: absolute; bottom: 35px; width: 100%; background: transparent; }
         
         #logout-button-item { display: none; }
-        body.user-logged-in #logout-button-item { display: block; }
 
         #theme-toggle .dark-mode-icon { display: none; }
         body.dark-mode #theme-toggle .light-mode-icon { display: none; }
@@ -488,13 +519,24 @@
 <body>
     <div class="sidebar-backdrop"></div>
 
-    <!-- Sidebar from Index -->
+    <!-- Sidebar Modified -->
     <aside class="sidebar">
       <header class="sidebar-header">
-        <a href="#" class="header-logo"></a>
-        <button class="sidebar-back-button">
-          <span class="material-symbols-rounded">arrow_back</span>
-        </button>
+        <a href="index.html" class="header-logo">
+            <img id="sidebarLogo" src="" alt="Logo">
+        </a>
+        
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <a href="login.html" id="sidebarLoginBtn" class="sidebar-auth-btn">
+                <i class="fas fa-sign-in-alt"></i> লগ ইন
+            </a>
+            <button id="sidebarLogoutBtn" class="sidebar-auth-btn" style="display: none;">
+                <i class="fas fa-sign-out-alt"></i> লগ আউট
+            </button>
+            <button class="sidebar-back-button">
+              <span class="material-symbols-rounded">arrow_back</span>
+            </button>
+        </div>
       </header>
       <nav class="sidebar-nav">
         <ul class="nav-list primary-nav">
@@ -533,18 +575,12 @@
                   <span class="nav-label"></span>
               </a>
           </li>
-          <li class="nav-item" id="logout-button-item" style="display:none;">
-              <a href="#" class="nav-link" id="logoutBtn">
-                  <span class="material-symbols-rounded">logout</span>
-                  <span class="nav-label">লগ আউট</span>
-              </a>
-          </li>
         </ul>
       </nav>
     </aside>
 
     <div id="aboutUsView">
-        <!-- Header from Index -->
+        <!-- Header from Index (Updated: Removed Login Button) -->
         <header>
             <div class="container">
                 <div class="header-content">
@@ -553,8 +589,6 @@
                         <span id="siteName">পাশে আছি</span>
                     </a>
                     <div class="auth-buttons">
-                        <a href="login.html" class="btn btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> লগ ইন</a>
-                        
                         <!-- Profile Icon (Hidden by default) -->
                         <div class="profile-container" id="profileContainer" onclick="window.location.href='profile.html'">
                             <div class="profile-icon-btn">
@@ -690,16 +724,24 @@
         window.doc = doc;
         window.getDoc = getDoc;
 
-        // --- Auth State Change Logic (From Index) ---
+        // --- Auth State Change Logic (Updated for Sidebar Header) ---
         onAuthStateChanged(auth, (user) => {
             const loginBtn = document.getElementById('loginBtn');
             const profileContainer = document.getElementById('profileContainer');
-            const logoutItem = document.getElementById('logout-button-item');
             const profileIconBtn = document.querySelector('.profile-icon-btn');
+            
+            // Sidebar Auth Buttons
+            const sidebarLoginBtn = document.getElementById('sidebarLoginBtn');
+            const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
 
             if (user) {
                 // User is signed in
                 if(loginBtn) loginBtn.style.display = 'none';
+                
+                // Update Sidebar Buttons
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'none';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'inline-flex';
+
                 if(profileContainer) profileContainer.style.display = 'block';
                 document.body.classList.add('user-logged-in'); 
 
@@ -714,15 +756,20 @@
             } else {
                 // User is signed out
                 if(loginBtn) loginBtn.style.display = 'inline-flex';
+                
+                // Update Sidebar Buttons
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'inline-flex';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'none';
+
                 if(profileContainer) profileContainer.style.display = 'none';
                 document.body.classList.remove('user-logged-in');
             }
         });
 
         // Logout functionality
-        const logoutBtn = document.getElementById('logoutBtn');
-        if(logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => {
+        const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+        if(sidebarLogoutBtn) {
+            sidebarLogoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 signOut(auth).then(() => {
                     window.location.reload();
@@ -731,6 +778,42 @@
                 });
             });
         }
+        
+        // --- Helper: Copy to Clipboard ---
+        window.copyToClipboard = (text) => {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("কপি হয়েছে: " + text);
+            }).catch(err => {
+                console.error('Copy failed', err);
+            });
+        };
+
+        // --- Global Handler for Team Contact ---
+        window.handleTeamContact = (contactInfo) => {
+            if (!contactInfo) {
+                alert("কোন যোগাযোগের তথ্য নেই।");
+                return;
+            }
+
+            // Check if input contains only digits (Phone Number)
+            const isDigitsOnly = /^\d+$/.test(contactInfo);
+            // Simple check for mobile device
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (window.innerWidth <= 768);
+
+            if (isDigitsOnly) {
+                if (isMobile) {
+                    // Mobile & Digits -> Open Dialer
+                    window.location.href = `tel:${contactInfo}`;
+                } else {
+                    // Desktop & Digits -> Copy
+                    window.copyToClipboard(contactInfo);
+                }
+            } else {
+                // Text/Mixed -> Copy on both devices
+                window.copyToClipboard(contactInfo);
+            }
+        };
+
     </script>
     
     <script type="module">
@@ -753,11 +836,16 @@
                         // Update Logo
                         if (data.logoUrl) {
                             const headerLogo = document.getElementById('siteLogo');
+                            const sidebarLogo = document.getElementById('sidebarLogo');
                             if (headerLogo) headerLogo.src = data.logoUrl;
+                            if (sidebarLogo) sidebarLogo.src = data.logoUrl;
                         } else {
                              // Default logo if not in DB
+                             const defaultLogo = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
                              const headerLogo = document.getElementById('siteLogo');
-                             if (headerLogo) headerLogo.src = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
+                             const sidebarLogo = document.getElementById('sidebarLogo');
+                             if (headerLogo) headerLogo.src = defaultLogo;
+                             if (sidebarLogo) sidebarLogo.src = defaultLogo;
                         }
 
                         // Update Site Name
@@ -768,6 +856,7 @@
                     } else {
                         // Fallback
                         document.getElementById('siteLogo').src = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
+                        document.getElementById('sidebarLogo').src = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
                     }
                 } catch (error) {
                     console.error("Error fetching settings:", error);
@@ -810,9 +899,11 @@
                         const admin = doc.data();
                         // Fallback image if not present
                         const imgSrc = admin.image || 'https://via.placeholder.com/150';
+                        const contactVal = admin.contact || '';
                         
                         const card = document.createElement('div');
                         card.className = 'card swiper-slide';
+                        // MODIFIED: Contact button logic
                         card.innerHTML = `
                             <div class="image-content">
                                 <span class="overlay"></span>
@@ -824,7 +915,7 @@
                                 <h2 class="name">${admin.name}</h2>
                                 <p class="role">${admin.role || 'Volunteer'}</p>
                                 <p class="description">${admin.bio || ''}</p>
-                                <button class="button">যোগাযোগ</button>
+                                <button class="button" onclick="window.handleTeamContact('${contactVal}')">যোগাযোগ</button>
                             </div>
                         `;
                         container.appendChild(card);
@@ -855,15 +946,21 @@
                     let index = 0;
                     querySnapshot.forEach((doc) => {
                         const partner = doc.data();
-                        // admin.html uses 'imageUrl' for partners
+                        
                         if (partner.imageUrl) { 
                             const logoDiv = document.createElement('div');
                             logoDiv.className = 'partner-logo';
                             logoDiv.style.transitionDelay = `${index * 100}ms`;
-                            const img = document.createElement('img');
-                            img.src = partner.imageUrl;
-                            img.alt = `Partner`;
-                            logoDiv.appendChild(img);
+                            
+                            // MODIFIED: Wrap in <a> if linkUrl exists
+                            let contentHTML = '';
+                            if (partner.linkUrl) {
+                                contentHTML = `<a href="${partner.linkUrl}" target="_blank"><img src="${partner.imageUrl}" alt="Partner"></a>`;
+                            } else {
+                                contentHTML = `<img src="${partner.imageUrl}" alt="Partner">`;
+                            }
+                            
+                            logoDiv.innerHTML = contentHTML;
                             container.appendChild(logoDiv);
                             index++;
                         }
