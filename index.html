@@ -30,7 +30,7 @@
             --header-bg: #fff;
             --card-bg: #fff;
             --footer-bg: #2c3e50;
-            --sidebar-bg: rgba(255, 255, 255, 0.65);
+            --sidebar-bg: rgba(255, 255, 255, 0.85); /* Slightly more opaque for visibility */
             --sidebar-text: #333;
             --sidebar-hover-bg: #EEF2FF;
             --sidebar-hover-text: #151A2D;
@@ -43,7 +43,7 @@
             --header-bg: #1e1e1e;
             --card-bg: #2a2a2a;
             --footer-bg: #1e1e1e;
-            --sidebar-bg: rgba(26, 26, 26, 0.55);
+            --sidebar-bg: rgba(26, 26, 26, 0.9);
             --sidebar-text: #f5f5f5;
             --sidebar-hover-bg: #333;
             --sidebar-hover-text: #f5f5f5;
@@ -358,24 +358,38 @@
         .update-card-content { padding: 20px; display: flex; flex-direction: column; }
         .update-card-content h3 { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary-dark); }
         
-        /* News content handling for line breaks and read more */
         .update-card-content p, .news-text-content { 
             font-size: 0.95rem; 
             color: var(--text-light); 
             margin-bottom: 15px; 
-            white-space: pre-wrap; /* Handles line breaks from DB */
+            white-space: pre-wrap; 
+        }
+
+        /* Updated Read More Button Style */
+        .read-more-container {
+            text-align: center;
+            margin: 10px auto;
+            width: 100%;
         }
         
         .read-more-btn {
+            background: transparent;
             color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            text-decoration: none;
-            margin-left: 5px;
-            display: inline-block;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
-        .read-more-btn:hover { text-decoration: underline; }
+        
+        .read-more-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
 
         .update-card-timestamp { font-size: 0.8rem; font-weight: 500; color: #999; text-align: right; margin-top: auto; }
         
@@ -423,6 +437,32 @@
         .sidebar .sidebar-header { display: flex; position: relative; padding: 25px 20px; align-items: center; justify-content: space-between; }
         .sidebar-header .header-logo img { width: 46px; height: 46px; display: block; object-fit: contain; border-radius: 50%; }
         
+        /* Updated Sidebar Header Auth Buttons */
+        .sidebar-auth-group {
+            margin-left: auto;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-auth-btn {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .sidebar-auth-btn:hover { background: var(--primary-dark); }
+        .sidebar-auth-btn i { font-size: 0.8rem; }
+
         .sidebar-header .sidebar-back-button {
             height: 35px; width: 35px; color: var(--sidebar-text); border: none; cursor: pointer; display: flex;
             background: transparent; align-items: center; justify-content: center; border-radius: 8px; transition: 0.4s ease;
@@ -448,12 +488,6 @@
         
         .sidebar-nav .secondary-nav { position: absolute; bottom: 35px; width: 100%; background: transparent; }
 
-        #logout-button-item { display: none; }
-        body.user-logged-in #logout-button-item { display: block; }
-        
-        #login-button-sidebar { display: block; }
-        body.user-logged-in #login-button-sidebar { display: none; }
-        
         #theme-toggle .dark-mode-icon { display: none; }
         body.dark-mode #theme-toggle .light-mode-icon { display: none; }
         body.dark-mode #theme-toggle .dark-mode-icon { display: block; }
@@ -580,6 +614,17 @@
     <aside class="sidebar">
       <header class="sidebar-header">
         <a href="#" class="header-logo"></a>
+        
+        <!-- Sidebar Auth Group: Placed BEFORE the back button -->
+        <div class="sidebar-auth-group" id="sidebarAuthGroup">
+            <a href="login.html" class="sidebar-auth-btn" id="sidebarLoginBtn">
+                <i class="fas fa-sign-in-alt"></i> লগ ইন
+            </a>
+            <button class="sidebar-auth-btn" id="sidebarLogoutBtn" style="display: none; background: #333;">
+                <i class="fas fa-sign-out-alt"></i> লগ আউট
+            </button>
+        </div>
+
         <button class="sidebar-back-button">
           <span class="material-symbols-rounded">arrow_back</span>
         </button>
@@ -619,18 +664,6 @@
                   <span class="material-symbols-rounded light-mode-icon">light_mode</span>
                   <span class="material-symbols-rounded dark-mode-icon">dark_mode</span>
                   <span class="nav-label"></span>
-              </a>
-          </li>
-          <li class="nav-item" id="login-button-sidebar">
-              <a href="login.html" class="nav-link">
-                  <span class="material-symbols-rounded">login</span>
-                  <span class="nav-label">লগ ইন</span>
-              </a>
-          </li>
-          <li class="nav-item" id="logout-button-item" style="display:none;">
-              <a href="#" class="nav-link" id="logoutBtn">
-                  <span class="material-symbols-rounded">logout</span>
-                  <span class="nav-label">লগ আউট</span>
               </a>
           </li>
         </ul>
@@ -808,22 +841,25 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- Auth State Change Logic (Requirement 1) ---
+        // --- Auth State Change Logic ---
         onAuthStateChanged(auth, (user) => {
             const loginBtn = document.getElementById('loginBtn');
             const profileContainer = document.getElementById('profileContainer');
-            const logoutItem = document.getElementById('logout-button-item');
-            const loginItemSidebar = document.getElementById('login-button-sidebar');
             const profileIconBtn = document.querySelector('.profile-icon-btn');
+            
+            // Sidebar Auth Buttons
+            const sidebarLoginBtn = document.getElementById('sidebarLoginBtn');
+            const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
 
             if (user) {
                 // User is signed in
                 loginBtn.style.display = 'none';
                 profileContainer.style.display = 'block';
-                document.body.classList.add('user-logged-in'); // For sidebar items
+                document.body.classList.add('user-logged-in'); 
                 
-                if(logoutItem) logoutItem.style.display = 'block';
-                if(loginItemSidebar) loginItemSidebar.style.display = 'none';
+                // Sidebar: Show Logout, Hide Login
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'none';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'flex';
 
                 // Set profile picture if available
                 if (user.photoURL) {
@@ -837,24 +873,27 @@
                 profileContainer.style.display = 'none';
                 document.body.classList.remove('user-logged-in');
                 
-                if(logoutItem) logoutItem.style.display = 'none';
-                if(loginItemSidebar) loginItemSidebar.style.display = 'block';
+                // Sidebar: Show Login, Hide Logout
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'flex';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'none';
             }
         });
 
-        // Logout functionality
-        const logoutBtn = document.getElementById('logoutBtn');
-        if(logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                signOut(auth).then(() => {
-                    // Sign-out successful. UI updates handled by onAuthStateChanged
-                    window.location.reload();
-                }).catch((error) => {
-                    console.error("Logout Error:", error);
-                });
+        // Logout functionality (Main & Sidebar)
+        const logoutBtn = document.getElementById('logoutBtn'); // Existing logic (not present in HTML but kept for safety)
+        const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+
+        function performLogout(e) {
+            e.preventDefault();
+            signOut(auth).then(() => {
+                window.location.reload();
+            }).catch((error) => {
+                console.error("Logout Error:", error);
             });
         }
+
+        if(logoutBtn) logoutBtn.addEventListener('click', performLogout);
+        if(sidebarLogoutBtn) sidebarLogoutBtn.addEventListener('click', performLogout);
 
         async function fetchSiteSettings() {
             try {
@@ -906,9 +945,14 @@
             tickerContentDiv.innerHTML = `<span class="ticker-item">${defaultTickerNews.join('<span class="ticker-square"></span>')}</span>`;
         }
 
-        // Helper function for relative time (Requirement 3)
+        // Helper function for relative time with safety check (Fix for Problem 1)
         function timeAgo(timestamp) {
             if (!timestamp) return "অজানা সময়";
+            
+            // Safety check: Ensure timestamp has toDate method
+            if (typeof timestamp.toDate !== 'function') {
+                return "সময় উল্লেখ নেই"; 
+            }
             
             const date = timestamp.toDate();
             const now = new Date();
@@ -931,7 +975,7 @@
                 return convertToBanglaNumber(diffInDays) + " দিন আগে";
             }
             
-            return date.toLocaleDateString('bn-BD'); // Fallback to date
+            return date.toLocaleDateString('bn-BD'); 
         }
 
         function convertToBanglaNumber(num) {
@@ -942,7 +986,6 @@
         async function loadEmergencyRequests() {
             const emergencyGrid = document.getElementById('emergencyGrid');
             try {
-                // Modified Query: Limit 10 (Requirement 2)
                 const q = query(collection(db, "emergency_requests"), orderBy("createdAt", "desc"), limit(10));
                 const querySnapshot = await getDocs(q);
 
@@ -954,8 +997,13 @@
                 }
 
                 querySnapshot.forEach((doc) => {
-                    const emData = doc.data();
-                    renderIndexEmergencyCard(emData, emergencyGrid);
+                    // Try-catch block inside loop to prevent one bad entry from stopping others
+                    try {
+                        const emData = doc.data();
+                        renderIndexEmergencyCard(emData, emergencyGrid);
+                    } catch (err) {
+                        console.error("Error rendering card:", err);
+                    }
                 });
 
             } catch (error) {
@@ -964,7 +1012,6 @@
             }
         }
 
-        // Window scope e details function ta set kora hoyeche jate button click e kaj kore
         window.openDetailsModal = function(details) {
             const modal = document.getElementById('detailsModal');
             const modalBody = document.getElementById('modalBodyContent');
@@ -976,7 +1023,7 @@
             }
             
             modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
+            document.body.style.overflow = 'hidden'; 
         };
 
         function renderIndexEmergencyCard(emData, container) {
@@ -997,10 +1044,9 @@
             };
             const divName = divisionMap[emData.division] || emData.division;
             
-            // Dynamic Time (Requirement 3)
+            // Safe execution of timeAgo
             const postedTime = timeAgo(emData.createdAt); 
             
-            // Safe details text handling for JS injection
             const safeDetails = emData.details ? emData.details.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '<br>') : "";
 
             cardDiv.innerHTML = `
@@ -1022,14 +1068,13 @@
                 </div>
                 <div class="e-actions">
                     <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${emData.mobile}'"><i class="fas fa-phone-alt"></i> কল করুন</button>
-                    <!-- Requirement 2: Details Modal Trigger -->
                     <button class="btn btn-sm btn-outline" onclick="window.openDetailsModal('${safeDetails}')">ডিটেইলস</button>
                 </div>
             `;
             container.appendChild(cardDiv);
         }
 
-        // --- Updates/News Logic (Requirement 4) ---
+        // --- Updates/News Logic (Fix for Problem 3) ---
         async function loadUpdates() {
             const updatesGrid = document.getElementById('updatesGrid');
             try {
@@ -1051,14 +1096,18 @@
                     const words = content.trim().split(/\s+/);
                     let contentHTML = '';
 
-                    // Requirement 4: Button at the end of the text
-                    if (words.length > 30) { // Reduced word count for testing, can be 100
+                    // Changed: Button is now a block element centered below the text
+                    if (words.length > 30) { 
                         const shortText = words.slice(0, 30).join(" ");
                         contentHTML = `
                             <div class="news-text-content">
                                 <span class="short-text">${shortText}...</span>
                                 <span class="full-text" style="display:none;">${content}</span>
-                                <span class="read-more-btn" onclick="this.previousElementSibling.style.display='inline'; this.previousElementSibling.previousElementSibling.style.display='none'; this.style.display='none';">[more...]</span>
+                                <div class="read-more-container">
+                                    <button class="read-more-btn" onclick="this.parentElement.previousElementSibling.style.display='inline'; this.parentElement.previousElementSibling.previousElementSibling.style.display='none'; this.style.display='none';">
+                                        <i class="fas fa-chevron-circle-down"></i> আরও পড়ুন
+                                    </button>
+                                </div>
                             </div>
                         `;
                     } else {
@@ -1226,10 +1275,8 @@
             const menu = dropdown.querySelector(".dropdown-menu");
             const isOpen = dropdown.classList.contains("open");
             
-            // অন্য সব ড্রপডাউন বন্ধ করা
             closeAllDropdowns();
             
-            // যদি এটি আগে খোলা না থাকে, তবে এখন খুলবে
             if (!isOpen) {
             toggleDropdown(dropdown, menu, true);
             }
