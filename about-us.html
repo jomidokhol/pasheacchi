@@ -12,21 +12,29 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
         /* --- General/Shared Styles --- */
+        @font-face {
+            font-family: 'Jagoron';
+            src: url('fonts/jagoron.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         :root {
             --primary: #e53935;
             --primary-dark: #c62828;
             --white: #fff;
+            --secondary: #f5f5f5; /* Added from index */
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
 
             /* Light Mode Variables */
-            --background-color: #eef7ff; /* Existing light blue */
+            --background-color: #eef7ff; 
             --text-color: #333;
             --text-light: #666;
             --header-bg: #fff;
             --card-bg: #fff;
             --footer-bg: #2c3e50;
-            --sidebar-bg: rgba(255, 255, 255, 0.65); /* MODIFIED for more transparency */
+            --sidebar-bg: rgba(255, 255, 255, 0.65); 
             --sidebar-text: #333;
             --sidebar-hover-bg: #EEF2FF;
             --sidebar-hover-text: #151A2D;
@@ -40,7 +48,7 @@
             --header-bg: #1e1e1e;
             --card-bg: #2a2a2a;
             --footer-bg: #1e1e1e;
-            --sidebar-bg: rgba(26, 26, 26, 0.55); /* MODIFIED for more transparency */
+            --sidebar-bg: rgba(26, 26, 26, 0.55); 
             --sidebar-text: #f5f5f5;
             --sidebar-hover-bg: #333;
             --sidebar-hover-text: #f5f5f5;
@@ -52,6 +60,14 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* --- Remove Blue Tap Highlight --- */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        
+        input:focus, button:focus, a:focus {
+            outline: none !important;
+            box-shadow: none !important;
         }
         
         html {
@@ -72,27 +88,30 @@
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 10px 25px;
             border-radius: 30px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             border: none;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            white-space: nowrap;
         }
         
         .btn-primary {
             background: var(--primary);
             color: var(--white);
+            box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3);
         }
 
         .btn-primary:hover {
             background: var(--primary-dark);
+            transform: translateY(-2px);
         }
         
         .btn-outline {
@@ -119,12 +138,14 @@
             font-weight: 700;
         }
         
+        /* --- Header Styles (From Index) --- */
         header {
             background-color: var(--header-bg);
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 999;
+            animation: slideDown 0.5s ease;
         }
 
         .header-content {
@@ -132,46 +153,79 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
+            height: 80px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
+        .header-content::-webkit-scrollbar { display: none; }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 1.5rem;
             text-decoration: none;
+            color: var(--primary);
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        .logo img { height: 40px; } /* Added for new logo */
-        .logo span { font-size: 2.0rem; font-weight: bold; }
+        .logo img { height: 40px; } 
+        .logo span { font-family: 'Jagoron', sans-serif; font-size: 2.0rem; font-weight: bold; margin-left: 10px; }
 
-        .auth-buttons { display: flex; gap: 15px; }
-        
-        /* --- MODIFICATION 1 START: Hide nav on all screen sizes --- */
-        .header-content nav { display: none; }
-        /* --- MODIFICATION 1 END --- */
-        
-        nav ul { display: flex; list-style: none; gap: 25px; }
-        nav a { text-decoration: none; color: var(--text-color); font-weight: 500; transition: var(--transition); position: relative; }
-        nav a:hover { color: var(--primary); }
-        nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background-color: var(--primary); transition: var(--transition); }
-        nav a:hover::after { width: 100%; }
-        
-        .nav-link-active { 
-            color: var(--primary); 
-            font-weight: 700; 
+        .auth-buttons { 
+            display: flex; 
+            gap: 15px; 
+            align-items: center;
+            flex-shrink: 0;
         }
-        .nav-link-active::after { 
-            width: 100%; 
+        
+        /* Profile Icon Styles (From Index) */
+        .profile-container {
+            position: relative;
+            display: none; /* Initially hidden, shown by JS */
+            cursor: pointer;
+        }
+        
+        .profile-icon-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--secondary);
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .profile-icon-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-icon-btn i {
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+        
+        .profile-icon-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+        
+        @media (max-width: 576px) {
+            .header-content { flex-direction: row; flex-wrap: nowrap; justify-content: space-between; overflow-x: auto; }
+            .auth-buttons { margin-top: 0; width: auto; }
         }
 
+        /* --- Footer Styles (From Index) --- */
         footer { background: var(--footer-bg); color: var(--white); padding: 60px 0 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
         .footer-column h3 { font-size: 1.3rem; margin-bottom: 20px; position: relative; padding-bottom: 10px; }
         .footer-column h3::after { content: ''; position: absolute; bottom: 0; left: 0; width: 50px; height: 2px; background: var(--primary); }
-        .footer-links { list-style: none; } .footer-links li { margin-bottom: 10px; } .footer-links a { color: #ddd; text-decoration: none; transition: var(--transition); }
+        .footer-links { list-style: none; padding-left: 0; } .footer-links li { margin-bottom: 10px; } .footer-links a { color: #ddd; text-decoration: none; transition: var(--transition); }
         .footer-links a:hover { color: var(--primary); padding-left: 5px; }
         .social-links { display: flex; gap: 15px; margin-top: 20px; }
         .social-links a { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; color: var(--white); transition: var(--transition); }
@@ -350,7 +404,7 @@
         .partner-logo img { max-height: 100%; filter: grayscale(100%); transition: var(--transition); }
         .partner-logo img:hover { filter: grayscale(0%); transform: scale(1.1); }
         
-        /* Sidebar Styles */
+        /* Sidebar Styles (From Index) */
         .sidebar-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0;
@@ -396,6 +450,10 @@
         }
         
         .sidebar-nav .secondary-nav { position: absolute; bottom: 35px; width: 100%; background: transparent; }
+        
+        #logout-button-item { display: none; }
+        body.user-logged-in #logout-button-item { display: block; }
+
         #theme-toggle .dark-mode-icon { display: none; }
         body.dark-mode #theme-toggle .light-mode-icon { display: none; }
         body.dark-mode #theme-toggle .dark-mode-icon { display: block; }
@@ -410,15 +468,14 @@
             height: 0;
             overflow: hidden;
             transition: height 0.4s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
         }
         .sidebar-nav .dropdown-menu .nav-link {
             padding-top: 8px;
             padding-bottom: 8px;
             font-size: 0.9rem;
         }
+        
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         /* Responsive Styles */
         @media (max-width: 768px) { 
@@ -431,9 +488,10 @@
 <body>
     <div class="sidebar-backdrop"></div>
 
+    <!-- Sidebar from Index -->
     <aside class="sidebar">
       <header class="sidebar-header">
-        <a href="index.html" class="header-logo"><img src="https://i.ibb.co.com/QFtV51LQ/1000018745.png" alt="logo"></a>
+        <a href="#" class="header-logo"></a>
         <button class="sidebar-back-button">
           <span class="material-symbols-rounded">arrow_back</span>
         </button>
@@ -442,7 +500,6 @@
         <ul class="nav-list primary-nav">
           <li class="nav-item"><a href="index.html" class="nav-link"><span class="material-symbols-rounded">home</span><span class="nav-label">হোম</span></a></li>
           
-          <!-- Services Dropdown (Corrected links) -->
           <li class="nav-item dropdown-container">
             <a href="#" class="nav-link dropdown-toggle">
               <span class="material-symbols-rounded">medical_services</span>
@@ -450,10 +507,10 @@
               <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
             </a>
             <ul class="dropdown-menu">
-              <li class="nav-item"><a href="all-search.html?type=donor" class="nav-link"><span class="material-symbols-rounded">bloodtype</span><span class="nav-label">ব্লাড ডোনার</span></a></li>
+              <li class="nav-item"><a href="donar_find.html" class="nav-link"><span class="material-symbols-rounded">bloodtype</span><span class="nav-label">ব্লাড ডোনার</span></a></li>
               <li class="nav-item"><a href="all-search.html?type=police" class="nav-link"><span class="material-symbols-rounded">local_police</span><span class="nav-label">পুলিশ স্টেশন</span></a></li>
               <li class="nav-item"><a href="all-search.html?type=hospital" class="nav-link"><span class="material-symbols-rounded">health_and_safety</span><span class="nav-label">হাসপাতাল ও ডাক্তার</span></a></li>
-              <li class="nav-item"><a href="all-search.html?type=ambulance" class="nav-link"><span class="material-symbols-rounded">ambulance</span><span class="nav-label">এম্বুলেন্স</span></a></li>
+              <li class="nav-item"><a href="all-search.html?type=ambulance" class="nav-link"><span class="material-symbols-rounded">ambulance</span><span class="nav-label">এম্বুল্যান্স</span></a></li>
               <li class="nav-item"><a href="all-search.html?type=electricity" class="nav-link"><span class="material-symbols-rounded">electrical_services</span><span class="nav-label">বিদ্যুৎ জোনাল অফিস</span></a></li>
               <li class="nav-item"><a href="all-search.html?type=fire" class="nav-link"><span class="material-symbols-rounded">fire_truck</span><span class="nav-label">ফায়ার সার্ভিস</span></a></li>
               <li class="nav-item"><a href="all-search.html?type=gas" class="nav-link"><span class="material-symbols-rounded">gas_meter</span><span class="nav-label">গ্যাস ফিলিং স্টেশন</span></a></li>
@@ -465,7 +522,7 @@
 
           <li class="nav-item"><a href="bloodrouls.html" class="nav-link"><span class="material-symbols-rounded">rule</span><span class="nav-label">রক্তদানের নিয়ম</span></a></li>
           <li class="nav-item"><a href="emergency-find-blood.html" class="nav-link"><span class="material-symbols-rounded">emergency</span><span class="nav-label">ইমারজেন্সি ব্লাড</span></a></li>
-          <li class="nav-item"><a href="news.html" class="nav-link"><span class="material-symbols-rounded">campaign</span><span class="nav-label">নিউজ এন্ড আপডেটস</span></a></li>
+          <li class="nav-item"><a href="#" class="nav-link"><span class="material-symbols-rounded">campaign</span><span class="nav-label">নিউজ এন্ড আপডেটস</span></a></li>
           <li class="nav-item"><a href="https://wa.me/8801851956615" class="nav-link"><span class="material-symbols-rounded">contact_support</span><span class="nav-label">সাপোর্ট</span></a></li>
         </ul>
         <ul class="nav-list secondary-nav">
@@ -477,7 +534,7 @@
               </a>
           </li>
           <li class="nav-item" id="logout-button-item" style="display:none;">
-              <a href="#" class="nav-link">
+              <a href="#" class="nav-link" id="logoutBtn">
                   <span class="material-symbols-rounded">logout</span>
                   <span class="nav-label">লগ আউট</span>
               </a>
@@ -487,23 +544,25 @@
     </aside>
 
     <div id="aboutUsView">
+        <!-- Header from Index -->
         <header>
             <div class="container">
                 <div class="header-content">
                     <a href="index.html" class="logo">
-                        <img src="https://i.ibb.co.com/QFtV51LQ/1000018745.png" alt="পাশে আছি লোগো">
-                        <span>পাশে আছি</span>
+                        <img id="siteLogo" src="" alt="পাশে আছি লোগো" style="height: 40px;"> 
+                        <span id="siteName">পাশে আছি</span>
                     </a>
-                    <nav>
-                        <ul>
-                             <li><a href="index.html">হোম</a></li>
-                             <li><a href="bloodrouls.html">রক্তদানের নিয়ম</a></li>
-                             <li><a href="about-us.html" class="nav-link-active">আমাদের সম্পর্কে</a></li>
-                             <li><a href="emergency-find-blood.html">জরুরি যোগাযোগ</a></li>
-                        </ul>
-                    </nav>
                     <div class="auth-buttons">
-                        <a href="index.html" class="btn btn-primary">হোম</a>
+                        <a href="login.html" class="btn btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> লগ ইন</a>
+                        
+                        <!-- Profile Icon (Hidden by default) -->
+                        <div class="profile-container" id="profileContainer" onclick="window.location.href='profile.html'">
+                            <div class="profile-icon-btn">
+                                <!-- Image or Icon will be set via JS -->
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+
                         <a href="#" class="btn btn-outline sidebar-menu-button-header">
                             <i class="fas fa-bars"></i>
                         </a>
@@ -553,15 +612,48 @@
             </section>
         </main>
 
+        <!-- Footer from Index -->
         <footer>
             <div class="container">
                 <div class="footer-content">
-                    <div class="footer-column"><h3>পাশে আছি</h3><p>জীবন বাঁচাতে রক্ত দিন। আমাদের প্ল্যাটফর্ম জরুরী অবস্থায় রক্তের প্রয়োজনীয়তা মেটাতে সাহায্য করে।</p><div class="social-links"><a href="https://www.facebook.com/profile.php?id=61583966346088"><i class="fab fa-facebook-f"></i></a><a href="phttps://x.com/PasheAachi"><i class="fab fa-twitter"></i></a><a href="https://www.instagram.com/pasheachhi?igsh=aGJyeHpmM3llazY5"><i class="fab fa-instagram"></i></a><a href="https://bd.linkedin.com/in/pashe-aachi-65b5a6392"><i class="fab fa-linkedin-in"></i></a></div></div>
-                    <div class="footer-column"><h3>লিংকস</h3><ul class="footer-links"><li><a href="index.html">হোম</a></li><li><a href="emergency-find-blood.html">জরুরি যোগাযোগ</a></li><li><a href="emergency-find-blood.html">ইমারজেন্সি ব্লাড</a></li></ul></div>
-                    <div class="footer-column"><h3>সহায়তা</h3><ul class="footer-links"><li><a href="https://wa.me/8801851956615">সাপোর্ট</a></li><li><a href="about-us.html">আমাদের সম্পর্কে</a></li><li><a href="condition.html">টার্মস এন্ড কন্ডিশন</a></li></ul></div>
-                    <div class="footer-column"><h3>যোগাযোগ</h3><ul class="footer-links"><li><i class="fas fa-map-marker-alt"></i> ঢাকা, বাংলাদেশ</li><li><i class="fas fa-phone"></i> +880 1XXX-XXXXXX</li><li><i class="fas fa-envelope"></i> info@bloodlink.com</li></ul></div>
+                    <div class="footer-column">
+                        <h3>পাশে আছি</h3>
+                        <p>জীবন বাঁচাতে রক্ত দিন। আমাদের প্ল্যাটফর্ম জরুরী অবস্থায় রক্তের প্রয়োজনীয়তা মেটাতে সাহায্য করে।</p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/profile.php?id=61583966346088"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://x.com/PasheAachi"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.instagram.com/pasheachhi?igsh=aGJyeHpmM3llazY5"><i class="fab fa-instagram"></i></a>
+                            <a href="https://bd.linkedin.com/in/pashe-aachi-65b5a6392"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-column">
+                        <h3>লিংকস</h3>
+                        <ul class="footer-links">
+                            <li><a href="index.html">হোম</a></li>
+                            <li><a href="all-search.html?type=donor">রক্তদাতা</a></li>
+                            <li><a href="emergency-find-blood.html">ইমারজেন্সি ব্লাড</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>সহায়তা</h3>
+                         <ul class="footer-links">
+                            <li><a href="https://wa.me/8801851956615">সাপোর্ট</a></li>
+                             <li><a href="about-us.html">আমাদের সম্পর্কে</a></li>
+                             <li><a href="condition.html">টার্মস এন্ড কন্ডিশন</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>যোগাযোগ</h3>
+                        <ul class="footer-links">
+                            <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress">ঢাকা, বাংলাদেশ</span></li>
+                            <li><i class="fas fa-phone"></i> <span id="footerPhone">+880 1XXX-XXXXXX</span></li>
+                            <li><i class="fas fa-envelope"></i> <span id="footerEmail">info@bloodlink.com</span></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="copyright"><p>&copy; ২০২৫ পাশে আছি. সকল অধিকার সংরক্ষিত।</p></div>
+                <div class="copyright">
+                    <p>&copy; ২০২৫ পাশে আছি. সকল অধিকার সংরক্ষিত।</p>
+                </div>
             </div>
         </footer>
     </div>
@@ -572,7 +664,8 @@
     <!-- Firebase SDK Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Firebase Configuration
         const firebaseConfig = {
@@ -587,63 +680,201 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Can integrate fetching admins from Firestore here later
-        // const adminsCol = collection(db, 'admins');
-        // ...
+        // Make db available globally for the script below if needed
+        window.db = db;
+        window.getDocs = getDocs;
+        window.collection = collection;
+        window.doc = doc;
+        window.getDoc = getDoc;
+
+        // --- Auth State Change Logic (From Index) ---
+        onAuthStateChanged(auth, (user) => {
+            const loginBtn = document.getElementById('loginBtn');
+            const profileContainer = document.getElementById('profileContainer');
+            const logoutItem = document.getElementById('logout-button-item');
+            const profileIconBtn = document.querySelector('.profile-icon-btn');
+
+            if (user) {
+                // User is signed in
+                if(loginBtn) loginBtn.style.display = 'none';
+                if(profileContainer) profileContainer.style.display = 'block';
+                document.body.classList.add('user-logged-in'); 
+
+                // Set profile picture if available
+                if (profileIconBtn) {
+                    if (user.photoURL) {
+                        profileIconBtn.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
+                    } else {
+                        profileIconBtn.innerHTML = `<i class="fas fa-user"></i>`;
+                    }
+                }
+            } else {
+                // User is signed out
+                if(loginBtn) loginBtn.style.display = 'inline-flex';
+                if(profileContainer) profileContainer.style.display = 'none';
+                document.body.classList.remove('user-logged-in');
+            }
+        });
+
+        // Logout functionality
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                signOut(auth).then(() => {
+                    window.location.reload();
+                }).catch((error) => {
+                    console.error("Logout Error:", error);
+                });
+            });
+        }
     </script>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    <script type="module">
+        // Re-importing inside module to ensure scope access
+        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            const db = window.db;
+
+            // --- Function to fetch Site Settings (Logo, Name) - From Index/Admin logic ---
+            const fetchSiteSettings = async () => {
+                try {
+                    // admin.html uses "settings" -> "siteConfig"
+                    const docRef = window.doc(db, "settings", "siteConfig"); 
+                    const docSnap = await window.getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+
+                        // Update Logo
+                        if (data.logoUrl) {
+                            const headerLogo = document.getElementById('siteLogo');
+                            if (headerLogo) headerLogo.src = data.logoUrl;
+                        } else {
+                             // Default logo if not in DB
+                             const headerLogo = document.getElementById('siteLogo');
+                             if (headerLogo) headerLogo.src = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
+                        }
+
+                        // Update Site Name
+                        if (data.siteName) {
+                            const siteName = document.getElementById('siteName');
+                            if (siteName) siteName.innerText = data.siteName;
+                        }
+                    } else {
+                        // Fallback
+                        document.getElementById('siteLogo').src = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
+                    }
+                } catch (error) {
+                    console.error("Error fetching settings:", error);
+                }
+            };
             
-            // --- Function to generate admin cards ---
-            const generateAdminCards = () => {
+            // --- Function to fetch Footer Contact Settings ---
+            const fetchContactSettings = async () => {
+                try {
+                    // admin.html uses "settings" -> "contact"
+                    const docRef = window.doc(db, "settings", "contact");
+                    const docSnap = await window.getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if(data.address) document.getElementById('footerAddress').innerText = data.address;
+                        if(data.phone) document.getElementById('footerPhone').innerText = data.phone;
+                        if(data.email) document.getElementById('footerEmail').innerText = data.email;
+                    }
+                } catch (error) {
+                    console.error("Error fetching contact settings:", error);
+                }
+            };
+
+            // --- Function to generate admin cards from Firestore (Using 'team_members' collection) ---
+            const generateAdminCards = async () => {
                 const container = document.getElementById('admins-container');
                 if (!container) return;
 
-                // বর্তমানে অ্যারেটি খালি রাখা হয়েছে। এডমিন প্যানেল/ডেটাবেজ থেকে ডেটা এখানে যুক্ত হবে।
-                const admins = [];
+                try {
+                    // Fetch from 'team_members' collection (Corrected from admin.html)
+                    const querySnapshot = await window.getDocs(window.collection(db, "team_members"));
+                    
+                    if (querySnapshot.empty) {
+                        container.innerHTML = '<p style="text-align:center; width:100%;">No team members found.</p>';
+                        return;
+                    }
 
-                admins.forEach(admin => {
-                    const card = document.createElement('div');
-                    card.className = 'card swiper-slide';
-                    card.innerHTML = `
-                        <div class="image-content">
-                            <span class="overlay"></span>
-                            <div class="card-image">
-                               <img src="${admin.image}" alt="${admin.name}" class="card-img">
+                    querySnapshot.forEach((doc) => {
+                        const admin = doc.data();
+                        // Fallback image if not present
+                        const imgSrc = admin.image || 'https://via.placeholder.com/150';
+                        
+                        const card = document.createElement('div');
+                        card.className = 'card swiper-slide';
+                        card.innerHTML = `
+                            <div class="image-content">
+                                <span class="overlay"></span>
+                                <div class="card-image">
+                                   <img src="${imgSrc}" alt="${admin.name}" class="card-img">
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-content">
-                            <h2 class="name">${admin.name}</h2>
-                            <p class="role">${admin.role}</p>
-                            <p class="description">${admin.bio}</p>
-                            <button class="button">যোগাযোগ</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
+                            <div class="card-content">
+                                <h2 class="name">${admin.name}</h2>
+                                <p class="role">${admin.role || 'Volunteer'}</p>
+                                <p class="description">${admin.bio || ''}</p>
+                                <button class="button">যোগাযোগ</button>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+
+                    // Initialize Swiper AFTER data is loaded
+                    initializeSwiper();
+
+                } catch (error) {
+                    console.error("Error fetching admins:", error);
+                    container.innerHTML = '<p>Error loading admins.</p>';
+                }
             };
             
-            // --- Function to generate partner logos ---
-            const generatePartnerLogos = () => {
+            // --- Function to generate partner logos from Firestore (Using 'partners' collection) ---
+            const generatePartnerLogos = async () => {
                 const container = document.getElementById('partners-container');
                  if (!container) return;
 
-                // বর্তমানে অ্যারেটি খালি রাখা হয়েছে। এডমিন প্যানেল/ডেটাবেজ থেকে ডেটা এখানে যুক্ত হবে।
-                const partners = [];
-                
-                partners.forEach((src, index) => {
-                    const logoDiv = document.createElement('div');
-                    logoDiv.className = 'partner-logo';
-                    logoDiv.style.transitionDelay = `${index * 100}ms`;
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.alt = `Partner ${index + 1}`;
-                    logoDiv.appendChild(img);
-                    container.appendChild(logoDiv);
-                });
+                try {
+                    // Fetch from 'partners' collection
+                    const querySnapshot = await window.getDocs(window.collection(db, "partners"));
+
+                    if (querySnapshot.empty) {
+                        return; // Or show a message
+                    }
+                    
+                    let index = 0;
+                    querySnapshot.forEach((doc) => {
+                        const partner = doc.data();
+                        // admin.html uses 'imageUrl' for partners
+                        if (partner.imageUrl) { 
+                            const logoDiv = document.createElement('div');
+                            logoDiv.className = 'partner-logo';
+                            logoDiv.style.transitionDelay = `${index * 100}ms`;
+                            const img = document.createElement('img');
+                            img.src = partner.imageUrl;
+                            img.alt = `Partner`;
+                            logoDiv.appendChild(img);
+                            container.appendChild(logoDiv);
+                            index++;
+                        }
+                    });
+
+                    // Setup observer for animations after elements are added
+                    setupObserver();
+
+                } catch (error) {
+                    console.error("Error fetching partners:", error);
+                }
             };
 
             // --- Intersection Observer for animations ---
@@ -670,9 +901,6 @@
                     spaceBetween: 25,
                     loop: true,
                     slidesPerGroup: 1, 
-                    /* --- MODIFICATION 2 START: Removed centeredSlides for smoother looping --- */
-                    // centeredSlides: true, 
-                    /* --- MODIFICATION 2 END --- */
                     grabCursor: 'true',
                     autoplay: {
                         delay: 3500,
@@ -695,7 +923,7 @@
                 });
             };
 
-            // --- Sidebar Functionality ---
+            // --- Sidebar Functionality (From Index) ---
             const sidebar = document.querySelector(".sidebar");
             const backdrop = document.querySelector(".sidebar-backdrop");
             const openMenuBtn = document.querySelector(".sidebar-menu-button-header");
@@ -710,9 +938,9 @@
                 backdrop.classList.remove("is-open");
             };
 
-            openMenuBtn.addEventListener("click", (e) => { e.preventDefault(); openSidebar(); });
-            closeMenuBtn.addEventListener("click", (e) => { e.preventDefault(); closeSidebar(); });
-            backdrop.addEventListener("click", (e) => { e.preventDefault(); closeSidebar(); });
+            if(openMenuBtn) openMenuBtn.addEventListener("click", (e) => { e.preventDefault(); openSidebar(); });
+            if(closeMenuBtn) closeMenuBtn.addEventListener("click", (e) => { e.preventDefault(); closeSidebar(); });
+            if(backdrop) backdrop.addEventListener("click", (e) => { e.preventDefault(); closeSidebar(); });
 
             // --- Theme Toggle Functionality ---
             const themeToggleButton = document.getElementById('theme-toggle');
@@ -721,17 +949,19 @@
             if (savedTheme === 'dark') {
                 body.classList.add('dark-mode');
             }
-            themeToggleButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                body.classList.toggle('dark-mode');
-                if (body.classList.contains('dark-mode')) {
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    localStorage.setItem('theme', 'light');
-                }
-            });
+            if(themeToggleButton) {
+                themeToggleButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    body.classList.toggle('dark-mode');
+                    if (body.classList.contains('dark-mode')) {
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        localStorage.setItem('theme', 'light');
+                    }
+                });
+            }
 
-            // --- Dropdown Menu Script ---
+            // --- Dropdown Menu Script (From Index) ---
             const toggleDropdown = (dropdown, menu, isOpen) => {
               dropdown.classList.toggle("open", isOpen);
               menu.style.height = isOpen ? `${menu.scrollHeight}px` : "0";
@@ -750,52 +980,19 @@
                 const menu = dropdown.querySelector(".dropdown-menu");
                 const isOpen = dropdown.classList.contains("open");
                 
-                if (!sidebar.classList.contains('collapsed')) {
-                    closeAllDropdowns();
-                }
+                closeAllDropdowns();
                 
-                toggleDropdown(dropdown, menu, !isOpen);
+                if (!isOpen) {
+                    toggleDropdown(dropdown, menu, true);
+                }
               });
             });
 
-            // --- Initialize Page ---
-            generateAdminCards();
-            generatePartnerLogos();
-            setupObserver();
-            initializeSwiper();
-        });
-    </script>
-</body>
-</html>classList.toggle("open", isOpen);
-              menu.style.height = isOpen ? `${menu.scrollHeight}px` : "0";
-            };
-
-            const closeAllDropdowns = () => {
-              document.querySelectorAll(".dropdown-container.open").forEach((openDropdown) => {
-                toggleDropdown(openDropdown, openDropdown.querySelector(".dropdown-menu"), false);
-              });
-            };
-            
-            document.querySelectorAll(".dropdown-toggle").forEach((dropdownToggle) => {
-              dropdownToggle.addEventListener("click", (e) => {
-                e.preventDefault();
-                const dropdown = dropdownToggle.closest(".dropdown-container");
-                const menu = dropdown.querySelector(".dropdown-menu");
-                const isOpen = dropdown.classList.contains("open");
-                
-                if (!sidebar.classList.contains('collapsed')) {
-                    closeAllDropdowns();
-                }
-                
-                toggleDropdown(dropdown, menu, !isOpen);
-              });
-            });
-
-            // --- Initialize Page ---
-            generateAdminCards();
-            generatePartnerLogos();
-            setupObserver();
-            initializeSwiper();
+            // --- Initialize Page Data ---
+            await fetchSiteSettings();
+            await fetchContactSettings();
+            await generateAdminCards();
+            await generatePartnerLogos();
         });
     </script>
 </body>
