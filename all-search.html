@@ -91,7 +91,6 @@
             display: block;
             position: relative;
             min-height: 100vh;
-            /* Fixed position removed to restore original layout */
         }
         
         .search-view-content { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
@@ -105,7 +104,7 @@
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); 
             padding: 40px; 
             width: 100%; 
-            max-width: 600px; /* Restored original width */
+            max-width: 600px; 
             position: relative; 
             overflow: hidden; 
         }
@@ -696,9 +695,14 @@
                 performSearch();
             });
 
-            // FAB Trigger (Auth -> Passkey -> AddForm)
+            // FAB Trigger (Auth Check -> Passkey -> AddForm)
             document.getElementById('adminFab').addEventListener('click', ()=>{
-                if(!auth.currentUser) { window.location.href='login.html'; return; }
+                // Check if user is logged in
+                if(!auth.currentUser) { 
+                    alert("তথ্য যুক্ত করতে অনুগ্রহ করে লগ ইন করুন।");
+                    window.location.href='login.html'; 
+                    return; 
+                }
                 document.getElementById('passkeyOverlay').style.display='flex';
             });
 
@@ -767,9 +771,26 @@
                         const data = d.data();
                         const card = document.createElement('div');
                         card.className = 'emergency-card';
+                        
                         let emailBtn = '';
-                        const mailMatch = (data.details || '').match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
-                        if(mailMatch) emailBtn = `<button class="btn btn-sm btn-outline" onclick="copyToClipboard('${mailMatch[0]}')"><i class="fas fa-copy"></i> ই-মেইল</button>`;
+                        let detailsText = data.details || 'বিস্তারিত তথ্য নেই';
+                        
+                        // Extract email if exists
+                        const mailMatch = detailsText.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+                        if(mailMatch) {
+                            const email = mailMatch[0];
+                            emailBtn = `<button class="btn btn-sm btn-outline" onclick="copyToClipboard('${email}')"><i class="fas fa-copy"></i> কপি মেইল</button>`;
+                            
+                            // Remove email and pipe separator from the displayed details text
+                            // Replace "Name | Email" -> "Name"
+                            detailsText = detailsText.replace(email, '').replace('|', '').trim();
+                            
+                            // Cleanup any stray pipes at start or end
+                            detailsText = detailsText.replace(/^\|\s*/, '').replace(/\s*\|$/, '').trim();
+                        }
+                        
+                        // Fallback if details become empty after stripping email
+                        if(!detailsText || detailsText === '') detailsText = 'বিস্তারিত তথ্য নেই';
                         
                         let displayUpa = data.upazila;
                         let displayDist = data.district;
@@ -782,9 +803,9 @@
                         } catch(e) {}
 
                         card.innerHTML = `
-                        <div class="e-card-top"><div class="creator-info"><span class="creator-name"><i class="fas fa-building"></i> ${data.name}</span></div></div>
+                        <div class="e-card-top"><div class="creator-info"><span class="creator-name"><i class="fas fa-user-tie"></i> ${data.name}</span></div></div>
                         <div class="e-details">
-                            <p class="text-dark fw-bold"><i class="fas fa-info-circle"></i> ${data.details || 'বিস্তারিত তথ্য নেই'}</p>
+                            <p class="text-dark fw-bold"><i class="fas fa-info-circle"></i> ${detailsText}</p>
                             <p><i class="fas fa-phone"></i> ${data.phone}</p>
                             <p><i class="fas fa-map-marker-alt"></i> ${displayUpa}, ${displayDist}</p>
                         </div>
