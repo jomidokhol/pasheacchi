@@ -330,7 +330,7 @@
 
         body.dark-mode .e-actions { border-top-color: #444; }
         .btn-sm { padding: 6px 15px; font-size: 0.85rem; border-radius: 20px; }
-        .btn-call { background: #27ae60; color: white; }
+        .btn-call { background: #27ae60; color: white; border: none; cursor: pointer; }
         .btn-call:hover { background: #219150; }
         
         .load-more-container { text-align: center; margin-top: 20px; }
@@ -350,6 +350,79 @@
         }
         
         .update-card-timestamp { font-size: 0.8rem; font-weight: 500; color: #999; text-align: right; }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: var(--text-color);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-body {
+            font-size: 1rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            color: var(--text-color);
+        }
         
         footer { background: var(--footer-bg); color: var(--white); padding: 60px 0 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
@@ -675,6 +748,17 @@
                 </div>
             </section>
 
+            <!-- Details Modal -->
+            <div class="modal-overlay" id="detailsModal">
+                <div class="modal-content">
+                    <button class="modal-close" id="closeModalBtn">&times;</button>
+                    <h3 class="modal-title">বিস্তারিত তথ্য</h3>
+                    <div class="modal-body" id="modalBodyContent">
+                        <!-- Content will be injected here -->
+                    </div>
+                </div>
+            </div>
+
             <footer>
                 <div class="container">
                     <div class="footer-content">
@@ -884,6 +968,9 @@
             const divisionMap = { "barishal": "বরিশাল", "chattogram": "চট্টগ্রাম", "dhaka": "ঢাকা", "khulna": "খুলনা", "mymensingh": "ময়মনসিংহ", "rajshahi": "রাজশাহী", "rangpur": "রংপুর", "sylhet": "সিলেট" };
             const divName = divisionMap[emData.division] || emData.division;
             
+            // Safe details for modal
+            const safeDetails = emData.details ? emData.details.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '<br>') : "";
+            
             cardDiv.innerHTML = `
                 <div class="e-card-top">
                     <div class="blood-group-badge">${emData.bloodGroup}</div>
@@ -898,7 +985,7 @@
                 </div>
                 <div class="e-actions">
                     <button class="btn btn-sm btn-call" onclick="window.location.href='tel:${emData.mobile}'"><i class="fas fa-phone-alt"></i> কল করুন</button>
-                    <button class="btn btn-sm btn-outline">ডিটেইলস</button>
+                    <button class="btn btn-sm btn-outline" onclick="openDetailsModal('${safeDetails}')">ডিটেইলস</button>
                 </div>`;
             container.appendChild(cardDiv);
         }
@@ -1049,6 +1136,32 @@
                     closeAllDropdowns();
                     if (!isOpen) toggleDropdown(dropdown, menu, true);
                 });
+            });
+
+            // --- Modal Logic ---
+            const modal = document.getElementById('detailsModal');
+            const modalBody = document.getElementById('modalBodyContent');
+            const closeModal = document.getElementById('closeModalBtn');
+            const overlay = document.querySelector('.modal-overlay');
+
+            window.openDetailsModal = function(details) {
+                if (details && details.trim() !== "") {
+                    modalBody.innerHTML = details;
+                } else {
+                    modalBody.innerHTML = "<p style='text-align:center; color: #777;'>কোন বিস্তারিত তথ্য দেওয়া হয়নি।</p>";
+                }
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+
+            function closeDetailsModal() {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            if(closeModal) closeModal.addEventListener('click', closeDetailsModal);
+            if(overlay) overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeDetailsModal();
             });
         });
     </script>
