@@ -104,7 +104,7 @@
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); 
             padding: 40px; 
             width: 100%; 
-            max-width: 600px; 
+            max-width: 600px;
             position: relative; 
             overflow: hidden; 
         }
@@ -245,6 +245,252 @@
         @media (max-width: 768px) { .edit-form { grid-template-columns: 1fr; } .form-group.full-width { grid-column: 1 / 1; } }
         
         @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- START: Ambulance Loading Animation Styles --- */
+        :root {
+            --road-color: #7f8c8d;
+            --road-border: #95a5a6;
+            --dust-color: rgba(140, 130, 120, 0.5);
+            --headlight-opacity: 0;
+            --amb-white: #ffffff;
+            --amb-red: #e74c3c;
+        }
+
+        body.dark-mode {
+            --road-color: #34495e;
+            --road-border: #1a252f;
+            --dust-color: rgba(200, 200, 200, 0.3);
+            --headlight-opacity: 1;
+        }
+
+        #ambulanceLoader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 40px 0;
+        }
+
+        .road {
+            width: 100%;
+            max-width: 800px;
+            height: 180px; 
+            background-color: var(--road-color);
+            position: relative;
+            border-top: 10px solid var(--road-border);
+            border-bottom: 10px solid var(--road-border);
+            box-shadow: 0 0 50px rgba(0,0,0,0.4);
+            overflow: hidden;
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        .road-line {
+            position: absolute;
+            width: 200%;
+            height: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: repeating-linear-gradient(
+                90deg,
+                #f1c40f 0,
+                #f1c40f 60px,
+                transparent 60px,
+                transparent 140px
+            );
+            animation: roadMove 0.2s linear infinite;
+        }
+
+        .amb-container {
+            position: absolute;
+            top: 50%;
+            margin-top: -40px;
+            width: 160px;
+            height: 80px;
+            animation: driveAcross 3.5s linear infinite;
+            z-index: 10;
+        }
+
+        .amb-body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--amb-white);
+            border-radius: 5px 20px 20px 5px; 
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .amb-body::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 35px;
+            height: 100%;
+            background-color: var(--amb-white);
+            border-radius: 0 20px 20px 0;
+            border-left: 4px solid var(--amb-red);
+            z-index: 6;
+        }
+
+        .amb-body::after {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 15%;
+            width: 2px;
+            height: 70%;
+            background-color: #bdc3c7;
+        }
+
+        .amb-roof {
+            width: 65%;
+            height: 80%;
+            background-color: #f4f6f7;
+            position: absolute;
+            top: 50%;
+            left: 45%;
+            transform: translate(-50%, -50%);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            z-index: 7;
+        }
+        
+        .windshield {
+            position: absolute;
+            right: 32px;
+            top: 10%;
+            width: 15px;
+            height: 80%;
+            background-color: #2c3e50;
+            border-radius: 2px;
+            z-index: 8;
+        }
+
+        .red-cross {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            z-index: 8;
+        }
+        .red-cross::before, .red-cross::after {
+            content: '';
+            position: absolute;
+            background-color: var(--amb-red);
+            border-radius: 2px;
+        }
+        .red-cross::before {
+            width: 12px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .red-cross::after {
+            width: 100%;
+            height: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .wheel {
+            position: absolute;
+            background-color: #222;
+            width: 24px;
+            height: 14px;
+            border-radius: 4px;
+            z-index: 4;
+        }
+        .w-fl { top: -6px; left: 25px; }
+        .w-fr { bottom: -6px; left: 25px; }
+        .w-bl { top: -6px; right: 35px; }
+        .w-br { bottom: -6px; right: 35px; }
+
+        .siren-box {
+            position: absolute;
+            top: 50%;
+            right: 50px;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 50px;
+            z-index: 9;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .light {
+            width: 100%;
+            height: 20px;
+            border-radius: 3px;
+        }
+        .light-red {
+            background-color: #ff0000;
+            animation: flashRed 0.4s infinite alternate;
+        }
+        .light-blue {
+            background-color: #0000ff;
+            animation: flashBlue 0.4s infinite alternate-reverse;
+        }
+
+        .headlights {
+            position: absolute;
+            right: -160px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 170px;
+            height: 70px;
+            opacity: var(--headlight-opacity);
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+        .beam {
+            position: absolute;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(90deg, rgba(255, 255, 220, 0.7) 0%, rgba(255, 255, 255, 0.1) 80%, transparent 100%);
+            clip-path: polygon(0% 30%, 100% 0%, 100% 100%, 0% 70%);
+        }
+        .beam-l { top: 0; }
+        .beam-r { bottom: 0; }
+
+        .dust {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background-color: var(--dust-color);
+            border-radius: 50% 40% 60% 30%;
+            z-index: 3;
+            opacity: 0;
+        }
+        .d-1 { top: -10px; left: 15px; animation: dustAnim 0.7s linear infinite; }
+        .d-2 { bottom: -10px; left: 15px; animation: dustAnim 0.7s linear infinite 0.2s; }
+        .d-3 { top: -10px; right: 25px; animation: dustAnim 0.7s linear infinite 0.4s; }
+        .d-4 { bottom: -10px; right: 25px; animation: dustAnim 0.7s linear infinite 0.6s; }
+
+        @keyframes driveAcross {
+            0% { left: -250px; }
+            100% { left: 110%; }
+        }
+        @keyframes roadMove {
+            from { transform: translate(0, -50%); }
+            to { transform: translate(-120px, -50%); }
+        }
+        @keyframes flashRed {
+            0% { opacity: 0.3; box-shadow: none; }
+            100% { opacity: 1; box-shadow: 0 0 25px 8px #ff0000; }
+        }
+        @keyframes flashBlue {
+            0% { opacity: 0.3; box-shadow: none; }
+            100% { opacity: 1; box-shadow: 0 0 25px 8px #0000ff; }
+        }
+        @keyframes dustAnim {
+            0% { opacity: 0.8; transform: scale(0.5) rotate(0deg); }
+            100% { opacity: 0; transform: scale(2.5) translate(-40px, -10px) rotate(100deg); }
+        }
+        /* --- END: Ambulance Loading Animation Styles --- */
+
     </style>
 </head>
 <body>
@@ -278,6 +524,7 @@
               <li class="nav-item"><a href="all-search.html?type=wasa" class="nav-link"><span class="material-symbols-rounded">water_drop</span><span class="nav-label">ওয়াসা</span></a></li>
               <li class="nav-item"><a href="all-search.html?type=petrol" class="nav-link"><span class="material-symbols-rounded">local_gas_station</span><span class="nav-label">পেট্রোল পাম্প</span></a></li>
               <li class="nav-item"><a href="all-search.html?type=govt" class="nav-link"><span class="material-symbols-rounded">account_balance</span><span class="nav-label">সরকারী কার্যালয়</span></a></li>
+               <li class="nav-item"><a href="railway.html" class="nav-link"><span class="material-symbols-rounded">train</span><span class="nav-label">ট্রেন</span></a></li>
             </ul>
           </li>
           <li class="nav-item"><a href="bloodrouls.html" class="nav-link"><span class="material-symbols-rounded">rule</span><span class="nav-label">রক্তদানের নিয়ম</span></a></li>
@@ -350,10 +597,37 @@
                 <h2 class="section-title" id="resultHeaderTitle">ফলাফল</h2>
                 <p id="searchCriteriaText" style="color: var(--text-light); margin-bottom: 20px;">loading...</p>
                 
-                <div id="loadingSpinner" style="text-align: center; display: none; padding: 40px;">
-                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
-                    <p class="mt-2">ডাটা লোড হচ্ছে...</p>
+                <!-- START: MODIFIED LOADING SECTION -->
+                <div id="ambulanceLoader" style="display: none;">
+                    <div class="road">
+                        <div class="road-line"></div>
+                        <div class="amb-container">
+                            <div class="headlights">
+                                <div class="beam beam-l"></div>
+                                <div class="beam beam-r"></div>
+                            </div>
+                            <div class="dust d-1"></div>
+                            <div class="dust d-2"></div>
+                            <div class="dust d-3"></div>
+                            <div class="dust d-4"></div>
+                            <div class="wheel w-fl"></div>
+                            <div class="wheel w-fr"></div>
+                            <div class="wheel w-bl"></div>
+                            <div class="wheel w-br"></div>
+                            <div class="amb-body">
+                                <div class="windshield"></div>
+                                <div class="amb-roof">
+                                    <div class="red-cross"></div>
+                                </div>
+                                <div class="siren-box">
+                                    <div class="light light-red"></div>
+                                    <div class="light light-blue"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <!-- END: MODIFIED LOADING SECTION -->
 
                 <div id="resultsGrid" class="emergency-grid"></div>
 
@@ -695,14 +969,9 @@
                 performSearch();
             });
 
-            // FAB Trigger (Auth Check -> Passkey -> AddForm)
+            // FAB Trigger (Auth -> Passkey -> AddForm)
             document.getElementById('adminFab').addEventListener('click', ()=>{
-                // Check if user is logged in
-                if(!auth.currentUser) { 
-                    alert("তথ্য যুক্ত করতে অনুগ্রহ করে লগ ইন করুন।");
-                    window.location.href='login.html'; 
-                    return; 
-                }
+                if(!auth.currentUser) { window.location.href='login.html'; return; }
                 document.getElementById('passkeyOverlay').style.display='flex';
             });
 
@@ -752,9 +1021,16 @@
             document.getElementById('searchCriteriaText').innerText = `${upaTxt}, ${distTxt}, ${divTxt}`;
             
             const grid = document.getElementById('resultsGrid');
+            const ambulanceLoader = document.getElementById('ambulanceLoader');
+            const params = new URLSearchParams(window.location.search);
+            const type = params.get('type');
+
             grid.innerHTML='';
-            document.getElementById('loadingSpinner').style.display='block';
             document.getElementById('noResults').style.display='none';
+
+            if (type === 'ambulance') {
+                ambulanceLoader.style.display = 'block';
+            }
 
             try {
                 let q;
@@ -764,38 +1040,24 @@
                     q = query(collection(db,"contacts"), where("division","==",div), where("district","==",dist), where("upazila","==",upa));
                 }
                 const snap = await getDocs(q);
-                document.getElementById('loadingSpinner').style.display='none';
+
+                if (type === 'ambulance') {
+                    ambulanceLoader.style.display = 'none';
+                }
+
                 if(snap.empty) { document.getElementById('noResults').style.display='block'; }
                 else {
                     snap.forEach(d => {
                         const data = d.data();
                         const card = document.createElement('div');
                         card.className = 'emergency-card';
-                        
                         let emailBtn = '';
-                        let detailsText = data.details || 'বিস্তারিত তথ্য নেই';
-                        
-                        // Extract email if exists
-                        const mailMatch = detailsText.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
-                        if(mailMatch) {
-                            const email = mailMatch[0];
-                            emailBtn = `<button class="btn btn-sm btn-outline" onclick="copyToClipboard('${email}')"><i class="fas fa-copy"></i> কপি মেইল</button>`;
-                            
-                            // Remove email and pipe separator from the displayed details text
-                            // Replace "Name | Email" -> "Name"
-                            detailsText = detailsText.replace(email, '').replace('|', '').trim();
-                            
-                            // Cleanup any stray pipes at start or end
-                            detailsText = detailsText.replace(/^\|\s*/, '').replace(/\s*\|$/, '').trim();
-                        }
-                        
-                        // Fallback if details become empty after stripping email
-                        if(!detailsText || detailsText === '') detailsText = 'বিস্তারিত তথ্য নেই';
+                        const mailMatch = (data.details || '').match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+                        if(mailMatch) emailBtn = `<button class="btn btn-sm btn-outline" onclick="copyToClipboard('${mailMatch[0]}')"><i class="fas fa-copy"></i> ই-মেইল</button>`;
                         
                         let displayUpa = data.upazila;
                         let displayDist = data.district;
                         
-                        // Simple lookup for display
                         try {
                            displayDist = locationData[data.division].districts[data.district].name;
                            const uObj = locationData[data.division].districts[data.district].upazilas.find(u => u.v === data.upazila);
@@ -803,9 +1065,9 @@
                         } catch(e) {}
 
                         card.innerHTML = `
-                        <div class="e-card-top"><div class="creator-info"><span class="creator-name"><i class="fas fa-user-tie"></i> ${data.name}</span></div></div>
+                        <div class="e-card-top"><div class="creator-info"><span class="creator-name"><i class="fas fa-building"></i> ${data.name}</span></div></div>
                         <div class="e-details">
-                            <p class="text-dark fw-bold"><i class="fas fa-info-circle"></i> ${detailsText}</p>
+                            <p class="text-dark fw-bold"><i class="fas fa-info-circle"></i> ${data.details || 'বিস্তারিত তথ্য নেই'}</p>
                             <p><i class="fas fa-phone"></i> ${data.phone}</p>
                             <p><i class="fas fa-map-marker-alt"></i> ${displayUpa}, ${displayDist}</p>
                         </div>
@@ -820,7 +1082,9 @@
                     setTimeout(()=>hint.classList.remove('show'),3500);
                 }
             } catch(e) {
-                document.getElementById('loadingSpinner').style.display='none';
+                if (type === 'ambulance') {
+                    ambulanceLoader.style.display = 'none';
+                }
                 grid.innerHTML='<p style="color:red;width:100%;text-align:center">ডাটা লোড এরর।</p>';
             }
         }
@@ -894,7 +1158,6 @@
         // Globals
         window.resetSearch = () => {
             document.getElementById('results-view-section').style.display='none';
-            // RESTORED: Use 'block' to match original CSS structure instead of flex
             document.getElementById('search-view-section').style.display='block';
         };
         window.copyToClipboard = (t) => navigator.clipboard.writeText(t).then(()=>alert("কপি হয়েছে"));
