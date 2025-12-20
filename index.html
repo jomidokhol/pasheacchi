@@ -472,6 +472,32 @@
         .sidebar .sidebar-header { display: flex; position: relative; padding: 25px 20px; align-items: center; justify-content: space-between; }
         .sidebar-header .header-logo img { width: 46px; height: 46px; display: block; object-fit: contain; border-radius: 50%; }
         
+        /* Updated Sidebar Header Auth Buttons */
+        .sidebar-auth-group {
+            margin-left: auto;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-auth-btn {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .sidebar-auth-btn:hover { background: var(--primary-dark); }
+        .sidebar-auth-btn i { font-size: 0.8rem; }
+
         .sidebar-header .sidebar-back-button {
             height: 35px; width: 35px; color: var(--sidebar-text); border: none; cursor: pointer; display: flex;
             background: transparent; align-items: center; justify-content: center; border-radius: 8px; transition: 0.4s ease;
@@ -496,9 +522,6 @@
         }
         
         .sidebar-nav .secondary-nav { position: absolute; bottom: 35px; width: 100%; background: transparent; }
-
-        #logout-button-item { display: none; }
-        body.user-logged-in #logout-button-item { display: block; }
         
         #theme-toggle .dark-mode-icon { display: none; }
         body.dark-mode #theme-toggle .light-mode-icon { display: none; }
@@ -582,7 +605,20 @@
 
     <aside class="sidebar">
       <header class="sidebar-header">
-        <a href="#" class="header-logo"></a>
+        <a href="#" class="header-logo">
+            <img src="https://i.ibb.co/com/QFtV51LQ/1000018745.png" alt="logo">
+        </a>
+        
+        <!-- Sidebar Auth Group: Placed BEFORE the back button -->
+        <div class="sidebar-auth-group" id="sidebarAuthGroup">
+            <a href="login.html" class="sidebar-auth-btn" id="sidebarLoginBtn">
+                <i class="fas fa-sign-in-alt"></i> লগ ইন
+            </a>
+            <button class="sidebar-auth-btn" id="sidebarLogoutBtn" style="display: none; background: #333;">
+                <i class="fas fa-sign-out-alt"></i> লগ আউট
+            </button>
+        </div>
+
         <button class="sidebar-back-button">
           <span class="material-symbols-rounded">arrow_back</span>
         </button>
@@ -623,12 +659,6 @@
                   <span class="material-symbols-rounded light-mode-icon">light_mode</span>
                   <span class="material-symbols-rounded dark-mode-icon">dark_mode</span>
                   <span class="nav-label"></span>
-              </a>
-          </li>
-          <li class="nav-item" id="logout-button-item" style="display:none;">
-              <a href="#" class="nav-link" id="logoutBtn">
-                  <span class="material-symbols-rounded">logout</span>
-                  <span class="nav-label">লগ আউট</span>
               </a>
           </li>
         </ul>
@@ -828,33 +858,53 @@
         onAuthStateChanged(auth, (user) => {
             const loginBtn = document.getElementById('loginBtn');
             const profileContainer = document.getElementById('profileContainer');
-            const logoutItem = document.getElementById('logout-button-item');
             const profileIconBtn = document.querySelector('.profile-icon-btn');
+            
+            // Sidebar Auth Buttons
+            const sidebarLoginBtn = document.getElementById('sidebarLoginBtn');
+            const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
 
             if (user) {
+                // User is signed in
                 loginBtn.style.display = 'none';
                 profileContainer.style.display = 'block';
                 document.body.classList.add('user-logged-in'); 
+                
+                // Sidebar: Show Logout, Hide Login
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'none';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'flex';
 
+                // Set profile picture if available
                 if (user.photoURL) {
                     profileIconBtn.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
                 } else {
                     profileIconBtn.innerHTML = `<i class="fas fa-user"></i>`;
                 }
             } else {
+                // User is signed out
                 loginBtn.style.display = 'inline-flex';
                 profileContainer.style.display = 'none';
                 document.body.classList.remove('user-logged-in');
+                
+                // Sidebar: Show Login, Hide Logout
+                if(sidebarLoginBtn) sidebarLoginBtn.style.display = 'flex';
+                if(sidebarLogoutBtn) sidebarLogoutBtn.style.display = 'none';
             }
         });
 
-        const logoutBtn = document.getElementById('logoutBtn');
-        if(logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                signOut(auth).then(() => { window.location.reload(); }).catch(console.error);
+        const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+
+        function performLogout(e) {
+            e.preventDefault();
+            signOut(auth).then(() => {
+                window.location.reload();
+            }).catch((error) => {
+                console.error("Logout Error:", error);
             });
         }
+
+        if(sidebarLogoutBtn) sidebarLogoutBtn.addEventListener('click', performLogout);
+
 
         // --- FETCH & RENDER LOGIC ---
 
@@ -933,7 +983,7 @@
 
         function loadDefaultSettings() {
             // Default Fallbacks
-             const defaultLogo = "https://i.ibb.co.com/QFtV51LQ/1000018745.png";
+             const defaultLogo = "https://i.ibb.co/com/QFtV51LQ/1000018745.png";
              const savedLogo = localStorage.getItem('siteLogo') || defaultLogo;
              const siteLogoEl = document.getElementById('siteLogo');
              if(siteLogoEl) siteLogoEl.src = savedLogo;
@@ -942,6 +992,44 @@
              initSlider();
         }
         
+        // Helper function for relative time with safety check
+        function timeAgo(timestamp) {
+            if (!timestamp) return "অজানা সময়";
+            
+            // Safety check: Ensure timestamp has toDate method
+            if (typeof timestamp.toDate !== 'function') {
+                return "সময় উল্লেখ নেই"; 
+            }
+            
+            const date = timestamp.toDate();
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+
+            if (diffInSeconds < 60) return "এইমাত্র";
+            
+            const diffInMinutes = Math.floor(diffInSeconds / 60);
+            if (diffInMinutes < 60) {
+                return convertToBanglaNumber(diffInMinutes) + " মিনিট আগে";
+            }
+            
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            if (diffInHours < 24) {
+                return convertToBanglaNumber(diffInHours) + " ঘণ্টা আগে";
+            }
+            
+            const diffInDays = Math.floor(diffInHours / 24);
+            if (diffInDays < 7) {
+                return convertToBanglaNumber(diffInDays) + " দিন আগে";
+            }
+            
+            return date.toLocaleDateString('bn-BD'); 
+        }
+
+        function convertToBanglaNumber(num) {
+            const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return num.toString().split('').map(d => bengaliDigits[d] || d).join('');
+        }
+
         async function loadEmergencyRequests() {
             const emergencyGrid = document.getElementById('emergencyGrid');
             try {
@@ -970,12 +1058,13 @@
             
             // Safe details for modal
             const safeDetails = emData.details ? emData.details.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '<br>') : "";
+            const postedTime = timeAgo(emData.createdAt); 
             
             cardDiv.innerHTML = `
                 <div class="e-card-top">
                     <div class="blood-group-badge">${emData.bloodGroup}</div>
                     <div class="creator-info"><span class="creator-name"><i class="fas fa-user-circle"></i> ${creatorName}</span></div>
-                    <div class="e-card-tags"><span class="posted-time">কিছুক্ষণ আগে</span><span class="urgent-tag">Urgent</span></div>
+                    <div class="e-card-tags"><span class="posted-time">${postedTime}</span><span class="urgent-tag">Urgent</span></div>
                 </div>
                 <div class="e-details">
                     <h4>${emData.location}</h4>
