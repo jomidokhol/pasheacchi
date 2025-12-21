@@ -159,7 +159,7 @@
                 <input type="number" id="postal-code" name="postal-code" required>
             </div>
 
-            <!-- পছন্দের জেলা -->
+            <!-- সংশোধন: সার্চ/ফিল্টার ফাংশন ফিরিয়ে আনা হয়েছে -->
             <div class="form-group">
                 <label for="preferred-district">কোন জেলার এডমিন হিসেবে যোগ দিতে চান?</label>
                 <input list="districts-list" id="preferred-district" name="preferred-district" placeholder="জেলা সার্চ করুন..." required>
@@ -297,7 +297,8 @@
             for (const division in geoData) {
                 allDistricts.push(...Object.keys(geoData[division]));
             }
-            allDistricts.sort().forEach(district => {
+            // জেলার নাম বর্ণানুক্রমে সাজানো
+            allDistricts.sort((a, b) => a.localeCompare(b, 'bn')).forEach(district => {
                 const option = document.createElement('option');
                 option.value = district;
                 preferredDistrictList.appendChild(option);
@@ -309,7 +310,7 @@
                 upazilaSelect.innerHTML = '<option value="">-- উপজেলা নির্বাচন করুন --</option>';
                 const selectedDivision = divisionSelect.value;
                 if (selectedDivision) {
-                    const districts = Object.keys(geoData[selectedDivision]);
+                    const districts = Object.keys(geoData[selectedDivision]).sort((a, b) => a.localeCompare(b, 'bn'));
                     districts.forEach(district => {
                         const option = document.createElement('option');
                         option.value = district;
@@ -325,7 +326,7 @@
                 const selectedDivision = divisionSelect.value;
                 const selectedDistrict = districtSelect.value;
                 if (selectedDivision && selectedDistrict) {
-                    const upazilas = geoData[selectedDivision][selectedDistrict];
+                    const upazilas = geoData[selectedDivision][selectedDistrict].sort((a, b) => a.localeCompare(b, 'bn'));
                     upazilas.forEach(upazila => {
                         const option = document.createElement('option');
                         option.value = upazila;
@@ -350,23 +351,24 @@
                     age: form.age.value,
                     mobile: form.mobile.value,
                     email: form.email.value,
-                    division: form.division.value,
-                    district: form.district.value,
-                    upazila: form.upazila.value,
-                    village: form.village.value,
-                    postOffice: form['post-office'].value,
-                    postalCode: form['postal-code'].value,
+                    address: {
+                        division: form.division.value,
+                        district: form.district.value,
+                        upazila: form.upazila.value,
+                        village: form.village.value,
+                        postOffice: form['post-office'].value,
+                        postalCode: form['postal-code'].value,
+                    },
                     preferredDistrict: form['preferred-district'].value,
+                    status: 'pending', // আবেদনের প্রাথমিক স্ট্যাটাস
                     appliedAt: new Date()
                 };
                 
                 // Firestore-এ ডেটা পাঠান
                 db.collection("adminApplications").add(applicationData)
                 .then((docRef) => {
-                    alert("আপনার আবেদন সফলভাবে জমা হয়েছে।");
-                    form.reset(); // ফর্ম রিসেট করুন
-                    districtSelect.innerHTML = '<option value="">-- জেলা নির্বাচন করুন --</option>';
-                    upazilaSelect.innerHTML = '<option value="">-- উপজেলা নির্বাচন করুন --</option>';
+                    // সফল হলে নতুন পেজে রিডাইরেক্ট করুন
+                    window.location.href = 'submission_success.html';
                 })
                 .catch((error) => {
                     console.error("ডেটা পাঠাতে সমস্যা হয়েছে: ", error);
