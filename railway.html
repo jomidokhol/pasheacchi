@@ -297,7 +297,7 @@
 
         /* Header */
         header { background-color: var(--header-bg); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 999; }
-        .header-content { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
         .logo { display: flex; align-items: center; gap: 10px; color: var(--primary); font-weight: 700; font-size: 1.5rem; text-decoration: none; }
         .logo span { font-size: 2.0rem; font-weight: bold; }
         .auth-buttons { display: flex; gap: 15px; align-items: center; }
@@ -331,17 +331,6 @@
         .sidebar-nav .dropdown-container.open .dropdown-icon { transform: rotate(180deg); }
         .sidebar-nav .dropdown-menu { list-style: none; padding-left: 20px; height: 0; overflow: hidden; transition: height 0.4s ease; display: flex; flex-direction: column; gap: 2px; }
 
-        /* Footer */
-        footer { background: var(--footer-bg); color: var(--white); padding: 60px 0 20px; margin-top: auto; }
-        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-column h3 { font-size: 1.3rem; margin-bottom: 20px; position: relative; padding-bottom: 10px; border-bottom: 2px solid var(--primary); display: inline-block; width: auto; }
-        .footer-links { list-style: none; } .footer-links li { margin-bottom: 10px; } .footer-links a { color: #ddd; text-decoration: none; transition: var(--transition); }
-        .footer-links a:hover { color: var(--primary); padding-left: 5px; }
-        .social-links { display: flex; gap: 15px; margin-top: 20px; }
-        .social-links a { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; color: var(--white); transition: var(--transition); }
-        .social-links a:hover { background: var(--primary); transform: translateY(-3px); }
-        .copyright { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.9rem; color: #aaa; }
-
         /* Loader */
         .image-loader-container { position: relative; display: inline-block; background-color: rgba(0,0,0,0.1); overflow: hidden; }
         .image-loader-container.logo-image-container { width: auto; height: 40px; background: transparent; }
@@ -358,7 +347,7 @@
         /* Web View / Iframe Style */
         .webview-container {
             width: 100%;
-            height: calc(100vh - 80px); /* Adjust based on header height */
+            height: calc(100vh - 70px); /* Adjust based on new header height */
             border: none;
             display: block;
         }
@@ -501,22 +490,6 @@
     <main style="flex-grow: 1; padding: 0;">
         <iframe src="https://eticket.railway.gov.bd/" class="webview-container" allowfullscreen></iframe>
     </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column"><h3>পাশে আছি</h3><p>জীবন বাঁচাতে রক্ত দিন। আমাদের প্ল্যাটফর্ম জরুরী অবস্থায় রক্তের প্রয়োজনীয়তা মেটাতে সাহায্য করে।</p><div class="social-links"><a href="https://www.facebook.com/profile.php?id=61583966346088"><i class="fab fa-facebook-f"></i></a><a href="phttps://x.com/PasheAachi"><i class="fab fa-twitter"></i></a><a href="https://www.instagram.com/pasheachhi?igsh=aGJyeHpmM3llazY5"><i class="fab fa-instagram"></i></a><a href="https://bd.linkedin.com/in/pashe-aachi-65b5a6392"><i class="fab fa-linkedin-in"></i></a></div></div>
-                <div class="footer-column"><h3>লিংকস</h3><ul class="footer-links"><li><a href="index.html">হোম</a></li><li><a href="emergency-find-blood.html">জরুরি যোগাযোগ</a></li><li><a href="emergency-find-blood.html">ইমারজেন্সি ব্লাড</a></li></ul></div>
-                <div class="footer-column"><h3>সহায়তা</h3><ul class="footer-links"><li><a href="https://wa.me/8801851956615">সাপোর্ট</a></li><li><a href="about-us.html">আমাদের সম্পর্কে</a></li><li><a href="condition.html">টার্মস এন্ড কন্ডিশন</a></li></ul></div>
-                <div class="footer-column"><h3>যোগাযোগ</h3><ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress">ঢাকা, বাংলাদেশ</span></li>
-                    <li><i class="fas fa-phone"></i> <span id="footerPhone">+880 1XXX-XXXXXX</span></li>
-                    <li><i class="fas fa-envelope"></i> <span id="footerEmail">info@bloodlink.com</span></li>
-                </ul></div>
-            </div>
-            <div class="copyright"><p>&copy; ২০২৫ পাশে আছি. সকল অধিকার সংরক্ষিত।</p></div>
-        </div>
-    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
