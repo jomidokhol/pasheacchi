@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
+body {
+    -webkit-user-select: none
+    -ms-user-select: none;
+    user-select: none;
+}
         @font-face {
             font-family: 'Jagoron';
             src: url('fonts/jagoron.ttf') format('truetype');
@@ -1252,6 +1257,11 @@
                 if (e.target === overlay) closeDetailsModal();
             });
         });
+        
+// সিলেকশন ইভেন্ট বন্ধ করতে
+document.onselectstart = function() {
+    return false;
+};
     </script>
 </body>
 </html>
