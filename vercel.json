@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true
+}  "rewrites": [
+    {
+      "source": "/topup/:category",
+      "destination": "/topup.html"
+    }
+  ]
+}
